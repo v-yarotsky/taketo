@@ -1,0 +1,3 @@
+module Taketo
+end
+
