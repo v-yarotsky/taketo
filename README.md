@@ -7,5 +7,5 @@ eaiser for different projects and environments.
 Usage:
 ------
 
-taketo <project> <environment> [<server>] [<command>]
+taketo project environment [server] [command]
 
