@@ -12,11 +12,19 @@ end
 
 require 'rake'
 require 'rake/testtask'
+require 'cucumber'
+require 'cucumber/rake/task'
 
 Rake::TestTask.new do |t|
   t.test_files = Dir.glob('spec/**/*_spec.rb')
   t.verbose = true
 end
+
+Cucumber::Rake::Task.new(:features) do |t|
+  t.cucumber_opts = "features --format pretty -x"
+  t.fork = false
+end
+
 
 task :default => :test
 
