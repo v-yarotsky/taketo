@@ -5,3 +5,4 @@ tmp/
 .exrc
 nohup.out
 pkg/
+coverage/
