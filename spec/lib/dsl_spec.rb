@@ -104,5 +104,31 @@ describe "DSL" do
       end
     end
   end
+
+  describe "#configure" do
+    it "should read config from file if filename passed" do
+      File.stub(:read => "the config")
+      dsl = DSL.new(factory)
+      dsl.should_receive(:instance_eval) do |config, *args|
+        config.should == "the config"
+      end
+      dsl.configure("path/to/config")
+    end
+
+    it "should be configured from block unless filename specified" do
+      dsl = DSL.new(factory)
+      config = proc { }
+      dsl.should_receive(:instance_eval).with(&config)
+      dsl.configure &config
+    end
+
+    it "should raise an error if neither config filename nor block passed" do
+      expect do
+        DSL.new(factory).configure
+      end.to raise_error ArgumentError, /(config|block)/
+    end
+
+    it "should raise meaningful error if config parse failed"
+  end
 end
 

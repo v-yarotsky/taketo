@@ -1,4 +1,4 @@
-require 'taketo/support'
+require 'taketo/constructs_factory'
 
 module Taketo
   class DSL
@@ -31,14 +31,22 @@ module Taketo
 
     attr_reader :current_scope_object, :config
 
-    def initialize(factory)
+    def initialize(factory = Taketo::ConstructsFactory.new)
       @factory = factory
       @scope = [:config]
       @config = @current_scope_object = factory.create_config
     end
 
-    def configure(&block)
-      instance_eval(&block)
+    def configure(filename = nil, &block)
+      if filename
+        filename = filename.to_s
+        config_text = File.read(filename)
+        instance_eval config_text, filename, 1
+      elsif block
+        instance_eval(&block)
+      else
+        raise ArgumentError, "Either filename or block should be provided"
+      end
       @config
     end
 
