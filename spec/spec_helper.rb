@@ -1,7 +1,10 @@
 require 'rubygems'
 require 'bundler/setup'
-require 'simplecov'
-SimpleCov.start
+
+if ENV['COVERAGE']
+  require 'simplecov'
+  SimpleCov.start
+end
 
 $: << File.expand_path('../../lib', __FILE__)
 
