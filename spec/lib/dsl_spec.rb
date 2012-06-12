@@ -108,7 +108,7 @@ describe "DSL" do
   describe "#configure" do
     it "should read config from file if filename passed" do
       File.stub(:read => "the config")
-      dsl = DSL.new(factory)
+      dsl = Taketo::DSL.new(factory)
       dsl.should_receive(:instance_eval) do |config, *args|
         config.should == "the config"
       end
@@ -116,7 +116,7 @@ describe "DSL" do
     end
 
     it "should be configured from block unless filename specified" do
-      dsl = DSL.new(factory)
+      dsl = Taketo::DSL.new(factory)
       config = proc { }
       dsl.should_receive(:instance_eval).with(&config)
       dsl.configure &config
@@ -124,7 +124,7 @@ describe "DSL" do
 
     it "should raise an error if neither config filename nor block passed" do
       expect do
-        DSL.new(factory).configure
+        Taketo::DSL.new(factory).configure
       end.to raise_error ArgumentError, /(config|block)/
     end
 
