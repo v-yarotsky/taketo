@@ -6,6 +6,7 @@ begin
   require 'taketo'
   require 'taketo/constructs_factory'
   require 'taketo/commands'
+  require 'optparse'
 rescue LoadError => e #development
   $: << File.expand_path('../../lib', __FILE__)
   require 'bundler/setup'
