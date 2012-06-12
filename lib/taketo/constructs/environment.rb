@@ -9,6 +9,7 @@ module Taketo
       end
 
       def append_server(server)
+        server.environment    = self
         @servers[server.name] = server
       end
     end

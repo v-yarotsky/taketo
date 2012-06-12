@@ -1,7 +1,7 @@
-require File.expand_path('../../spec_helper', __FILE__)
-require 'taketo/ssh_command'
+require File.expand_path('../../../spec_helper', __FILE__)
+require 'taketo/commands/ssh_command'
 
-include Taketo
+include Taketo::Commands
 
 describe "SSH Command" do
   let(:environment) { stub(:Environment, :name => :staging) }

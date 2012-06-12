@@ -2,22 +2,20 @@ require 'taketo/constructs'
 
 module Taketo
   class ConstructsFactory
-    include Constructs
-
     def create_config
-      Config.new
+      Constructs::Config.new
     end
 
     def create_project(*args)
-      Project.new(*args)
+      Constructs::Project.new(*args)
     end
 
     def create_environment(*args)
-      Environment.new(*args)
+      Constructs::Environment.new(*args)
     end
 
     def create_server(*args)
-      Server.new(*args)
+      Constructs::Server.new(*args)
     end
   end
 end

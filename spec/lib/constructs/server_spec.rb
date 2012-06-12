@@ -1,4 +1,4 @@
-require File.expand_path('../../spec_helper', __FILE__)
+require File.expand_path('../../../spec_helper', __FILE__)
 require 'taketo/constructs/server'
 require 'stringio'
 
@@ -29,6 +29,12 @@ describe "Server" do
   it "should set default_location" do
     server.default_location = "foo"
     server.default_location.should == "foo"
+  end
+
+  it "should set environment" do
+    environment = stub(:Environment)
+    server.environment = environment
+    server.environment.should == environment
   end
 end
 

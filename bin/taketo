@@ -1,1 +1,71 @@
 #!/usr/bin/env ruby
+
+require 'rubygems'
+
+begin
+  require 'taketo'
+  require 'taketo/constructs_factory'
+  require 'taketo/commands'
+rescue LoadError => e #development
+  $: << File.expand_path('../../lib', __FILE__)
+  require 'bundler/setup'
+  retry
+end
+
+Signal.trap("SIGINT") do
+  puts "Terminating"
+  exit 1
+end
+
+include Taketo
+
+def parse_options
+  options = { :config => File.join(ENV['HOME'], ".taketo.rc.rb") }
+
+  OptionParser.new do |opts|
+    opts.banner = <<-DESC
+  A tiny helper utility to make access to servers 
+  eaiser for different projects and environments.
+  DESC
+
+    opts.on("-c CONFIG", "--config") do |c|
+      options[:config] = c
+    end
+
+    opts.on("--dry-run") do |v|
+      options[:dry_run] = v
+    end
+  end.parse!
+
+  options
+end
+
+def parse_config(options)
+  factory = Taketo::ConstructsFactory.new
+
+  Taketo::DSL.new(factory).configure do
+    config_text = File.read(options[:config])
+    eval config_text, binding, options[:config], 1
+  end
+end
+ 
+options = parse_options
+config = parse_config(options)
+
+project, environment, server = ARGV.shift(3).map(&:to_sym)
+
+server = begin
+  config.projects.fetch(project).environments.fetch(environment).servers.fetch(server)
+rescue KeyError => e
+  raise ArgumentError, e
+end
+
+remote_command = ARGV.join(" ")
+remote_command = "bash" if remote_command.empty?
+command_to_execute = Commands::SSHCommand.new(server).render(remote_command)
+if options[:dry_run]
+  puts command_to_execute
+else
+  system command_to_execute
+end
+

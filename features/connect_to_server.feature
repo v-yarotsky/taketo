@@ -19,4 +19,7 @@ Feature:
 
       """
     And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run slots staging s1`
-    Then the output should contain 'ssh -t "deployer"@"1.2.3.4" "cd \'/var/apps/slots\'; RAILS_ENV=staging bash"'
+    Then the output should contain
+      """
+      ssh -t "deployer"@"1.2.3.4" "cd '/var/apps/slots'; RAILS_ENV=staging bash"
+      """

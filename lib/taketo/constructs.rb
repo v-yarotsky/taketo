@@ -3,6 +3,4 @@ module Taketo
   end
 end
 
-Dir.glob('taketo/constructs/*.rb').each do |c|
-  require c
-end
+Dir.glob(File.expand_path('../constructs/*.rb', __FILE__)).each { |c| require c }
