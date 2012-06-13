@@ -7,6 +7,7 @@ describe "NamedNodesCollection" do
   let(:node2) { stub(:name => :bar) }
 
   it "should mimic Array" do
+    collection.should be_empty
     collection << node1
     collection.push node2
     collection[0].should == node1

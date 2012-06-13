@@ -6,4 +6,5 @@ end
 require 'taketo/support'
 require 'taketo/dsl'
 require 'taketo/commands'
+require 'taketo/config_validator'
 

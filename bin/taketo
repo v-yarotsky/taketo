@@ -46,7 +46,9 @@ eaiser for different projects and environments.
 end
 
 def parse_config(config)
-  Taketo::DSL.new.configure(config)
+  DSL.new.configure(config).tap do |config|
+    ConfigValidator.new(config).validate!
+  end
 end
  
 begin
@@ -71,6 +73,6 @@ begin
     system command_to_execute
   end
 rescue Exception => e
-  puts "An error occurred: #{e.message}"
+  STDERR.puts "An error occurred: #{e.message}"
   raise if options && options[:debug]
 end
