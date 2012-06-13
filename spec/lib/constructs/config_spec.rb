@@ -10,7 +10,7 @@ describe "Config" do
     it "should add project to config's projects collection" do
       project = stub(:name => :foo)
       config.append_project(project)
-      config.projects[:foo].should == project
+      config.projects.should include(project)
     end
   end
 end

@@ -1,3 +1,5 @@
+require 'taketo/support/named_nodes_collection'
+
 module Taketo
   module Constructs
     class Project
@@ -5,11 +7,11 @@ module Taketo
 
       def initialize(name)
         @name = name
-        @environments = {}
+        @environments = Taketo::Support::NamedNodesCollection.new
       end
 
       def append_environment(environment)
-        @environments[environment.name] = environment
+        @environments << environment
       end
     end
   end

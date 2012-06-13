@@ -1,3 +1,5 @@
+require 'taketo/support/named_nodes_collection'
+
 module Taketo
   module Constructs
     class Environment
@@ -5,12 +7,12 @@ module Taketo
 
       def initialize(name)
         @name = name
-        @servers = {}
+        @servers = Taketo::Support::NamedNodesCollection.new
       end
 
       def append_server(server)
-        server.environment    = self
-        @servers[server.name] = server
+        server.environment = self
+        @servers << server
       end
     end
   end

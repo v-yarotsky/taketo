@@ -15,7 +15,7 @@ describe "Environment" do
 
     it "should add a server to environment's servers collection" do
       environment.append_server(server)
-      environment.servers[:foo].should == server
+      environment.servers.should include(server)
     end
 
     it "should set environment attribute on a server to self" do

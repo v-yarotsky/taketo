@@ -56,7 +56,7 @@ begin
   project, environment, server = ARGV.shift(3).map(&:to_sym)
 
   server = begin
-    config.projects.fetch(project).environments.fetch(environment).servers.fetch(server)
+    config.projects[project].environments[environment].servers[server]
   rescue KeyError => e
     raise ArgumentError, e
   end

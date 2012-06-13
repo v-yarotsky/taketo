@@ -14,7 +14,7 @@ describe "Project" do
     it "should add an environment to project's environments collection" do
       environment = stub(:name => :foo)
       project.append_environment(environment)
-      project.environments[:foo].should == environment
+      project.environments.should include(environment)
     end
   end
 end
