@@ -19,8 +19,8 @@ describe "DSL" do
     end
 
     it "should create a #{scope_name} and set it as current scope object" do
-      factory.should_receive("create_#{scope_name}").with(:bar)
-      dsl(parent_scope, factory.send("create_#{parent_scope_name}")) do |c|
+      dsl(parent_scope, factory.create(parent_scope_name)) do |c|
+        factory.should_receive(:create).with(scope_name, :bar)
         c.send(scope_name, :bar) do
           c.current_scope_object.should == factory.send(scope_name)
         end
@@ -28,14 +28,14 @@ describe "DSL" do
     end
 
     it "should not leak #{scope_name} as current scope object" do
-      dsl(parent_scope, factory.send("create_#{parent_scope_name}")) do |c|
+      dsl(parent_scope, factory.create(parent_scope_name)) do |c|
         c.send(scope_name, :bar) {}
         c.current_scope_object.should_not == factory.send(scope_name)
       end
     end
 
     it "should add a #{scope_name} to the #{parent_scope_name}'s #{scope_name}s collection" do
-      dsl(parent_scope, factory.send("create_#{parent_scope_name}")) do |c|
+      dsl(parent_scope, factory.create(parent_scope_name)) do |c|
         c.current_scope_object.should_receive("append_#{scope_name}").with(factory.send("create_#{scope_name}", :bar))
         c.send(scope_name, :bar) {}
       end
@@ -52,7 +52,7 @@ describe "DSL" do
     end
 
     it "should set #{parent_scope_method.to_s.gsub('=', '')} attribute on current server" do
-      dsl(parent_scope, factory.send("create_#{parent_scope_name}", :foo)) do |c|
+      dsl(parent_scope, factory.create(parent_scope_name, :foo)) do |c|
         factory.send(parent_scope_name).should_receive(parent_scope_method).with(example_value)
         c.send(attribute_name, example_value)
       end

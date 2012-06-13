@@ -2,6 +2,10 @@ module DSLSpec
   class TestConstructsFactory
     attr_reader :config, :project, :environment, :server
 
+    def create(type, *args)
+      send("create_#{type}", *args)
+    end
+
     def create_config
       @config ||= RSpec::Mocks::Mock.new(:Config).as_null_object
     end

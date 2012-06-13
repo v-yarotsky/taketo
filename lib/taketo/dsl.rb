@@ -11,7 +11,7 @@ module Taketo
             raise ScopeError,
               "#{scope} can't be defined in #{current_scope} scope"
           end
-          scope_object = @factory.send("create_#{scope}", name)
+          scope_object = @factory.create(scope, name)
           in_scope(scope, scope_object) do
             block.call
           end

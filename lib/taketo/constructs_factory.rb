@@ -2,6 +2,11 @@ require 'taketo/constructs'
 
 module Taketo
   class ConstructsFactory
+
+    def create(type, *args)
+      send("create_#{type}", *args)
+    end
+
     def create_config
       Constructs::Config.new
     end
