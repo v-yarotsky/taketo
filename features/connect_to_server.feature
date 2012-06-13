@@ -23,3 +23,21 @@ Feature:
       """
       ssh -t "deployer"@"1.2.3.4" "cd '/var/apps/slots'; RAILS_ENV=staging bash"
       """
+
+  Scenario: SSH to the only server
+    When I have the following config in "/tmp/taketo_test_cfg.rb"
+      """
+      project :slots do
+        environment :staging do
+          server :s1 do
+            host "1.2.3.4"
+            location "/var/apps/slots"
+          end
+        end
+      end
+      """
+    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run`
+    Then the output should contain
+      """
+      ssh -t "1.2.3.4" "cd '/var/apps/slots'; RAILS_ENV=staging bash"
+      """

@@ -6,6 +6,10 @@ describe "NamedNodesCollection" do
   let(:node1) { stub(:name => :foo) }
   let(:node2) { stub(:name => :bar) }
 
+  it "should be able to initialize with array" do
+    Taketo::Support::NamedNodesCollection.new([1, 2, 3]).length.should == 3
+  end
+
   it "should mimic Array" do
     collection.should be_empty
     collection << node1

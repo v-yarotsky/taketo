@@ -9,8 +9,8 @@ module Taketo
 
       def_delegators :@nodes, :each, :<<, :push, :length, :size, :empty?
 
-      def initialize
-        @nodes = []
+      def initialize(nodes = [])
+        @nodes = nodes
       end
 
       def [](index)

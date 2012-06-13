@@ -6,7 +6,7 @@ begin
   require 'taketo'
   require 'taketo/constructs_factory'
   require 'taketo/commands'
-  require 'taketo/support'
+  require 'taketo/taketo_argv_parser'
   require 'optparse'
 rescue LoadError => e #development
   $: << File.expand_path('../../lib', __FILE__)
@@ -58,11 +58,7 @@ begin
 
   project, environment, server = ARGV.shift(3).map(&:to_sym)
 
-  server = begin
-    config.projects[project].environments[environment].servers[server]
-  rescue KeyError => e
-    raise ArgumentError, e
-  end
+  server = TaketoArgvParser.new(config, ARGV).parse
 
   remote_command = ARGV.join(" ")
   remote_command = "bash" if remote_command.empty?
