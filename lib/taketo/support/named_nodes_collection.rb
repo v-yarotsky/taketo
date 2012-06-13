@@ -1,4 +1,5 @@
 require 'forwardable'
+require 'taketo/support'
 
 module Taketo
   module Support

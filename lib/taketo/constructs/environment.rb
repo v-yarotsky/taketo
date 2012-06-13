@@ -1,4 +1,4 @@
-require 'taketo/support/named_nodes_collection'
+require 'taketo/support'
 
 module Taketo
   module Constructs
