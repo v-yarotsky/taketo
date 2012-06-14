@@ -9,8 +9,11 @@ begin
   require 'taketo/taketo_argv_parser'
   require 'optparse'
 rescue LoadError => e #development
-  $: << File.expand_path('../../lib', __FILE__)
-  require 'bundler/setup'
+  raise if $loaded
+  $:.unshift File.expand_path('../../lib', __FILE__)
+  require 'bundler'
+  Bundler.setup(:default)
+  $loaded = true
   retry
 end
 
@@ -41,6 +44,11 @@ eaiser for different projects and environments.
     opts.on("--debug") do |d|
       options[:debug] = d
     end
+
+    opts.on("--command COMMAND") do |c|
+      raise OptionParser::MissingArgument if String(c).strip.empty?
+      options[:command] = c
+    end
   end.parse!
 
   options
@@ -56,12 +64,9 @@ begin
   options = parse_options
   config  = parse_config(options[:config])
 
-  project, environment, server = ARGV.shift(3).map(&:to_sym)
-
   server = TaketoArgvParser.new(config, ARGV).parse
 
-  remote_command = ARGV.join(" ")
-  remote_command = "bash" if remote_command.empty?
+  remote_command = options.fetch(:command) { "bash" }
   command_to_execute = Commands::SSHCommand.new(server).render(remote_command)
 
   if options[:dry_run]

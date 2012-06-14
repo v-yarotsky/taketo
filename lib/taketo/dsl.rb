@@ -3,7 +3,7 @@ require 'taketo/constructs_factory'
 module Taketo
   class DSL
     class ScopeError < StandardError; end
-    
+
     class << self
       def define_scope(scope, parent_scope)
         define_method scope do |name, &block|
@@ -54,21 +54,11 @@ module Taketo
     define_scope :environment, :project
     define_scope :server, :environment
 
-    define_attribute :host, :server do |hostname|
-      current_scope_object.host = hostname
-    end
-
-    define_attribute :port, :server do |port_number|
-      current_scope_object.port = port_number
-    end
-
-    define_attribute :user, :server do |username|
-      current_scope_object.username = username
-    end
-
-    define_attribute :location, :server do |path|
-      current_scope_object.default_location = path
-    end
+    define_attribute(:host, :server)     { |hostname|    current_scope_object.host = hostname         }
+    define_attribute(:port, :server)     { |port_number| current_scope_object.port = port_number      }
+    define_attribute(:user, :server)     { |username|    current_scope_object.username = username     }
+    define_attribute(:location, :server) { |path|        current_scope_object.default_location = path }
+    define_attribute(:env, :server)      { |env|         current_scope_object.env(env)                }
 
     private
 
@@ -88,7 +78,7 @@ module Taketo
       parent_scope_object, @current_scope_object = @current_scope_object, new_scope_object
       @scope << scope
       yield
-      parent_scope_object.send("append_#{scope}", current_scope_object) 
+      parent_scope_object.send("append_#{scope}", current_scope_object)
       @scope.pop
       @current_scope_object = parent_scope_object
     end

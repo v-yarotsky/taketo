@@ -1,4 +1,4 @@
-require File.expand_path('../../spec_helper', __FILE__)
+require File.expand_path('../../../spec_helper', __FILE__)
 require 'taketo/taketo_argv_parser'
 require 'taketo/support/named_nodes_collection'
 

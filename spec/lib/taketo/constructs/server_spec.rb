@@ -1,4 +1,4 @@
-require File.expand_path('../../../spec_helper', __FILE__)
+require File.expand_path('../../../../spec_helper', __FILE__)
 require 'taketo/constructs/server'
 require 'stringio'
 
@@ -35,6 +35,12 @@ describe "Server" do
     environment = stub(:Environment)
     server.environment = environment
     server.environment.should == environment
+  end
+
+  it "should set environment variables" do
+    server.env :FOO => "bar"
+    server.env :BAR => "baz"
+    server.environment_variables.should == { :FOO => "bar", :BAR => "baz" }
   end
 end
 

@@ -11,19 +11,16 @@ rescue Bundler::BundlerError => e
 end
 
 require 'rake'
-require 'rake/testtask'
+require 'rspec/core/rake_task'
 require 'cucumber'
 require 'cucumber/rake/task'
 
-Rake::TestTask.new do |t|
-  t.test_files = Dir.glob('spec/**/*_spec.rb')
-  t.verbose = true
-end
+RSpec::Core::RakeTask.new
 
 Cucumber::Rake::Task.new(:features) do |t|
   t.cucumber_opts = "features --tags ~@wip --format pretty -x"
   t.fork = false
 end
 
-task :default => [:test, :features]
+task :default => [:spec, :features]
 

@@ -1,4 +1,4 @@
-require File.expand_path('../../spec_helper', __FILE__)
+require File.expand_path('../../../spec_helper', __FILE__)
 require 'support/helpers/dsl_spec_helper'
 require 'taketo/dsl'
 
@@ -82,6 +82,10 @@ describe "DSL" do
 
         describe "#location" do
           it_behaves_like "an attribute", :location, :server, :default_location=, "/var/app/"
+        end
+
+        describe "#env" do
+          it_behaves_like "an attribute", :env, :server, :env, { :FOO => "bar" }
         end
       end
     end

@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.files = Dir.glob("{bin,lib,spec,features}/**/*") + %w[Gemfile Gemfile.lock Rakefile LICENSE.txt README.md VERSION]
   s.require_paths = ["lib"]
 
-  s.add_development_dependency("rspec", "~> 2.10")
+  s.add_development_dependency("rspec", "~> 2.11")
   s.add_development_dependency("rake",  "~> 0.9")
   s.add_development_dependency("aruba", "~> 0.4")
   s.add_development_dependency("simplecov", "~> 0.6")
