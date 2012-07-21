@@ -4,7 +4,15 @@ Take Me To
 [![Build Status](https://secure.travis-ci.org/v-yarotsky/taketo.png)](http://travis-ci.org/v-yarotsky/taketo)
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/v-yarotsky/taketo)
 
-A tiny helper utility to make access to servers eaiser for different projects and environments.
+A tiny helper utility to make access to servers easier for different projects and environments.
+
+Important note:
+---------------
+
+The project is currently actively developed, thus it may contain bugs;
+backward compatibility is not guaranteed.
+
+Suggestions and contributions are highly appreciated :)
 
 Usage:
 ------
