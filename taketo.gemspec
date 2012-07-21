@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
     "for different projects and environments"
 
   s.version = Taketo::VERSION.dup
-  s.authors = ["Vladimir Yarotsky", "Maksim Yermalovich"]
+  s.authors = ["Vladimir Yarotsky"]
   s.date = Date.today.to_s
   s.email = "vladimir.yarotksy@gmail.com"
   s.homepage = "http://github.com/v-yarotsky/taketo"
