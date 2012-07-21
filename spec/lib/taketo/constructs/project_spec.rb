@@ -17,5 +17,12 @@ describe "Project" do
       project.environments.should include(environment)
     end
   end
+
+  describe "#find_environment" do
+    it "should find environment by name" do
+      project.environments.should_receive(:find_by_name).with(:foo).and_return(:bar)
+      project.find_environment(:foo).should == :bar
+    end
+  end
 end
 

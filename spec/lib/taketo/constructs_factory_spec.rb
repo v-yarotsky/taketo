@@ -6,7 +6,7 @@ include Taketo
 describe "ConstructsFactory" do
   let(:factory) { Taketo::ConstructsFactory.new }
 
-  specify "#create should delegate to appripriate method according to type" do
+  specify "#create should delegate to appropriate method according to the type" do
     factory.should_receive(:create_config)
     factory.create(:config)
 

@@ -7,18 +7,27 @@ module Taketo
       include Enumerable
       extend Forwardable
 
-      def_delegators :@nodes, :each, :<<, :push, :length, :size, :empty?
+      def_delegators :@nodes, :each, :length, :size, :empty?
 
       def initialize(nodes = [])
         @nodes = nodes
       end
 
+      def push(node)
+        @nodes << node unless find_by_name(node.name)
+      end
+      alias :<< :push
+
       def [](index)
         if index.is_a?(Symbol)
-          node = @nodes.detect { |n| n.name == index } or raise KeyError, "Element with name #{index} not found"
+          node = find_by_name(index) or raise KeyError, "Element with name #{index} not found"
           return node
         end
         @nodes[index] or raise KeyError, "Element ##{index} not found"
+      end
+
+      def find_by_name(name)
+        @nodes.detect { |n| n.name == name }
       end
     end
   end

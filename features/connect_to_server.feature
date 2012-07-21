@@ -69,3 +69,28 @@ Feature:
       FOO=the\ value
       """
       
+  Scenario: Reopen config scopes
+    When I have the following config in "/tmp/taketo_test_cfg.rb"
+      """
+      project :slots do
+        environment :staging do
+          server :s1 do
+            host "1.2.3.4"
+          end
+        end
+      end
+
+      project :slots do
+        environment :staging do
+          server :s1 do
+            env :FOO => "bar"
+          end
+        end
+      end
+      """
+    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb slots:staging:s1 --dry-run`
+    Then the output should contain
+      """
+      ssh -t 1.2.3.4 "RAILS_ENV=staging FOO=bar bash"
+      """
+

@@ -60,22 +60,10 @@ describe "Server" do
       end
     end
 
-    describe "#command_by_name" do
-      context "if there is such command" do
-        it "should return command object with corresponding name" do
-          server.append_command(command)
-          server.command_by_name(:foo).should == command
-        end
-      end
-
-      context "if there is no such command" do
-        it "should yield if block given" do
-          expect { |b| server.command_by_name(:bar, &b) }.to yield_control
-        end
-
-        it "should raise CommandNotFoundError if no block given" do
-          expect { server.command_by_name(:bar) }.to raise_error(Taketo::Constructs::Server::CommandNotFoundError)
-        end
+    describe "#find_command" do
+      it "should find command by name" do
+        server.commands.should_receive(:find_by_name).with(:foo).and_return(:bar)
+        server.find_command(:foo).should == :bar
       end
     end
   end

@@ -62,7 +62,7 @@ end
 
 def remote_command(server, options)
   command_name = options[:command] or return default_command(options)
-  server.command_by_name(command_name.to_sym) { default_command(options) }
+  server.find(:command, command_name.to_sym) { default_command(options) }
 end
 
 def default_command(options)

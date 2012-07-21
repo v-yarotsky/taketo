@@ -23,6 +23,13 @@ describe "Environment" do
       environment.append_server(server)
     end
   end
+
+  describe "#find_server" do
+    it "should find server by name" do
+      environment.servers.should_receive(:find_by_name).with(:foo).and_return(:bar)
+      environment.find_server(:foo).should == :bar
+    end
+  end
 end
 
 

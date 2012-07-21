@@ -1,15 +1,18 @@
+require 'taketo/constructs/base_construct'
+require 'taketo/support'
+
 module Taketo
   module Constructs
-    class Server
+    class Server < BaseConstruct
       class CommandNotFoundError < StandardError; end
 
-      attr_reader :name, :environment_variables, :commands
+      attr_reader :environment_variables, :commands
       attr_accessor :host, :port, :username, :default_location, :environment
       
       def initialize(name)
-        @name = name
+        super
         @environment_variables = {}
-        @commands = []
+        @commands = Taketo::Support::NamedNodesCollection.new
       end
 
       def env(env_variables)
@@ -20,20 +23,14 @@ module Taketo
         @commands << command
       end
 
+      def find_command(name)
+        @commands.find_by_name(name)
+      end
+
       def environment=(environment)
         env(:RAILS_ENV => environment.name.to_s)
         @environment = environment
       end
-
-      def command_by_name(command_name)
-        @commands.detect { |c| c.name == command_name } or 
-          if block_given?
-            yield
-          else
-            raise CommandNotFoundError, "Command #{command_name} not found for server #{name}"
-          end
-      end
-
     end
   end
 end

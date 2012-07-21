@@ -24,6 +24,13 @@ describe "NamedNodesCollection" do
     expect { collection[3] }.to raise_error KeyError, /#3/i
     expect { collection[:quux] }.to raise_error KeyError, /name/i
   end
+
+  it "should not add if node with same name exists" do
+    collection << node1
+    collection.push node1
+    collection.length.should == 1
+    collection.first.should == node1
+  end
 end
 
 

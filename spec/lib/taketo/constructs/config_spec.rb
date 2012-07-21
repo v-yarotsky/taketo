@@ -13,5 +13,12 @@ describe "Config" do
       config.projects.should include(project)
     end
   end
+
+  describe "#find_project" do
+    it "should find project by name" do
+      config.projects.should_receive(:find_by_name).with(:foo).and_return(:bar)
+      config.find_project(:foo).should == :bar
+    end
+  end
 end
 

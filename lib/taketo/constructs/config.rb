@@ -1,8 +1,9 @@
+require 'taketo/constructs/base_construct'
 require 'taketo/support'
 
 module Taketo
   module Constructs
-    class Config
+    class Config < BaseConstruct
       attr_reader :projects
 
       def initialize
@@ -11,6 +12,10 @@ module Taketo
 
       def append_project(project)
         @projects << project
+      end
+
+      def find_project(name)
+        @projects.find_by_name(name)
       end
     end
   end

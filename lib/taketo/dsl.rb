@@ -11,7 +11,7 @@ module Taketo
             raise ScopeError,
               "#{scope} can't be defined in #{current_scope} scope"
           end
-          scope_object = @factory.create(scope, name)
+          scope_object = current_scope_object.find(scope, name) { @factory.create(scope, name) }
           in_scope(scope, scope_object) do
             block.call
           end
@@ -78,7 +78,7 @@ module Taketo
 
     def in_scope(scope, new_scope_object)
       parent_scope_object, @current_scope_object = @current_scope_object, new_scope_object
-      @scope << scope
+      @scope.push(scope)
       yield
       parent_scope_object.send("append_#{scope}", current_scope_object)
       @scope.pop

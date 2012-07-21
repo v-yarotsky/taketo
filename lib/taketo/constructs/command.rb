@@ -1,19 +1,15 @@
+require 'taketo/constructs/base_construct'
 require 'shellwords'
 
 module Taketo
   module Constructs
-    class Command
+    class Command < BaseConstruct
       include Shellwords
 
-      attr_reader :name
       attr_accessor :command
       
-      def initialize(name)
-        @name = name
-      end
-
       def render(server)
-        %Q[#{location(server)} #{environment_variables(server)} #{command}].squeeze(" ")
+        %Q[#{location(server)} #{environment_variables(server)} #{command}].strip.squeeze(" ")
       end
 
       private

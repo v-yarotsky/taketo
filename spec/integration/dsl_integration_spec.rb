@@ -11,6 +11,10 @@ describe "Taketo DSL" do
             host "127.0.0.2"
             user "deployer"
             location "/var/app"
+            env :FOO => "bar"
+            command :console do
+              execute "rails c"
+            end
           end
         end
 
@@ -40,6 +44,9 @@ describe "Taketo DSL" do
     staging_server.host.should == "127.0.0.2"
     staging_server.username.should == "deployer"
     staging_server.default_location.should == "/var/app"
+    staging_server.environment_variables.should == { :RAILS_ENV => "staging", :FOO => "bar" }
+    staging_server.commands.length.should == 1
+    staging_server.commands[:console].command.should == "rails c"
 
     production = project.environments[:production]
     production.servers.length.should == 2

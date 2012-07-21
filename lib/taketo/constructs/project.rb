@@ -1,17 +1,22 @@
+require 'taketo/constructs/base_construct'
 require 'taketo/support'
 
 module Taketo
   module Constructs
-    class Project
-      attr_reader :name, :environments
+    class Project < BaseConstruct
+      attr_reader :environments
 
       def initialize(name)
-        @name = name
+        super
         @environments = Taketo::Support::NamedNodesCollection.new
       end
 
       def append_environment(environment)
         @environments << environment
+      end
+
+      def find_environment(name)
+        @environments.find_by_name(name)
       end
     end
   end
