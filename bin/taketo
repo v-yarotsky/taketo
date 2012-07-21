@@ -6,7 +6,7 @@ begin
   require 'taketo'
   require 'taketo/constructs_factory'
   require 'taketo/commands'
-  require 'taketo/taketo_argv_parser'
+  require 'taketo/destination_resolver'
   require 'optparse'
 rescue LoadError => e #development
   raise if $loaded
@@ -75,7 +75,8 @@ begin
   options = parse_options
   config  = parse_config(options[:config])
 
-  server = TaketoArgvParser.new(config, ARGV).parse
+  destination_path = ARGV.shift.to_s
+  server = DestinationResolver.new(config, destination_path).resolve
 
   server_command = remote_command(server, options)
   command_to_execute = Commands::SSHCommand.new(server).render(server_command)
@@ -91,3 +92,4 @@ rescue Exception => e
   STDERR.puts "An error occurred: #{e.message}"
   raise if options && options[:debug]
 end
+

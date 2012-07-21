@@ -26,7 +26,13 @@ describe Taketo::Support::EvalDelegator do
       end.not_to raise_error
     end
 
-    it "should pass local variables through the scopes" do
+    it "should raise if external context does not respond" do
+      expect do
+        EvalDelegatorContext.new.evaluate { qux }
+      end.to raise_error(NameError)
+    end
+
+    it "should pass local variabnes through the scopes" do
       baz = :foo
       expect do
         EvalDelegatorContext.new.evaluate { baz }

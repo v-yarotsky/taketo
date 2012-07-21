@@ -16,7 +16,7 @@ Feature:
         end
       end
       """
-      And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run --command "TERM=xterm-256color bash" slots staging s1`
+    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run --command "TERM=xterm-256color bash"`
     Then the output should contain
       """
       ssh -t 1.2.3.4 "cd /var/apps/slots; RAILS_ENV=staging TERM=xterm-256color bash"
@@ -37,7 +37,7 @@ Feature:
         end
       end
       """
-      And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run --command console slots staging s1`
+    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run --command console slots:staging:s1`
     Then the output should contain
       """
       ssh -t 1.2.3.4 "cd /var/apps/slots; RAILS_ENV=staging rails c"
