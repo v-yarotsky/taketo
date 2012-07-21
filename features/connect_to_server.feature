@@ -89,8 +89,5 @@ Feature:
       end
       """
     And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb slots:staging:s1 --dry-run`
-    Then the output should contain
-      """
-      ssh -t 1.2.3.4 "RAILS_ENV=staging FOO=bar bash"
-      """
+    Then the output should match /ssh -t 1\.2\.3\.4 "(RAILS_ENV=staging FOO=bar|FOO=bar RAILS_ENV=staging) bash"/
 
