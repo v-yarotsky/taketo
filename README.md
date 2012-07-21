@@ -36,9 +36,42 @@ puts a config into ```~/.taketo.rc.rb```:
   end
 ```
 
-Then execute ```taketo my_project staging server -c console``` to execute the "rails c" with corresponding environment variables set on desired server
-or just ```taketo my_project staging server``` to open bash
+Then execute ```taketo my_project:staging:server -c console``` to execute the "rails c" with corresponding environment variables set on desired server
+or just ```taketo my_project:staging:server``` to open bash
 
+Destination resolving works intelligently. Given the following config:
+
+```ruby
+  default_destination "my_project2:staging:s2"
+
+  project :my_project do
+    environment :staging do
+      server :s1 do
+        host "1.2.3.4"
+      end
+    end
+    environment :production do
+      server :ps1 do
+        host "3.4.5.6"
+      end
+    end
+  end
+  
+  project :my_project2 do
+    environment :staging do
+      server :s2 do
+        host "2.3.4.5"
+      end
+    end
+  end
+```
+
+```taketo my_project:staging``` will ssh to s1 with host = 1.2.3.4  
+```taketo my_project2``` will ssh to s2 with host = 2.3.4.5   
+
+Note that default destination can be specified via ```default_destination``` config option
+
+  
 To-Do:
 ------
 
@@ -47,6 +80,10 @@ To-Do:
 
 The Changelog:
 --------------
+
+### v0.0.3 (22.07.2012) ###
+* Add default_destination config option
+* Add intelligent destination resolving
 
 ### v0.0.2 (21.07.2012) ###
 * Add ability to define environment variables
