@@ -33,7 +33,7 @@ A tiny helper utility to make access to servers
 eaiser for different projects and environments.
   DESC
 
-    opts.on("-c CONFIG", "--config") do |c|
+    opts.on("-f CONFIG", "--config") do |c|
       options[:config] = c
     end
 
@@ -45,7 +45,7 @@ eaiser for different projects and environments.
       options[:debug] = d
     end
 
-    opts.on("--command COMMAND") do |c|
+    opts.on("-c COMMAND", "--command") do |c|
       raise OptionParser::MissingArgument if String(c).strip.empty?
       options[:command] = c
     end
@@ -59,6 +59,17 @@ def parse_config(config)
     ConfigValidator.new(config).validate!
   end
 end
+
+def remote_command(server, options)
+  command_name = options.fetch(:command) { "" }
+  server.command_by_name(command_name.to_sym) { default_command(options) }
+end
+
+def default_command(options)
+  cmd = Constructs::Command.new(:default)
+  cmd.command = options.fetch(:command) { "bash" }
+  cmd
+end
  
 begin
   options = parse_options
@@ -66,8 +77,8 @@ begin
 
   server = TaketoArgvParser.new(config, ARGV).parse
 
-  remote_command = options.fetch(:command) { "bash" }
-  command_to_execute = Commands::SSHCommand.new(server).render(remote_command)
+  server_command = remote_command(server, options)
+  command_to_execute = Commands::SSHCommand.new(server).render(server_command)
 
   if options[:dry_run]
     puts command_to_execute

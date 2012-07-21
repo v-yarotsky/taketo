@@ -51,7 +51,7 @@ describe "DSL" do
       it { should_not be_appropriate_construct(attribute_name, example_value).under(inaproppriate_scope) }
     end
 
-    it "should set #{parent_scope_method.to_s.gsub('=', '')} attribute on current server" do
+    it "should call #{parent_scope_method} on current #{parent_scope_name}" do
       dsl(parent_scope, factory.create(parent_scope_name, :foo)) do |c|
         factory.send(parent_scope_name).should_receive(parent_scope_method).with(example_value)
         c.send(attribute_name, example_value)
@@ -86,6 +86,14 @@ describe "DSL" do
 
         describe "#env" do
           it_behaves_like "an attribute", :env, :server, :env, { :FOO => "bar" }
+        end
+
+        describe "#command" do
+          it_behaves_like "a scope", :command, :server
+
+          describe "#execute" do
+            it_behaves_like "an attribute", :execute, :command, :command=, "rails c"
+          end
         end
       end
     end

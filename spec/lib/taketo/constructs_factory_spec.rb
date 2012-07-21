@@ -32,5 +32,10 @@ describe "ConstructsFactory" do
     server = factory.create_server(:foo)
     server.should be_an_instance_of(Taketo::Constructs::Server)
   end
+
+  specify "#create_command should create a command object" do
+    command = factory.create_command(:foo)
+    command.should be_an_instance_of(Taketo::Constructs::Command)
+  end
 end
 

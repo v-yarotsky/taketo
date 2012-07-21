@@ -20,7 +20,7 @@ module Taketo
 
       def define_attribute(name, parent_scope, &block)
         define_method name do |attribute|
-          unless server_scope?
+          unless current_scope?(parent_scope)
             raise ScopeError,
               "#{name} can't be defined in #{current_scope} scope"
           end
@@ -53,12 +53,14 @@ module Taketo
     define_scope :project, :config
     define_scope :environment, :project
     define_scope :server, :environment
+    define_scope :command, :server
 
     define_attribute(:host, :server)     { |hostname|    current_scope_object.host = hostname         }
     define_attribute(:port, :server)     { |port_number| current_scope_object.port = port_number      }
     define_attribute(:user, :server)     { |username|    current_scope_object.username = username     }
     define_attribute(:location, :server) { |path|        current_scope_object.default_location = path }
     define_attribute(:env, :server)      { |env|         current_scope_object.env(env)                }
+    define_attribute(:execute, :command) { |command|     current_scope_object.command = command       }
 
     private
 
@@ -70,7 +72,7 @@ module Taketo
       current_scope == scope
     end
 
-    [:config, :project, :environment, :server].each do |scope|
+    [:config, :project, :environment, :server, :command].each do |scope|
       define_method("#{scope}_scope?") { current_scope == scope }
     end
 

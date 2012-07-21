@@ -7,16 +7,13 @@ module Taketo
       extend Forwardable
       include Shellwords
 
-      def_delegators :@server, :host, :port, :username, :default_location
-
       def initialize(server, options = {})
         @server = server
         @environment = @server.environment
       end
 
-      def render(command = "bash", env_variables = [])
-        env_variables = (Array(env_variables) + Array(default_env_variables)).join(" ")
-        %Q[ssh -t #{port} #{username}#{host} "#{[location, env_variables, command].compact.join(" ")}"].squeeze(" ")
+      def render(command)
+        %Q[ssh -t #{port} #{username}#{host} "#{command.render(@server)}"].squeeze(" ")
       end
 
       def host
@@ -32,20 +29,6 @@ module Taketo
 
       def username
         %Q[#{shellescape @server.username}@] if @server.username
-      end
-
-      def location
-        %Q[cd #{shellescape @server.default_location};] if @server.default_location
-      end
-
-      def default_env_variables
-        [%Q[RAILS_ENV=#{shellescape @environment.name.to_s}], *server_env_variables]
-      end
-
-      private
-
-      def server_env_variables
-        @server.environment_variables.map { |k, v| %Q[#{k}=#{shellescape v}] }
       end
     end
   end

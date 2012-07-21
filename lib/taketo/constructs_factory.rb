@@ -22,6 +22,10 @@ module Taketo
     def create_server(*args)
       Constructs::Server.new(*args)
     end
+
+    def create_command(*args)
+      Constructs::Command.new(*args)
+    end
   end
 end
 
