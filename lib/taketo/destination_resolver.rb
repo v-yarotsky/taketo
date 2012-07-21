@@ -6,8 +6,7 @@ module Taketo
   class DestinationResolver
     def initialize(config, path)
       @config = config
-      @path_str = path
-      @path = String(path).split(":").map(&:to_sym)
+      set_destination(path)
     end
 
     def resolve
@@ -20,6 +19,11 @@ module Taketo
     end
 
     private
+
+    def set_destination(path)
+      @path_str = path
+      @path = String(path).split(":").map(&:to_sym)
+    end
 
     def resolve_by_three_segments
       get_server(*@path)
@@ -36,6 +40,10 @@ module Taketo
     end
 
     def resolve_with_no_segments
+      unless @config.default_destination.nil?
+        set_destination(@config.default_destination.to_s)
+        return resolve
+      end
       get_only_server
     end
 

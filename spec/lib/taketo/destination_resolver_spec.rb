@@ -88,62 +88,71 @@ describe "DestinationResolver" do
   end
 
   context "when passed path is empty" do
-    context "when there's one project" do
-      context "when there's one environment" do
-        context "when there's one server" do
-          it "should execute command without asking project/environment/server" do
-            config = stub(:Config, :projects => list(
-              stub(:name => :foo, :environments => list(
-                stub(:name => :bar, :servers => list(
-                  server1
+    context "when there is no default destination set" do
+      context "when there's one project" do
+        context "when there's one environment" do
+          context "when there's one server" do
+            it "should execute command without asking project/environment/server" do
+              config = stub(:Config, :default_destination => nil, :projects => list(
+                stub(:name => :foo, :environments => list(
+                  stub(:name => :bar, :servers => list(
+                    server1
+                  ))
                 ))
               ))
-            ))
 
-            resolver(config, "").resolve.should == server1
+              resolver(config, "").resolve.should == server1
+            end
+          end
+
+          context "when there are multiple servers" do
+            let(:server1) { stub(:Server, :name => :s1) }
+            let(:server2) { stub(:Server, :name => :s2) }
+
+            it "should ask for server" do
+              config = stub(:Config, :default_destination => nil, :projects => list(
+                stub(:name => :foo, :environments => list(
+                  stub(:name => :bar, :servers => list(
+                    server1, server2
+                  ))
+                ))
+              ))
+
+              expect { resolver(config, "").resolve }.to raise_error AmbiguousDestinationError, /server/i
+            end
           end
         end
 
-        context "when there are multiple servers" do
-          let(:server1) { stub(:Server, :name => :s1) }
-          let(:server2) { stub(:Server, :name => :s2) }
-
-          it "should ask for server" do
-            config = stub(:Config, :projects => list(
+        context "when there are multiple environments" do
+          it "should ask for environment" do
+            config = stub(:Config, :default_destination => nil, :projects => list(
               stub(:name => :foo, :environments => list(
-                stub(:name => :bar, :servers => list(
-                  server1, server2
-                ))
+                stub(:name => :bar, :servers => [anything]),
+                stub(:name => :baz, :servers => [anything])
               ))
             ))
 
-            expect { resolver(config, "").resolve }.to raise_error AmbiguousDestinationError, /server/i
+            expect { resolver(config, "").resolve }.to raise_error AmbiguousDestinationError, /environment/i
           end
         end
       end
 
-      context "when there are multiple environments" do
-        it "should ask for environment" do
-          config = stub(:Config, :projects => list(
-            stub(:name => :foo, :environments => list(
-              stub(:name => :bar, :servers => [anything]),
-              stub(:name => :baz, :servers => [anything])
-            ))
+      context "when there are multiple projects" do
+        it "should ask for project" do
+          config = stub(:Config, :default_destination => nil, :projects => list(
+            stub(:name => :foo, :environments => [anything]),
+            stub(:name => :bar, :environments => [anything])
           ))
 
-          expect { resolver(config, "").resolve }.to raise_error AmbiguousDestinationError, /environment/i
+          expect { resolver(config, "").resolve }.to raise_error AmbiguousDestinationError, /projects/i
         end
       end
     end
 
-    context "when there are multiple projects" do
-      it "should ask for project" do
-        config = stub(:Config, :projects => list(
-          stub(:name => :foo, :environments => [anything]),
-          stub(:name => :bar, :environments => [anything])
-        ))
-
-        expect { resolver(config, "").resolve }.to raise_error AmbiguousDestinationError, /projects/i
+    context "when there is default destination" do
+      it "should resolve by default destination" do
+        config.stub(:default_destination => "foo:bar:s1")
+        resolver(config, "").resolve.should == server1
       end
     end
   end

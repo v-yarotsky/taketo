@@ -67,6 +67,10 @@ describe "DSL" do
     end
   end
 
+  describe "#default_destination" do
+    it_behaves_like "an attribute", :default_destination, :config, :default_destination=, "foo:bar:baz"
+  end
+
   describe "#project" do
     it_behaves_like "a scope", :project, :config
 

@@ -20,5 +20,11 @@ describe "Config" do
       config.find_project(:foo).should == :bar
     end
   end
+
+  it "should set default_destination" do
+    config.default_destination.should be_nil
+    config.default_destination = "foo:bar:baz"
+    config.default_destination.should == "foo:bar:baz"
+  end
 end
 

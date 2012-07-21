@@ -5,6 +5,7 @@ module Taketo
   module Constructs
     class Config < BaseConstruct
       attr_reader :projects
+      attr_accessor :default_destination
 
       def initialize
         @projects = Taketo::Support::NamedNodesCollection.new

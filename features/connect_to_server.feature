@@ -91,3 +91,22 @@ Feature:
     And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb slots:staging:s1 --dry-run`
     Then the output should match /ssh -t 1\.2\.3\.4 "(RAILS_ENV=staging FOO=bar|FOO=bar RAILS_ENV=staging) bash"/
 
+  Scenario: Default destination
+    When I have the following config in "/tmp/taketo_test_cfg.rb"
+      """
+      default_destination "slots:staging:s2"
+      project :slots do
+        environment :staging do
+          server :s1 do
+          end
+          server :s2 do
+            host "2.3.4.5"
+          end
+        end
+      end
+      """
+    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run`
+    Then the output should contain
+      """
+      ssh -t 2.3.4.5 "RAILS_ENV=staging bash"
+      """
