@@ -85,6 +85,8 @@ begin
   else
     system command_to_execute
   end
+rescue SystemExit
+  # Do nothing
 rescue Exception => e
   STDERR.puts "An error occurred: #{e.message}"
   raise if options && options[:debug]
