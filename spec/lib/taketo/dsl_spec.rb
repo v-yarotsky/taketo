@@ -20,8 +20,8 @@ describe "DSL" do
 
     it "should create a #{scope_name} and set it as current scope object" do # it "should create project and set it as current scope object"
       dsl(parent_scope, factory.create(parent_scope_name)) do |c|            #   dsl([:config], factory.create(:config)) do |c|
-        c.current_scope_object.should_receive(:find).with(scope_name, :bar)  #     c.current_scope_object.should_receive(:find).with(:project, :bar)
-          .and_yield.and_return(:bacon)                                      #       .and_yield.and_return(:bacon)
+        c.current_scope_object.should_receive(:find).with(scope_name, :bar). #     c.current_scope_object.should_receive(:find).with(:project, :bar).
+          and_yield.and_return(:bacon)                                       #       and_yield.and_return(:bacon)
         factory.should_receive(:create).with(scope_name, :bar)               #     factory.should_receive(:create).with(:project, :bar)
         c.send(scope_name, :bar) do                                          #     c.project(:bar) do
           c.current_scope_object.should_not be_nil                           #       c.current_scope_object.should_not be_nil
@@ -43,8 +43,8 @@ describe "DSL" do
     it "should add a #{scope_name} to the #{parent_scope_name}'s #{scope_name}s collection" do # it "should add a project to the config's projects collection" do
       dsl(parent_scope, factory.create(parent_scope_name)) do |c|                              #   dsl([:config], factory.create(:config)) do |c|
         c.current_scope_object.stub(:find => factory.create(scope_name, :bar))                 #     c.current_scope_object.stub(:find => factory.create(:project, :bar))
-        c.current_scope_object.should_receive("append_#{scope_name}")                          #     c.current_scope_object.should_receive(:append_project)
-          .with(factory.send(scope_name))                                                      #       .with(factory.project)
+        c.current_scope_object.should_receive("append_#{scope_name}").                         #     c.current_scope_object.should_receive(:append_project).
+          with(factory.send(scope_name))                                                       #       with(factory.project)
         c.send(scope_name, :bar) {}                                                            #     c.project(:bar) {}
       end                                                                                      #   end
     end                                                                                        # end
