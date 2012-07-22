@@ -6,6 +6,12 @@ Take Me To
 
 A tiny helper utility to make access to servers easier for different projects and environments.
 
+Taketo is known to work on:
+
+* ree 1.8.7
+* MRI 1.9.2
+* MRI 1.9.3
+
 Important note:
 ---------------
 
@@ -30,6 +36,7 @@ puts a config into ```~/.taketo.rc.rb```:
         env :TERM => "xterm-256color"
         command :console do
           execute "rails c"
+          desc    "Run rails console"
         end
       end
     end
@@ -38,6 +45,8 @@ puts a config into ```~/.taketo.rc.rb```:
 
 Then execute ```taketo my_project:staging:server -c console``` to execute the "rails c" with corresponding environment variables set on desired server
 or just ```taketo my_project:staging:server``` to open bash
+
+To have a brief overview of the config run ```taketo [destination] --view```
 
 Destination resolving works intelligently. Given the following config:
 
@@ -80,6 +89,10 @@ To-Do:
 
 The Changelog:
 --------------
+
+### v0.0.4 (22.07.2012) ###
+* Add --view option. Now you can view your config quickly: ```taketo my_project:environment:server --view``` or just ```taketo --view```
+* Now commands can have description
 
 ### v0.0.3 (22.07.2012) ###
 * Add default_destination config option
