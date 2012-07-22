@@ -6,7 +6,7 @@ module Taketo
     class Command < BaseConstruct
       include Shellwords
 
-      attr_accessor :command
+      attr_accessor :command, :description
       
       def render(server)
         %Q[#{location(server)} #{environment_variables(server)} #{command}].strip.squeeze(" ")

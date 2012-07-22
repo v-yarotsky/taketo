@@ -11,6 +11,11 @@ describe "Command" do
     cmd.command.should == "rails c"
   end
 
+  specify "#description= should set command description" do
+    cmd.description= "Run rails console"
+    cmd.description.should == "Run rails console"
+  end
+
   describe "#render" do
     it "should pick up server's environment variables and location" do
       server = mock(:Server, :environment_variables => { :FOO => "bar baz" }, :default_location => "/var/apps/the app")

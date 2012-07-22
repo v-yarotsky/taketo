@@ -15,7 +15,7 @@ module Taketo
     end
 
     def render_command(command)
-      put command.name
+      put command.name.to_s + (" - " + command.description if command.description).to_s
       result
     end
 

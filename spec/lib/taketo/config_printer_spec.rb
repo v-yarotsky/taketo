@@ -12,8 +12,15 @@ describe "ConfigPrinter" do
   end
 
   describe "#render_command" do
+    let(:command) { stub(:Command, :name => :foo, :description => nil) }
+
     it "should render command name" do
-      printer.render_command(stub(:name => :foo)).should == "foo"
+      printer.render_command(command).should == "foo"
+    end
+
+    it "should also render description if available" do
+      command.stub(:description => "The description")
+      printer.render_command(command).should == "foo - The description"
     end
   end
 

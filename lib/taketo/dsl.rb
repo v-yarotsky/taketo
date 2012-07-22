@@ -63,6 +63,7 @@ module Taketo
     define_attribute(:location, :server)            { |path|        current_scope_object.default_location = path           }
     define_attribute(:env, :server)                 { |env|         current_scope_object.env(env)                          }
     define_attribute(:execute, :command)            { |command|     current_scope_object.command = command                 }
+    define_attribute(:desc, :command)               { |description| current_scope_object.description = description         }
 
     private
 

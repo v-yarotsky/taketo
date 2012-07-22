@@ -27,6 +27,7 @@ Feature:
           end
           command :killall do
             execute "killall humans"
+            desc "Kill ALL humans"
           end
         end
       end
@@ -53,7 +54,7 @@ Feature:
             Environment: RAILS_ENV=qux
             Commands:
               console
-              killall
+              killall - Kill ALL humans
 
       """
 

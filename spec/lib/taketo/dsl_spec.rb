@@ -113,6 +113,10 @@ describe "DSL" do
           describe "#execute" do
             it_behaves_like "an attribute", :execute, :command, :command=, "rails c"
           end
+
+          describe "#desc" do
+            it_behaves_like "an attribute", :desc, :command, :description=, "Run rails console"
+          end
         end
       end
     end
