@@ -13,7 +13,6 @@ Feature:
           port 5678
           user "pivo"
           location "/var/apps/vodka"
-          env :FRIENDS => "many", :TABLE => "round", :FOOD => "hot"
         end
       end
     end
@@ -45,7 +44,7 @@ Feature:
             Port: 5678
             User: pivo
             Default location: /var/apps/vodka
-            Environment: FRIENDS=many TABLE=round FOOD=hot RAILS_ENV=bar
+            Environment: RAILS_ENV=bar
       
       Project: baz
         Environment: qux
@@ -67,6 +66,6 @@ Feature:
         Port: 5678
         User: pivo
         Default location: /var/apps/vodka
-        Environment: FRIENDS=many TABLE=round FOOD=hot RAILS_ENV=bar
+        Environment: RAILS_ENV=bar
 
       """
