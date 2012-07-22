@@ -24,20 +24,33 @@ end
 
 include Taketo
 
+DEFAULT_CONFIG_FILE = File.join(ENV['HOME'], ".taketo.rc.rb")
 def parse_options
-  options = { :config => File.join(ENV['HOME'], ".taketo.rc.rb") }
+  options = { :config => DEFAULT_CONFIG_FILE }
 
   OptionParser.new do |opts|
-    opts.banner = <<-DESC
-A tiny helper utility to make access to servers 
-eaiser for different projects and environments.
-  DESC
+    opts.banner = "Usage: taketo [destination] [options]"
+    opts.version = Taketo::VERSION
+    opts.separator ""
+    opts.separator "Common options:"
 
-    opts.on("-f CONFIG", "--config") do |c|
+    opts.on("-f CONFIG", "--config", "Use custom config file (default: #{DEFAULT_CONFIG_FILE})") do |c|
       options[:config] = c
     end
 
-    opts.on("--dry-run") do |v|
+    opts.on("-c COMMAND", "--command", "Command to execute on destination server", 
+            "  (COMMAND either declared in config or passed as an argument)") do |c|
+      raise OptionParser::MissingArgument if String(c).strip.empty?
+      options[:command] = c
+    end
+
+    opts.on("-l", "--list", "Show config contents and exit") do |c|
+      options[:list] = c
+    end
+
+    opts.separator "Special options:"
+
+    opts.on("--dry-run", "Print out what would be run") do |v|
       options[:dry_run] = v
     end
 
@@ -45,10 +58,6 @@ eaiser for different projects and environments.
       options[:debug] = d
     end
 
-    opts.on("-c COMMAND", "--command") do |c|
-      raise OptionParser::MissingArgument if String(c).strip.empty?
-      options[:command] = c
-    end
   end.parse!
 
   options
@@ -75,16 +84,20 @@ begin
   options = parse_options
   config  = parse_config(options[:config])
 
-  destination_path = ARGV.shift.to_s
-  server = DestinationResolver.new(config, destination_path).resolve
-
-  server_command = remote_command(server, options)
-  command_to_execute = Commands::SSHCommand.new(server).render(server_command)
-
-  if options[:dry_run]
-    puts command_to_execute
+  if options[:list]
+    puts ConfigPrinter.new.render_config(config).chomp
   else
-    system command_to_execute
+    destination_path = ARGV.shift.to_s
+    server = DestinationResolver.new(config, destination_path).resolve
+
+    server_command = remote_command(server, options)
+    command_to_execute = Commands::SSHCommand.new(server).render(server_command)
+
+    if options[:dry_run]
+      puts command_to_execute
+    else
+      system command_to_execute
+    end
   end
 rescue SystemExit
   # Do nothing
