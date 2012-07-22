@@ -25,12 +25,13 @@ end
 include Taketo
 
 DEFAULT_CONFIG_FILE = File.join(ENV['HOME'], ".taketo.rc.rb")
+
 def parse_options
   options = { :config => DEFAULT_CONFIG_FILE }
 
   OptionParser.new do |opts|
     opts.banner = "Usage: taketo [destination] [options]"
-    opts.version = Taketo::VERSION
+    opts.version = VERSION
     opts.separator ""
     opts.separator "Common options:"
 
