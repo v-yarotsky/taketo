@@ -44,8 +44,8 @@ def parse_options
       options[:command] = c
     end
 
-    opts.on("-l", "--list", "Show config contents and exit") do |c|
-      options[:list] = c
+    opts.on("-v", "--view", "Show config contents and exit") do |v|
+      options[:view] = v
     end
 
     opts.separator "Special options:"
@@ -81,14 +81,16 @@ def default_command(options)
 end
  
 begin
-  options = parse_options
-  config  = parse_config(options[:config])
+  options          = parse_options
+  config           = parse_config(options[:config])
+  destination_path = ARGV.shift.to_s
+  resolver         = DestinationResolver.new(config, destination_path)
 
-  if options[:list]
-    puts ConfigPrinter.new.render_config(config).chomp
+  if options[:view]
+    node = resolver.get_node
+    puts ConfigPrinter.new.render(node).chomp
   else
-    destination_path = ARGV.shift.to_s
-    server = DestinationResolver.new(config, destination_path).resolve
+    server = resolver.resolve
 
     server_command = remote_command(server, options)
     command_to_execute = Commands::SSHCommand.new(server).render(server_command)

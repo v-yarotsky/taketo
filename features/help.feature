@@ -3,7 +3,7 @@ Feature:
   As a user
   I want to view what's set up in config quickly
 
-  Scenario: Config validation
+  Background:
     When I have the following config in "/tmp/taketo_test_cfg.rb"
     """
     project :foo do
@@ -32,25 +32,40 @@ Feature:
       end
     end
     """
-  And I run `taketo --config=/tmp/taketo_test_cfg.rb --list`
-  Then the output should contain exactly:
-    """
-    Project: foo
-      Environment: bar
-        Server: default
-          Host: 1.2.3.4
-          Port: 5678
-          User: pivo
-          Default location: /var/apps/vodka
-          Environment: FRIENDS=many TABLE=round FOOD=hot RAILS_ENV=bar
-    
-    Project: baz
-      Environment: qux
-        Server: bart
-          Host: 2.3.4.5
-          Environment: RAILS_ENV=qux
-          Commands:
-            console
-            killall
 
-    """
+  Scenario: View full config
+    When I run `taketo --config=/tmp/taketo_test_cfg.rb --view`
+    Then the output should contain exactly:
+      """
+      Project: foo
+        Environment: bar
+          Server: default
+            Host: 1.2.3.4
+            Port: 5678
+            User: pivo
+            Default location: /var/apps/vodka
+            Environment: FRIENDS=many TABLE=round FOOD=hot RAILS_ENV=bar
+      
+      Project: baz
+        Environment: qux
+          Server: bart
+            Host: 2.3.4.5
+            Environment: RAILS_ENV=qux
+            Commands:
+              console
+              killall
+
+      """
+
+  Scenario: View particular server
+    When I run `taketo --config=/tmp/taketo_test_cfg.rb --view foo:bar:default`
+    Then the output should contain exactly:
+      """
+      Server: default
+        Host: 1.2.3.4
+        Port: 5678
+        User: pivo
+        Default location: /var/apps/vodka
+        Environment: FRIENDS=many TABLE=round FOOD=hot RAILS_ENV=bar
+
+      """

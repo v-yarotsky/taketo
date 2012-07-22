@@ -9,6 +9,11 @@ module Taketo
       @result.chomp
     end
 
+    def render(object)
+      method = "render_#{object.class.name.gsub(/[\w:]*::/, '').downcase}"
+      send(method, object)
+    end
+
     def render_command(command)
       put command.name
       result

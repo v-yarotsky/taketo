@@ -4,6 +4,13 @@ require 'taketo/config_printer'
 include Taketo
 
 describe "ConfigPrinter" do
+  describe "#render" do
+    it "should render based on node class name" do
+      printer.should_receive(:render_fixnum)
+      printer.render(1)
+    end
+  end
+
   describe "#render_command" do
     it "should render command name" do
       printer.render_command(stub(:name => :foo)).should == "foo"

@@ -157,6 +157,27 @@ describe "DestinationResolver" do
     end
   end
 
+  describe "#get_node" do
+    it "should return server when path has 3 segments and is correct" do
+      resolver(config, "foo:bar:s1").get_node.should == server1
+    end
+
+    it "should return environment when path has 2 segments and is correct" do
+      resolver(config, "foo:bar").get_node.name.should == :bar
+    end
+
+    it "should return project when path has 1 segment and is correct" do
+      resolver(config, "foo").get_node.name.should == :foo
+    end
+
+    it "should return the config if path has is empty" do
+      resolver(config, "").get_node.should == config
+    end
+
+    it "should raise NonExistentDestinationError when path is not correct" do
+      expect { resolver(config, "i").get_node }.to raise_error(NonExistentDestinationError)
+    end
+  end
 
   def resolver(*args)
     DestinationResolver.new(*args)

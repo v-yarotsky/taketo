@@ -18,6 +18,15 @@ module Taketo
       end
     end
 
+    def get_node
+      case @path.size
+      when 3 then get_server(*@path)
+      when 2 then get_project_and_environment(*@path).last
+      when 1 then get_project(*@path)
+      when 0 then @config
+      end
+    end
+
     private
 
     def set_destination(path)
