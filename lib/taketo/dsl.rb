@@ -5,12 +5,13 @@ module Taketo
     class ScopeError < StandardError; end
 
     class << self
-      def define_scope(scope, parent_scope)
-        define_method scope do |name, &block|
+      def define_scope(scope, parent_scope, options = {})
+        define_method scope do |*args, &block|
           unless current_scope?(parent_scope)
             raise ScopeError,
               "#{scope} can't be defined in #{current_scope} scope"
           end
+          name = args.shift || options[:default_name] or raise(ArgumentError, "Name not specified")
           scope_object = current_scope_object.find(scope, name) { @factory.create(scope, name) }
           in_scope(scope, scope_object) do
             block.call
@@ -52,7 +53,7 @@ module Taketo
 
     define_scope :project, :config
     define_scope :environment, :project
-    define_scope :server, :environment
+    define_scope :server, :environment, :default_name => :default
     define_scope :command, :server
 
     define_attribute(:default_destination, :config) { |destination| current_scope_object.default_destination = destination }

@@ -33,7 +33,7 @@ Feature:
       """
       project :slots do
         environment :staging do
-          server :s1 do
+          server do
             host "1.2.3.4"
             location "/var/apps/slots"
           end
@@ -51,7 +51,7 @@ Feature:
       """
       project :slots do
         environment :staging do
-          server :s1 do
+          server do
             host "1.2.3.4"
             location "/var/apps/slots"
             env :FOO => "the value"
@@ -74,7 +74,7 @@ Feature:
       """
       project :slots do
         environment :staging do
-          server :s1 do
+          server do
             host "1.2.3.4"
           end
         end
@@ -82,13 +82,13 @@ Feature:
 
       project :slots do
         environment :staging do
-          server :s1 do
+          server do
             env :FOO => "bar"
           end
         end
       end
       """
-    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb slots:staging:s1 --dry-run`
+    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb slots:staging --dry-run`
     Then the output should match /ssh -t 1\.2\.3\.4 "(RAILS_ENV=staging FOO=bar|FOO=bar RAILS_ENV=staging) bash"/
 
   Scenario: Default destination

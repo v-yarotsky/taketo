@@ -7,7 +7,7 @@ describe "Taketo DSL" do
     config = Taketo::DSL.new(factory).configure do
       project :slots do
         environment :staging do
-          server :staging do
+          server do
             host "127.0.0.2"
             user "deployer"
             location "/var/app"
@@ -40,7 +40,8 @@ describe "Taketo DSL" do
     staging = project.environments[:staging]
     
     staging.servers.length.should == 1
-    staging_server = staging.servers[:staging]
+    staging_server = staging.servers[:default]
+    staging_server.name.should == :default
     staging_server.host.should == "127.0.0.2"
     staging_server.username.should == "deployer"
     staging_server.default_location.should == "/var/app"

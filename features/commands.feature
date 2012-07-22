@@ -9,7 +9,7 @@ Feature:
       """
       project :slots do
         environment :staging do
-          server :s1 do
+          server do
             host "1.2.3.4"
             location "/var/apps/slots"
           end
@@ -27,7 +27,7 @@ Feature:
       """
       project :slots do
         environment :staging do
-          server :s1 do
+          server do
             host "1.2.3.4"
             location "/var/apps/slots"
             command :console do
@@ -37,7 +37,7 @@ Feature:
         end
       end
       """
-    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run --command console slots:staging:s1`
+    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run --command console slots:staging`
     Then the output should contain
       """
       ssh -t 1.2.3.4 "cd /var/apps/slots; RAILS_ENV=staging rails c"
