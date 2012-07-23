@@ -4,25 +4,7 @@ Feature:
   I want to have ability to create command shortcuts via config
   or specify command directly
 
-  Scenario: Run explicit command
-    When I have the following config in "/tmp/taketo_test_cfg.rb"
-      """
-      project :slots do
-        environment :staging do
-          server do
-            host "1.2.3.4"
-            location "/var/apps/slots"
-          end
-        end
-      end
-      """
-    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run --command "TERM=xterm-256color bash"`
-    Then the output should contain
-      """
-      ssh -t 1.2.3.4 "cd /var/apps/slots; RAILS_ENV=staging TERM=xterm-256color bash"
-      """
-
-  Scenario: Run command defined in config
+  Background:
     When I have the following config in "/tmp/taketo_test_cfg.rb"
       """
       project :slots do
@@ -37,9 +19,24 @@ Feature:
         end
       end
       """
-    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run --command console slots:staging`
+
+  Scenario: Run explicit command
+    When I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run --command "TERM=xterm-256color bash"`
+    Then the output should contain
+      """
+      ssh -t 1.2.3.4 "cd /var/apps/slots; RAILS_ENV=staging TERM=xterm-256color bash"
+      """
+
+  Scenario: Run command defined in config
+    When I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run --command console slots:staging`
     Then the output should contain
       """
       ssh -t 1.2.3.4 "cd /var/apps/slots; RAILS_ENV=staging rails c"
       """
 
+  Scenario: Override default location specified for server
+    When I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run --directory /var/www slots:staging`
+    Then the output should contain
+      """
+      ssh -t 1.2.3.4 "cd /var/www; RAILS_ENV=staging bash"
+      """

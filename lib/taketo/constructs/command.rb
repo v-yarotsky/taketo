@@ -8,14 +8,15 @@ module Taketo
 
       attr_accessor :command, :description
       
-      def render(server)
-        %Q[#{location(server)} #{environment_variables(server)} #{command}].strip.squeeze(" ")
+      def render(server, options = {})
+        %Q[#{location(server, options)} #{environment_variables(server)} #{command}].strip.squeeze(" ")
       end
 
       private
 
-      def location(server)
-        %Q[cd #{shellescape server.default_location};] if server.default_location
+      def location(server, options = {})
+        directory = options.fetch(:directory) { server.default_location }
+        %Q[cd #{shellescape directory};] if directory
       end
 
       def environment_variables(server)

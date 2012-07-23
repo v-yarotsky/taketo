@@ -17,10 +17,16 @@ describe "Command" do
   end
 
   describe "#render" do
+    let(:server) { mock(:Server, :environment_variables => { :FOO => "bar baz" }, :default_location => "/var/apps/the app") }
+
     it "should pick up server's environment variables and location" do
-      server = mock(:Server, :environment_variables => { :FOO => "bar baz" }, :default_location => "/var/apps/the app")
       cmd.command = "rails c"
       cmd.render(server).should == "cd /var/apps/the\\ app; FOO=bar\\ baz rails c"
+    end
+
+    it "should let user override default directory" do
+      cmd.command = "rails c"
+      cmd.render(server, :directory => "/var/qux").should == "cd /var/qux; FOO=bar\\ baz rails c"
     end
   end
 end

@@ -19,14 +19,13 @@ describe "SSH Command" do
   let(:ssh_command) { SSHCommand.new(server) }
 
   it "should compose command based on provided server object" do
-    command.should_receive(:render).with(server).and_return("foobar")
-    ssh_command.render(command).should == %q[ssh -t -p 22 deployer@1.2.3.4 "foobar"]
+    ssh_command.render("foobar").should == %q[ssh -t -p 22 deployer@1.2.3.4 "foobar"]
   end
 
   it "should ignore absent parts" do
     server.stub(:port => nil)
     server.stub(:username => nil)
-    ssh_command.render(command).should == %q[ssh -t 1.2.3.4 "the_command"]
+    ssh_command.render("foobar").should == %q[ssh -t 1.2.3.4 "foobar"]
   end
 
   it "should require host" do

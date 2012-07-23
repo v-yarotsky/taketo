@@ -45,6 +45,11 @@ def parse_options
       options[:command] = c
     end
 
+    opts.on("-d DIRECTORY", "--directory", "Directory on destination server to cd to") do |d|
+      raise OptionParser::MissingArgument if String(d).strip.empty?
+      options[:directory] = d
+    end
+
     opts.on("-v", "--view", "Show config contents and exit") do |v|
       options[:view] = v
     end
@@ -87,14 +92,14 @@ begin
   destination_path = ARGV.shift.to_s
   resolver         = DestinationResolver.new(config, destination_path)
 
-  if options[:view]
+  if options.delete(:view)
     node = resolver.get_node
     puts ConfigPrinter.new.render(node).chomp
   else
     server = resolver.resolve
 
     server_command = remote_command(server, options)
-    command_to_execute = Commands::SSHCommand.new(server).render(server_command)
+    command_to_execute = Commands::SSHCommand.new(server).render(server_command.render(server, options))
 
     if options[:dry_run]
       puts command_to_execute

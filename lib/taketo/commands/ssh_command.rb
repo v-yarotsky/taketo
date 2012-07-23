@@ -12,8 +12,8 @@ module Taketo
         @environment = @server.environment
       end
 
-      def render(command)
-        %Q[ssh -t #{port} #{username}#{host} "#{command.render(@server)}"].squeeze(" ")
+      def render(rendered_command)
+        %Q[ssh -t #{port} #{username}#{host} "#{rendered_command}"].squeeze(" ")
       end
 
       def host
