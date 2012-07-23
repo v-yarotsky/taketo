@@ -1,34 +1,22 @@
 require File.expand_path('../../../../spec_helper', __FILE__)
+require 'support/helpers/construct_spec_helper'
 require 'taketo/constructs/environment'
 
 include Taketo
 
 describe "Environment" do
-  let(:environment) { Taketo::Constructs::Environment.new(:foo) }
+  subject { Taketo::Constructs::Environment.new(:foo) }
 
   it "should have name" do
-    environment.name.should == :foo
+    subject.name.should == :foo
   end
 
-  describe "#append_server" do
-    let(:server) { mock(:Server, :name => :foo).as_null_object }
+  it_behaves_like "a construct with nodes", :servers, :server
 
-    it "should add a server to environment's servers collection" do
-      environment.append_server(server)
-      environment.servers.should include(server)
-    end
-
-    it "should set environment attribute on a server to self" do
-      server.should_receive(:environment=).with(environment)
-      environment.append_server(server)
-    end
-  end
-
-  describe "#find_server" do
-    it "should find server by name" do
-      environment.servers.should_receive(:find_by_name).with(:foo).and_return(:bar)
-      environment.find_server(:foo).should == :bar
-    end
+  specify "#append_server should set environment attribute on a server to self" do
+    server = mock(:Server, :name => :foo)
+    server.should_receive(:environment=).with(subject)
+    subject.append_server(server)
   end
 end
 

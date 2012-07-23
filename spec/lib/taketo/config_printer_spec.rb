@@ -6,8 +6,9 @@ include Taketo
 describe "ConfigPrinter" do
   describe "#render" do
     it "should render based on node class name" do
-      printer.should_receive(:render_fixnum)
-      printer.render(1)
+      construct = stub(:Server, :node_type => :server)
+      printer.should_receive(:render_server)
+      printer.render(construct)
     end
   end
 

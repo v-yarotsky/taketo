@@ -1,30 +1,18 @@
 require File.expand_path('../../../../spec_helper', __FILE__)
+require 'support/helpers/construct_spec_helper'
 require 'taketo/constructs/config'
 
 include Taketo
 
 describe "Config" do
-  let(:config) { Taketo::Constructs::Config.new }
+  subject { Taketo::Constructs::Config.new }
 
-  describe "#append_project" do
-    it "should add project to config's projects collection" do
-      project = stub(:name => :foo)
-      config.append_project(project)
-      config.projects.should include(project)
-    end
-  end
-
-  describe "#find_project" do
-    it "should find project by name" do
-      config.projects.should_receive(:find_by_name).with(:foo).and_return(:bar)
-      config.find_project(:foo).should == :bar
-    end
-  end
+  it_behaves_like "a construct with nodes", :projects, :project
 
   it "should set default_destination" do
-    config.default_destination.should be_nil
-    config.default_destination = "foo:bar:baz"
-    config.default_destination.should == "foo:bar:baz"
+    subject.default_destination.should be_nil
+    subject.default_destination = "foo:bar:baz"
+    subject.default_destination.should == "foo:bar:baz"
   end
 end
 

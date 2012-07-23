@@ -10,7 +10,7 @@ module Taketo
     end
 
     def render(object)
-      method = "render_#{object.class.name.gsub(/[\w:]*::/, '').downcase}"
+      method = "render_#{object.node_type}"
       send(method, object)
     end
 

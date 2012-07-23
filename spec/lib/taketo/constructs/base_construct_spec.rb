@@ -40,6 +40,45 @@ describe "BaseConstruct" do
       end
     end
   end
+
+  describe "#node_type" do
+    it "should return demodulized snake-cased class name" do
+      construct.node_type.should == :test_construct
+    end
+  end
+
+  describe "nodes" do
+    class TestConstruct2 < Constructs::BaseConstruct
+      has_nodes :foos, :foo
+    end
+
+    let(:construct) { TestConstruct2.new(:node_name) }
+
+    let(:foo) { stub(:name => :bar) }
+
+    describe ".has_nodes" do
+      it "should define add node type to class's node_types" do
+        TestConstruct2.node_types.should include(:foos)
+      end
+
+      it "should make nodes accessible via added methods" do
+        construct.append_foo(foo)
+        construct.foos.should include(foo)
+        construct.find_foo(:bar).should == foo
+      end
+    end
+
+    describe "#nodes" do
+      it "should return nodes collection by plural name" do
+        construct.append_foo(foo)
+        construct.nodes(:foos).should include(foo)
+      end
+
+      it "should raise NodesNotDefinedError if non-specified node requested" do
+        expect { construct.nodes(:bars) }.to raise_error(NodesNotDefinedError, /bars/)
+      end
+    end
+  end
 end
 
 
