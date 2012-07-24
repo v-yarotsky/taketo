@@ -6,11 +6,11 @@ module Taketo
     class Path
       PATH = [[:project, :projects], [:environment, :environments], [:server, :servers]].freeze
 
-      class PathNode < Struct.new(:singular, :plural, :name); end
+      class PathNode < Struct.new(:name, :singular, :plural); end
 
       def initialize(names)
         names = names.split(":").map(&:to_sym)
-        @path = PATH.each_with_index.map { |n, i| PathNode.new(n[0], n[1], names[i]) }
+        @path = PATH.each_with_index.map { |n, i| PathNode.new(names[i], *n) }
       end
 
       def specified
@@ -61,7 +61,7 @@ module Taketo
     def handling_failure(message = nil)
       yield
     rescue KeyError, NonExistentDestinationError
-      raise NonExistentDestinationError, message || $!
+      raise NonExistentDestinationError, message || $!.message
     end
   end
 end
