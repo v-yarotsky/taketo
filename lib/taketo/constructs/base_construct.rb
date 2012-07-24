@@ -36,7 +36,7 @@ module Taketo
           if block_given?
             yield
           else
-            raise KeyError, "#{singular_node_name} #{name} not found for #{node_type} #{name}"
+            raise KeyError, "#{singular_node_name} #{name} not found for #{node_type} #{self.name}"
           end
       end
 

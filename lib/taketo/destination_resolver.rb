@@ -1,126 +1,67 @@
 module Taketo
-  class ConfigError < StandardError; end
   class AmbiguousDestinationError < StandardError; end
   class NonExistentDestinationError < StandardError; end
 
   class DestinationResolver
-    def initialize(config, path)
-      @config = config
-      set_destination(path)
-    end
+    class Path
+      PATH = [[:project, :projects], [:environment, :environments], [:server, :servers]].freeze
 
-    def resolve
-      case @path.size
-      when 3 then resolve_by_three_segments
-      when 2 then resolve_by_two_segments
-      when 1 then resolve_by_one_segment
-      when 0 then resolve_with_no_segments
+      class PathNode < Struct.new(:singular, :plural, :name); end
+
+      def initialize(names)
+        names = names.split(":").map(&:to_sym)
+        @path = PATH.each_with_index.map { |n, i| PathNode.new(*n, names[i]) }
+      end
+
+      def specified
+        @path.reject { |n| n.name.nil? }
+      end
+
+      def unspecified
+        @path - specified
       end
     end
 
-    def get_node
-      case @path.size
-      when 3 then get_server(*@path)
-      when 2 then get_project_and_environment(*@path).last
-      when 1 then get_project(*@path)
-      when 0 then @config
+    def initialize(config, path)
+      @config = config
+      if String(path).empty? && !String(config.default_destination).empty?
+        path = config.default_destination
+      end
+      @path = Path.new(path)
+    end
+
+    def resolve
+      node = get_node
+      get_only_server(node)
+    end
+
+    def get_node(node = @config, remaining_path = @path.specified)
+      handling_failure do
+        return node if remaining_path.empty?
+        next_in_path = remaining_path.shift
+        node = node.find(next_in_path.singular, next_in_path.name)
+        get_node(node, remaining_path)
       end
     end
 
     private
 
-    def set_destination(path)
-      @path_str = path
-      @path = String(path).split(":").map(&:to_sym)
-    end
-
-    def resolve_by_three_segments
-      get_server(*@path)
-    end
-
-    def resolve_by_two_segments
-      project, environment = get_project_and_environment(*@path)
-      get_only_server_for_project_and_environment(project, environment)
-    end
-
-    def resolve_by_one_segment
-      project = get_project(*@path)
-      get_only_server_for_project(project)
-    end
-
-    def resolve_with_no_segments
-      unless @config.default_destination.nil?
-        set_destination(@config.default_destination.to_s)
-        return resolve
-      end
-      get_only_server
-    end
-
-    def get_server(project_name, environment_name, server_name)
-      handling_failure("There is no such project, environment or server for destination: #@path_str") do
-        project, environment = get_project_and_environment(project_name, environment_name)
-        environment.servers[server_name]
-      end
-    end
-
-    def get_project_and_environment(project_name, environment_name)
-      handling_failure("There is no such project - environment pair: #@path_str") do
-        project = get_project(project_name)
-        environment = project.environments[environment_name]
-        [project, environment]
-      end
-    end
-
-    def get_only_server_for_project_and_environment(project, environment)
-      if environment.servers.one?
-        return environment.servers.first
+    def get_only_server(node, remaining_path = @path.unspecified)
+      return node if remaining_path.empty?
+      next_in_path = remaining_path.shift
+      nested_nodes = node.nodes(next_in_path.plural)
+      if nested_nodes.one?
+        node = nested_nodes.first
+        get_only_server(node, remaining_path)
       else
-        raise_server_ambiguous!(project, environment)
+        raise AmbiguousDestinationError, "There are multiple #{next_in_path.plural} for #{node.node_type} #{node.name}: #{nested_nodes.map(&:name).join(", ")}"
       end
     end
 
-    def get_project(project_name)
-      handling_failure("There is no such project: #@path_str") do
-        @config.projects[project_name]
-      end
-    end
-
-    def get_only_server_for_project(project)
-      if project.environments.one?
-        environment = project.environments.first
-        get_only_server_for_project_and_environment(project, environment)
-      else
-        raise_environment_ambiguous!(project)
-      end
-    end
-
-    def get_only_server
-      if @config.projects.one?
-        project = @config.projects.first
-        get_only_server_for_project(project)
-      else
-        raise_project_ambiguous!
-      end
-    end
-
-    def raise_project_ambiguous!
-      raise AmbiguousDestinationError, "There are multiple projects #{@config.projects.map(&:name).join(", ")}"
-    end
-
-    def raise_environment_ambiguous!(project)
-      raise AmbiguousDestinationError, "There are multiple environments for project #{project.name}: " \
-        "#{project.environments.map(&:name).join(", ")}"
-    end
-
-    def raise_server_ambiguous!(project, environment)
-      raise AmbiguousDestinationError, "There are multiple servers for project #{project.name} " \
-        "in environment #{environment.name}: #{environment.servers.map(&:name).join(", ")}"
-    end
-
-    def handling_failure(message)
+    def handling_failure(message = nil)
       yield
     rescue KeyError, NonExistentDestinationError
-      raise NonExistentDestinationError, message
+      raise NonExistentDestinationError, message || $!
     end
   end
 end
