@@ -33,6 +33,26 @@ describe "ConfigValidator" do
     expect { validator(config).validate! }.not_to raise_error ConfigError, /environment_2/i
   end
 
+  describe "global server aliases" do
+    let(:server_1) { stub(:Server) }
+    let(:server_2) { stub(:Server) }
+    let(:environment) { stub(:Environment, :name => :environment, :servers => [server_1, server_2]) }
+    let(:project) { stub(:Project, :name => :project, :environments => [environment]) }
+    let(:config) { stub(:Config, :projects => [project]) }
+
+    it "should not raise error if unique" do
+      server_1.stub(:global_alias => :foo)
+      server_2.stub(:global_alias => :bar)
+      expect { validator(config).validate! }.not_to raise_error(ConfigError, /alias/i)
+    end
+
+    it "should raise error unless unique" do
+      server_1.stub(:global_alias => :foo)
+      server_2.stub(:global_alias => :foo)
+      expect { validator(config).validate! }.to raise_error(ConfigError, /alias/i)
+    end
+  end
+
   def validator(config)
     Taketo::ConfigValidator.new(config)
   end

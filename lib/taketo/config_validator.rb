@@ -10,6 +10,7 @@ module Taketo
       ensure_projects_exist
       ensure_environments_exist
       ensure_servers_exist
+      ensure_global_server_aliases_unique
     end
 
     private
@@ -36,6 +37,15 @@ module Taketo
           raise ConfigError,
             "There is no servers for the following environments in project #{project.name}: #{environments_without_servers.map(&:name).join(", ")}"
         end
+      end
+    end
+
+    def ensure_global_server_aliases_unique
+      aliases = @config.projects.map { |p| p.environments.map { |e| e.servers.map(&:global_alias) } }.flatten
+      non_uniq_aliases = aliases.reject(&:nil?).group_by(&:to_sym).reject { |k, v| v.size == 1 }
+      unless non_uniq_aliases.empty?
+        raise ConfigError,
+          "There are duplicates among global server aliases: #{non_uniq_aliases.keys.join(", ")}"
       end
     end
   end

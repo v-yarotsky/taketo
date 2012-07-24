@@ -107,6 +107,10 @@ describe "DSL" do
           it_behaves_like "an attribute", :env, :server, :env, { :FOO => "bar" }
         end
 
+        describe "#global_alias" do
+          it_behaves_like "an attribute", :global_alias, :server, :global_alias=, "foobared"
+        end
+
         describe "#command" do
           it_behaves_like "a scope", :command, :server
 

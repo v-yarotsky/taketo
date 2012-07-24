@@ -7,11 +7,22 @@ module Taketo
     class BaseConstruct
       attr_reader :name
 
-      class << self; attr_reader :node_types; end
-
+      ##
+      # Adds nodes collections to the construct
+      # 
+      # Example:
+      #
+      # class Bar < BaseConstruct
+      #   has_nodes :foos, :foo
+      # end
+      #
+      # bar = Bar.new
+      # bar.foos                                  # => foos collection
+      # bar.append_foo(foo)                       # adds node the collection
+      # bar.find_foo(:foo_name)                   # find foo in foos collection by name
+      #
       def self.has_nodes(name_plural, name_singular)
-        @node_types ||= []
-        @node_types << name_plural
+        self.node_types << name_plural
 
         define_method "append_#{name_singular}" do |object|
           nodes(name_plural) << object
@@ -24,6 +35,10 @@ module Taketo
         define_method name_plural do
           nodes(name_plural)
         end
+      end
+
+      def self.node_types
+        @node_types ||= []
       end
 
       def initialize(name)

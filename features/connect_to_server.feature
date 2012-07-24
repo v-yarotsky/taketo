@@ -110,3 +110,24 @@ Feature:
       """
       ssh -t 2.3.4.5 "RAILS_ENV=staging bash"
       """
+
+  Scenario: Unique server alias
+    When I have the following config in "/tmp/taketo_test_cfg.rb"
+      """
+      project :slots do
+        environment :staging do
+          server :s1 do
+            host "1.2.3.4"
+          end
+          server :s2 do
+            global_alias :s2
+            host "2.3.4.5"
+          end
+        end
+      end
+      """
+    And I successfully run `taketo s2 --config=/tmp/taketo_test_cfg.rb --dry-run`
+    Then the output should contain
+      """
+      ssh -t 2.3.4.5 "RAILS_ENV=staging bash"
+      """

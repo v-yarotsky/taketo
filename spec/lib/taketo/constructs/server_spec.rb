@@ -15,6 +15,7 @@ describe "Server" do
   it { should have_accessor(:port) }
   it { should have_accessor(:username) }
   it { should have_accessor(:default_location) }
+  it { should have_accessor(:global_alias) }
 
   describe "#environment=" do
     let(:environment) { environment = stub(:Environment, :name => :the_environment) }

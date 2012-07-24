@@ -61,6 +61,7 @@ module Taketo
     define_attribute(:port, :server)                { |port_number| current_scope_object.port = port_number                }
     define_attribute(:user, :server)                { |username|    current_scope_object.username = username               }
     define_attribute(:location, :server)            { |path|        current_scope_object.default_location = path           }
+    define_attribute(:global_alias,:server)         { |alias_name|  current_scope_object.global_alias = alias_name         }
     define_attribute(:env, :server)                 { |env|         current_scope_object.env(env)                          }
     define_attribute(:execute, :command)            { |command|     current_scope_object.command = command                 }
     define_attribute(:desc, :command)               { |description| current_scope_object.description = description         }
