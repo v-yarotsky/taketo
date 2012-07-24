@@ -61,6 +61,7 @@ Destination resolving works intelligently. Given the following config:
     end
     environment :production do
       server :ps1 do
+        global_alias :mps1
         host "3.4.5.6"
       end
     end
@@ -77,6 +78,7 @@ Destination resolving works intelligently. Given the following config:
 
 ```taketo my_project:staging``` will ssh to s1 with host = 1.2.3.4  
 ```taketo my_project2``` will ssh to s2 with host = 2.3.4.5   
+```taketo mps2``` will ssh to s2 with host = 3.4.5.6 - note the use of global alias
 
 Note that default destination can be specified via ```default_destination``` config option
 
@@ -89,6 +91,10 @@ To-Do:
 
 The Changelog:
 --------------
+
+### v0.0.5 (24.07.2012) ###
+* Add --directory option, which enables specifying directory on remote server upon launch
+* Add global_alias config option for servers
 
 ### v0.0.4 (22.07.2012) ###
 * Add --view option. Now you can view your config quickly: ```taketo my_project:environment:server --view``` or just ```taketo --view```
