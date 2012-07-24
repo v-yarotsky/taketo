@@ -78,7 +78,7 @@ Destination resolving works intelligently. Given the following config:
 
 ```taketo my_project:staging``` will ssh to s1 with host = 1.2.3.4  
 ```taketo my_project2``` will ssh to s2 with host = 2.3.4.5   
-```taketo mps2``` will ssh to s2 with host = 3.4.5.6 - note the use of global alias
+```taketo mps1``` will ssh to ps1 with host = 3.4.5.6 - note the use of global alias
 
 Note that default destination can be specified via ```default_destination``` config option
 
