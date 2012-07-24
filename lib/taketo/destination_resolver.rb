@@ -10,7 +10,7 @@ module Taketo
 
       def initialize(names)
         names = names.split(":").map(&:to_sym)
-        @path = PATH.each_with_index.map { |n, i| PathNode.new(*n, names[i]) }
+        @path = PATH.each_with_index.map { |n, i| PathNode.new(n[0], n[1], names[i]) }
       end
 
       def specified
