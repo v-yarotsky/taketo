@@ -31,7 +31,7 @@ def parse_options
 
   OptionParser.new do |opts|
     opts.banner = "Usage: taketo [destination] [options]"
-    opts.version = VERSION
+    opts.version = ::Taketo::VERSION
     opts.separator ""
     opts.separator "Common options:"
 
