@@ -27,12 +27,12 @@ module Taketo
       if String(path).empty? && !String(config.default_destination).empty?
         path = config.default_destination
       end
+      @path_str = path.dup
       @path = Path.new(path)
     end
 
     def resolve
-      node = get_node
-      get_only_server(node)
+      resolve_by_global_alias || resolve_by_path
     end
 
     def get_node(node = @config, remaining_path = @path.specified)
@@ -45,6 +45,16 @@ module Taketo
     end
 
     private
+
+    def resolve_by_global_alias
+      aliases_and_servers = Hash[servers_with_aliases]
+      aliases_and_servers[@path_str.to_sym] unless String(@path_str).empty?
+    end
+
+    def resolve_by_path
+      node = get_node
+      get_only_server(node)
+    end
 
     def get_only_server(node, remaining_path = @path.unspecified)
       return node if remaining_path.empty?
@@ -62,6 +72,10 @@ module Taketo
       yield
     rescue KeyError, NonExistentDestinationError
       raise NonExistentDestinationError, message || $!.message
+    end
+
+    def servers_with_aliases
+      @config.nodes(:projects).map { |p| p.nodes(:environments).map { |e| e.nodes(:servers).reject { |s| s.global_alias.nil? }.map { |s| [s.global_alias, s] } } }.flatten(2)
     end
   end
 end

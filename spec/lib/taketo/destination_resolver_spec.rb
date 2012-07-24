@@ -18,6 +18,10 @@ describe "DestinationResolver" do
     def nodes(type)
       @nodes
     end
+
+    def global_alias
+      :the_alias if name == :s1 && node_type == :server
+    end
   end
 
   [:project, :environment, :server].each do |node_type|
@@ -39,8 +43,8 @@ describe "DestinationResolver" do
   let(:environment3) { environment(:corge, server3, server4) }
   let(:project3) { environment(:quux, environment3) }
 
-  let(:environment4) { environment(:garply, anything, anything) }
-  let(:environment5) { environment(:waldo, anything) }
+  let(:environment4) { environment(:garply, server(:s5), server(:s6)) }
+  let(:environment5) { environment(:waldo, server(:s7)) }
   let(:project4) { project(:grault, environment4, environment5) }
 
   let(:config) { TestNode.new(:config, nil, project1, project2, project3, project4) }
@@ -149,6 +153,12 @@ describe "DestinationResolver" do
         config.stub(:default_destination => "foo:bar:s1")
         resolver(config, "").resolve.should == server1
       end
+    end
+  end
+
+  context "when there is global matching server alias" do
+    it "should resolve by alias" do
+      resolver(config, "the_alias").resolve.should == server1
     end
   end
 

@@ -120,13 +120,13 @@ Feature:
             host "1.2.3.4"
           end
           server :s2 do
-            global_alias :s2
+            global_alias :ss2
             host "2.3.4.5"
           end
         end
       end
       """
-    And I successfully run `taketo s2 --config=/tmp/taketo_test_cfg.rb --dry-run`
+    And I successfully run `taketo ss2 --config=/tmp/taketo_test_cfg.rb --dry-run`
     Then the output should contain
       """
       ssh -t 2.3.4.5 "RAILS_ENV=staging bash"
