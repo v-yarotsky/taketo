@@ -26,7 +26,8 @@ module Taketo
             raise ScopeError,
               "#{name} can't be defined in #{current_scope} scope"
           end
-          instance_exec(*args, blk, &block)
+          args.push blk
+          instance_exec(*args, &block)
         end
       end
     end

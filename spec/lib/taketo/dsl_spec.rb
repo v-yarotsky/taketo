@@ -97,7 +97,7 @@ describe "DSL" do
 
       it "should raise ConfigError if non-existent config included" do
         dsl(scopes[:server], factory.create(:server)) do |c|
-          expect { c.include_shared_server_config(:foo) }.to raise_error(DSL::ConfigError)
+          expect { c.include_shared_server_config(:foo) }.to raise_error(Taketo::DSL::ConfigError)
         end
       end
     end
