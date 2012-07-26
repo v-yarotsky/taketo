@@ -145,6 +145,10 @@ describe "DSL" do
           it_behaves_like "a scoped method", :global_alias, :server, :global_alias=, "foobared"
         end
 
+        describe "#identity_file" do
+          it_behaves_like "a scoped method", :identity_file, :server, :identity_file=, "/home/gor/.ssh/qqq"
+        end
+
         describe "#command" do
           it_behaves_like "a scope", :command, :server
 

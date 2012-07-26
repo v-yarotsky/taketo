@@ -59,15 +59,16 @@ module Taketo
     define_scope :server, :environment, :default_name => :default
     define_scope :command, :server
 
-    define_method_in_scope(:default_destination, :config) { |destination| current_scope_object.default_destination = destination }
-    define_method_in_scope(:host, :server)                { |hostname|    current_scope_object.host = hostname                   }
-    define_method_in_scope(:port, :server)                { |port_number| current_scope_object.port = port_number                }
-    define_method_in_scope(:user, :server)                { |username|    current_scope_object.username = username               }
-    define_method_in_scope(:location, :server)            { |path|        current_scope_object.default_location = path           }
-    define_method_in_scope(:global_alias,:server)         { |alias_name|  current_scope_object.global_alias = alias_name         }
-    define_method_in_scope(:env, :server)                 { |env|         current_scope_object.env(env)                          }
-    define_method_in_scope(:execute, :command)            { |command|     current_scope_object.command = command                 }
-    define_method_in_scope(:desc, :command)               { |description| current_scope_object.description = description         }
+    define_method_in_scope(:default_destination, :config) { |destination|   current_scope_object.default_destination = destination }
+    define_method_in_scope(:host, :server)                { |hostname|      current_scope_object.host = hostname                   }
+    define_method_in_scope(:port, :server)                { |port_number|   current_scope_object.port = port_number                }
+    define_method_in_scope(:user, :server)                { |username|      current_scope_object.username = username               }
+    define_method_in_scope(:location, :server)            { |path|          current_scope_object.default_location = path           }
+    define_method_in_scope(:global_alias,:server)         { |alias_name|    current_scope_object.global_alias = alias_name         }
+    define_method_in_scope(:env, :server)                 { |env|           current_scope_object.env(env)                          }
+    define_method_in_scope(:identity_file, :server)       { |identity_file| current_scope_object.identity_file = identity_file     }
+    define_method_in_scope(:execute, :command)            { |command|       current_scope_object.command = command                 }
+    define_method_in_scope(:desc, :command)               { |description|   current_scope_object.description = description         }
 
     define_method_in_scope(:shared_server_config, :config) do |name, blk|
       @shared_server_configs.store(name.to_sym, blk)

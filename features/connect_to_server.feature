@@ -66,3 +66,21 @@ Feature:
       ssh -t 2.3.4.5 "RAILS_ENV=staging bash"
       """
 
+  Scenario: SSH key file
+    When I have the following config in "/tmp/taketo_test_cfg.rb"
+      """
+      project :slots do
+        environment :staging do
+          server do
+            identity_file "/home/gor/.ssh/foo bar"
+            host "2.3.4.5"
+          end
+        end
+      end
+      """
+    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run`
+    Then the output should contain
+      """
+      ssh -t -i /home/gor/.ssh/foo\ bar 2.3.4.5 "RAILS_ENV=staging bash"
+      """
+

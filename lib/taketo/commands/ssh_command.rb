@@ -13,7 +13,7 @@ module Taketo
       end
 
       def render(rendered_command)
-        %Q[ssh -t #{port} #{username}#{host} "#{rendered_command}"].squeeze(" ")
+        %Q[ssh -t #{port} #{identity_file} #{username}#{host} "#{rendered_command}"].squeeze(" ")
       end
 
       def host
@@ -29,6 +29,10 @@ module Taketo
 
       def username
         %Q[#{shellescape @server.username}@] if @server.username
+      end
+
+      def identity_file
+        %Q[-i #{shellescape @server.identity_file}] if @server.identity_file
       end
     end
   end
