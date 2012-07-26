@@ -18,6 +18,8 @@ describe "NamedNodesCollection" do
     collection.map(&:name).should == [:foo, :bar]
     collection.length.should == 2
     collection.size.should == 2
+    collection.first.should == node1
+    collection.last.should == node2
   end
 
   it "should raise error if element not found" do

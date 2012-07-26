@@ -2,7 +2,8 @@ require 'taketo/constructs_factory'
 
 module Taketo
   class DSL
-    class ScopeError < StandardError; end
+    class ScopeError < StandardError;  end
+    class ConfigError < StandardError; end
 
     class << self
       def define_scope(scope, parent_scope, options = {})
@@ -19,23 +20,24 @@ module Taketo
         end
       end
 
-      def define_attribute(name, parent_scope, &block)
-        define_method name do |attribute|
+      def define_method_in_scope(name, parent_scope, &block)
+        define_method name do |*args, &blk|
           unless current_scope?(parent_scope)
             raise ScopeError,
               "#{name} can't be defined in #{current_scope} scope"
           end
-          instance_exec(attribute, &block)
+          instance_exec(*args, blk, &block)
         end
       end
     end
 
-    attr_reader :current_scope_object, :config
+    attr_reader :current_scope_object, :config, :shared_server_configs
 
     def initialize(factory = Taketo::ConstructsFactory.new)
       @factory = factory
       @scope = [:config]
       @config = @current_scope_object = factory.create_config
+      @shared_server_configs = Hash.new { |k| raise ConfigError, "Shared server config '#{k}' is not defined!"}
     end
 
     def configure(filename = nil, &block)
@@ -56,15 +58,23 @@ module Taketo
     define_scope :server, :environment, :default_name => :default
     define_scope :command, :server
 
-    define_attribute(:default_destination, :config) { |destination| current_scope_object.default_destination = destination }
-    define_attribute(:host, :server)                { |hostname|    current_scope_object.host = hostname                   }
-    define_attribute(:port, :server)                { |port_number| current_scope_object.port = port_number                }
-    define_attribute(:user, :server)                { |username|    current_scope_object.username = username               }
-    define_attribute(:location, :server)            { |path|        current_scope_object.default_location = path           }
-    define_attribute(:global_alias,:server)         { |alias_name|  current_scope_object.global_alias = alias_name         }
-    define_attribute(:env, :server)                 { |env|         current_scope_object.env(env)                          }
-    define_attribute(:execute, :command)            { |command|     current_scope_object.command = command                 }
-    define_attribute(:desc, :command)               { |description| current_scope_object.description = description         }
+    define_method_in_scope(:default_destination, :config) { |destination| current_scope_object.default_destination = destination }
+    define_method_in_scope(:host, :server)                { |hostname|    current_scope_object.host = hostname                   }
+    define_method_in_scope(:port, :server)                { |port_number| current_scope_object.port = port_number                }
+    define_method_in_scope(:user, :server)                { |username|    current_scope_object.username = username               }
+    define_method_in_scope(:location, :server)            { |path|        current_scope_object.default_location = path           }
+    define_method_in_scope(:global_alias,:server)         { |alias_name|  current_scope_object.global_alias = alias_name         }
+    define_method_in_scope(:env, :server)                 { |env|         current_scope_object.env(env)                          }
+    define_method_in_scope(:execute, :command)            { |command|     current_scope_object.command = command                 }
+    define_method_in_scope(:desc, :command)               { |description| current_scope_object.description = description         }
+
+    define_method_in_scope(:shared_server_config, :config) do |name, blk|
+      @shared_server_configs.store(name.to_sym, blk)
+    end
+
+    define_method_in_scope(:include_shared_server_config, :server) do |name, *args|
+      instance_exec(*args, &shared_server_configs[name])
+    end
 
     private
 

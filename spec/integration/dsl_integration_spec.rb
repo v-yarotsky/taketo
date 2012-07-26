@@ -5,6 +5,13 @@ describe "Taketo DSL" do
   it "should parse config and instantiate objects" do
     factory = Taketo::ConstructsFactory.new
     config = Taketo::DSL.new(factory).configure do
+      shared_server_config(:commands) do
+        command :console do
+          execute "rails c"
+          desc "Rails console"
+        end
+      end
+
       project :slots do
         environment :staging do
           server do
@@ -12,9 +19,7 @@ describe "Taketo DSL" do
             user "deployer"
             location "/var/app"
             env :FOO => "bar"
-            command :console do
-              execute "rails c"
-            end
+            include_shared_server_config :commands
           end
         end
 
@@ -26,6 +31,7 @@ describe "Taketo DSL" do
             server server_name do
               host host_name
               location "/var/app"
+              include_shared_server_config :commands
             end
           end
         end
@@ -46,11 +52,15 @@ describe "Taketo DSL" do
     staging_server.username.should == "deployer"
     staging_server.default_location.should == "/var/app"
     staging_server.environment_variables.should == { :RAILS_ENV => "staging", :FOO => "bar" }
-    staging_server.commands.length.should == 1
-    staging_server.commands[:console].command.should == "rails c"
 
     production = project.environments[:production]
     production.servers.length.should == 2
+    production_server_1, production_server_2 = production.servers.first, production.servers.last
+
+    [staging_server, production_server_1, production_server_2].each do |s|
+      s.commands.length.should == 1
+      s.commands[:console].command.should == "rails c"
+    end
   end
 end
 

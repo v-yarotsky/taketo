@@ -7,7 +7,7 @@ module Taketo
       include Enumerable
       extend Forwardable
 
-      def_delegators :@nodes, :each, :length, :size, :empty?
+      def_delegators :@nodes, :each, :length, :size, :empty?, :first, :last
 
       def initialize(nodes = [])
         @nodes = nodes

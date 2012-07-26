@@ -48,7 +48,7 @@ describe "DSL" do
     end                                                                                        # end
   end
 
-  shared_examples "an attribute" do |attribute_name, parent_scope_name, parent_scope_method, example_value|
+  shared_examples "a scoped method" do |attribute_name, parent_scope_name, parent_scope_method, example_value|
     parent_scope = scopes[parent_scope_name]
 
     it { should be_appropriate_construct(attribute_name, example_value).under(parent_scope) }
@@ -66,7 +66,41 @@ describe "DSL" do
   end
 
   describe "#default_destination" do
-    it_behaves_like "an attribute", :default_destination, :config, :default_destination=, "foo:bar:baz"
+    it_behaves_like "a scoped method", :default_destination, :config, :default_destination=, "foo:bar:baz"
+  end
+
+  describe "Shared server config" do
+    specify "#shared_server_config should store a block" do
+      dsl(scopes[:config], factory.create(:config)) do |c|
+        cfg = proc { any_method_call_here }
+        c.shared_server_config(:foo, &cfg)
+        c.shared_server_configs[:foo].should == cfg
+      end
+    end
+
+    describe "#include_shared_server_config" do
+      it "should execute the block on dsl object in server scope" do
+        dsl(scopes[:server], factory.create(:server)) do |c|
+          c.stub(:shared_server_configs => { :foo => proc { any_method_call_here } })
+          c.should_receive(:any_method_call_here)
+          c.include_shared_server_config(:foo)
+        end
+      end
+
+      it "should accept arguments" do
+        dsl(scopes[:server], factory.create(:server)) do |c|
+          c.stub(:shared_server_configs => { :foo => proc { |qux| any_method_call_here(qux) } })
+          c.should_receive(:any_method_call_here).with(321)
+          c.include_shared_server_config(:foo, 321)
+        end
+      end
+
+      it "should raise ConfigError if non-existent config included" do
+        dsl(scopes[:server], factory.create(:server)) do |c|
+          expect { c.include_shared_server_config(:foo) }.to raise_error(DSL::ConfigError)
+        end
+      end
+    end
   end
 
   describe "#project" do
@@ -88,38 +122,38 @@ describe "DSL" do
         end
 
         describe "#host" do
-          it_behaves_like "an attribute", :host, :server, :host=, "127.0.0.2"
+          it_behaves_like "a scoped method", :host, :server, :host=, "127.0.0.2"
         end
 
         describe "#port" do
-          it_behaves_like "an attribute", :port, :server, :port=, 4096
+          it_behaves_like "a scoped method", :port, :server, :port=, 4096
         end
 
         describe "#user" do
-          it_behaves_like "an attribute", :user, :server, :username=, "deployer"
+          it_behaves_like "a scoped method", :user, :server, :username=, "deployer"
         end
 
         describe "#location" do
-          it_behaves_like "an attribute", :location, :server, :default_location=, "/var/app/"
+          it_behaves_like "a scoped method", :location, :server, :default_location=, "/var/app/"
         end
 
         describe "#env" do
-          it_behaves_like "an attribute", :env, :server, :env, { :FOO => "bar" }
+          it_behaves_like "a scoped method", :env, :server, :env, { :FOO => "bar" }
         end
 
         describe "#global_alias" do
-          it_behaves_like "an attribute", :global_alias, :server, :global_alias=, "foobared"
+          it_behaves_like "a scoped method", :global_alias, :server, :global_alias=, "foobared"
         end
 
         describe "#command" do
           it_behaves_like "a scope", :command, :server
 
           describe "#execute" do
-            it_behaves_like "an attribute", :execute, :command, :command=, "rails c"
+            it_behaves_like "a scoped method", :execute, :command, :command=, "rails c"
           end
 
           describe "#desc" do
-            it_behaves_like "an attribute", :desc, :command, :description=, "Run rails console"
+            it_behaves_like "a scoped method", :desc, :command, :description=, "Run rails console"
           end
         end
       end
