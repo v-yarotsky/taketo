@@ -38,7 +38,7 @@ module Taketo
       @factory = factory
       @scope = [:config]
       @config = @current_scope_object = factory.create_config
-      @shared_server_configs = Hash.new { |k| raise ConfigError, "Shared server config '#{k}' is not defined!"}
+      @shared_server_configs = Hash.new { |h, k| raise ConfigError, "Shared server config '#{k}' is not defined!"}
     end
 
     def configure(filename = nil, &block)
