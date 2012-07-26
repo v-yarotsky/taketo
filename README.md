@@ -82,7 +82,33 @@ Destination resolving works intelligently. Given the following config:
 
 Note that default destination can be specified via ```default_destination``` config option
 
-  
+You can use shared server configs to reduce duplication:
+
+```ruby
+  shared_server_config :my_staging do
+    command :console do
+      execute "rails c"
+      desc "Launch rails console"
+    end
+  end
+
+  project :my_project do
+    environment :staging do
+      server :s1 do
+        host "1.2.3.4"
+        include_shared_server_config(:my_staging)
+      end
+
+      server :s2 do
+        host :s2 do
+        include_shared_server_config(:my_staging)
+      end
+    end
+  end
+```
+
+This will give you ```console``` commands available both on s1 and s2  
+
 To-Do:
 ------
 
@@ -91,6 +117,10 @@ To-Do:
 
 The Changelog:
 --------------
+
+### v0.0.6 (26.07.2012) ###
+* Add identity_file server config option
+* Add shared server config support
 
 ### v0.0.5 (24.07.2012) ###
 * Add --directory option, which enables specifying directory on remote server upon launch
