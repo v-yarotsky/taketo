@@ -7,3 +7,4 @@ branches:
   only:
     - wip
     - master
+env: COVERAGE=true
