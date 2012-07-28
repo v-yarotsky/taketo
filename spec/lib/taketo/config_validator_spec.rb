@@ -16,7 +16,7 @@ describe "ConfigValidator" do
     config = stub(:projects => [project_1, project_2])
     expect { validator(config).validate! }.to raise_error ConfigError, /project_1/i
 
-    project_1.stub(:environments => { :e => stub })
+    project_1.stub(:environments => [stub])
     expect { validator(config).validate! }.not_to raise_error ConfigError, /project_1/i
   end
 

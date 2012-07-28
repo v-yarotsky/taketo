@@ -12,10 +12,10 @@ describe "DSL" do
     parent_scope = scopes[parent_scope_name]
 
     it { should enclose_scope(scope_name).under(parent_scope) }
-    it { should be_appropriate_construct(scope_name, :foo).under(parent_scope) }
+    it { should be_appropriate_construct(scope_name, :foo).with_block.under(parent_scope) }
 
     scopes.except(parent_scope_name).each do |inappropriate_scope|
-      it { should_not be_appropriate_construct(scope_name, :foo).under(inappropriate_scope) }
+      it { should_not be_appropriate_construct(scope_name, :foo).with_block.under(inappropriate_scope) }
     end
 
     it "should create a #{scope_name} and set it as current scope object" do # it "should create project and set it as current scope object"

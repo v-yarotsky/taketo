@@ -5,6 +5,10 @@ RSpec::Matchers.define :be_appropriate_construct do |construct, *args|
     @enclosing_scope = enclosing_scope
   end
 
+  chain(:with_block) do
+    @blk = Proc.new {}
+  end
+
   match do |actual|
     unless @enclosing_scope
       raise ArgumentError, "#under must be called to set enclosing scope"
@@ -13,7 +17,11 @@ RSpec::Matchers.define :be_appropriate_construct do |construct, *args|
     @result = true
     dsl(@enclosing_scope) do |c|
       begin
-        c.send(construct, *args) {} 
+        if @blk
+          c.send(construct, *args, &@blk)
+        else
+          c.send(construct, *args)
+        end
       rescue Taketo::DSL::ScopeError => e
         @result = false
       rescue
