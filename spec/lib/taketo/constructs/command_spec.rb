@@ -26,5 +26,17 @@ describe "Command" do
       subject.render(server, :directory => "/var/qux").should == "cd /var/qux; FOO=bar\\ baz rails c"
     end
   end
+
+  describe ".default" do
+    it "should return 'bash' command" do
+      Taketo::Constructs::Command.default.command.should == "bash"
+    end
+  end
+
+  describe ".explicit_command" do
+    it "should return given command string encapsulated" do
+      Taketo::Constructs::Command.explicit_command("qq").command.should == "qq"
+    end
+  end
 end
 

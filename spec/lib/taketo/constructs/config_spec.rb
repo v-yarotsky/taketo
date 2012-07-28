@@ -9,10 +9,6 @@ describe "Config" do
 
   it_behaves_like "a construct with nodes", :projects, :project
 
-  it "should set default_destination" do
-    subject.default_destination.should be_nil
-    subject.default_destination = "foo:bar:baz"
-    subject.default_destination.should == "foo:bar:baz"
-  end
+  it { should have_accessor(:default_destination) }
 end
 

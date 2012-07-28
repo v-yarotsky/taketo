@@ -1,6 +1,6 @@
 tmp/
 .DS_Store
-.tags
+.tags*
 .rvmrc
 .exrc
 nohup.out

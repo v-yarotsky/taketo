@@ -15,8 +15,20 @@ describe "Server" do
   it { should have_accessor(:port) }
   it { should have_accessor(:username) }
   it { should have_accessor(:default_location) }
+  it { should have_accessor(:default_command) }
   it { should have_accessor(:global_alias) }
   it { should have_accessor(:identity_file) }
+
+  module Taketo
+    module Constructs
+      Command = Class.new unless defined? Command
+    end
+  end
+
+  it "should have default command" do
+    Taketo::Constructs::Command.should_receive(:default).and_return(:qux)
+    subject.default_command.should == :qux
+  end
 
   describe "#environment=" do
     let(:environment) { environment = stub(:Environment, :name => :the_environment) }

@@ -39,7 +39,7 @@ def parse_options
       options[:config] = c
     end
 
-    opts.on("-c COMMAND", "--command", "Command to execute on destination server", 
+    opts.on("-c COMMAND", "--command", "Command to execute on destination server",
             "  (COMMAND either declared in config or passed as an argument)") do |c|
       raise OptionParser::MissingArgument if String(c).strip.empty?
       options[:command] = c
@@ -76,16 +76,22 @@ def parse_config(config)
 end
 
 def remote_command(server, options)
-  command_name = options[:command] or return default_command(options)
-  server.find(:command, command_name.to_sym) { default_command(options) }
+  command = options[:command]
+  if String(command).empty?
+    server.default_command
+  else
+    server.find_command(command.to_sym) || Constructs::Command.explicit_command(command)
+  end
 end
 
-def default_command(options)
-  cmd = Constructs::Command.new(:default)
-  cmd.command = options.fetch(:command) { "bash" }
-  cmd
+def execute(shell_command, options)
+  if options[:dry_run]
+    puts shell_command
+  else
+    system shell_command
+  end
 end
- 
+
 begin
   options          = parse_options
   config           = parse_config(options[:config])
@@ -97,15 +103,9 @@ begin
     puts ConfigPrinter.new.render(node).chomp
   else
     server = resolver.resolve
-
     server_command = remote_command(server, options)
     command_to_execute = Commands::SSHCommand.new(server).render(server_command.render(server, options))
-
-    if options[:dry_run]
-      puts command_to_execute
-    else
-      system command_to_execute
-    end
+    execute(command_to_execute, options)
   end
 rescue SystemExit
   # Do nothing

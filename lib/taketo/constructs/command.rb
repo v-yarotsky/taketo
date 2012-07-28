@@ -7,7 +7,15 @@ module Taketo
       include Shellwords
 
       attr_accessor :command, :description
-      
+
+      def self.default
+        new(:default).tap { |cmd| cmd.command = "bash" }
+      end
+
+      def self.explicit_command(command_string)
+        new(:explicit_command).tap { |cmd| cmd.command = command_string }
+      end
+
       def render(server, options = {})
         %Q[#{location(server, options)} #{environment_variables(server)} #{command}].strip.squeeze(" ")
       end
