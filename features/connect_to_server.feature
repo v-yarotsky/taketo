@@ -1,4 +1,4 @@
-Feature: 
+Feature:
   In order to be able to access my servers quickly
   As a developer
   I want to have a nifty little utility

@@ -5,8 +5,8 @@ RSpec::Matchers.define :be_appropriate_construct do |construct, *args|
     @enclosing_scope = enclosing_scope
   end
 
-  chain(:with_block) do
-    @blk = Proc.new {}
+  chain(:with_block) do |with_block|
+    @blk = Proc.new {} if with_block
   end
 
   match do |actual|
