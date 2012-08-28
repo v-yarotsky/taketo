@@ -2,20 +2,11 @@
 
 require 'rubygems'
 
-begin
-  require 'taketo'
-  require 'taketo/constructs_factory'
-  require 'taketo/commands'
-  require 'taketo/destination_resolver'
-  require 'optparse'
-rescue LoadError => e #development
-  raise if $loaded
-  $:.unshift File.expand_path('../../lib', __FILE__)
-  require 'bundler'
-  Bundler.setup(:default)
-  $loaded = true
-  retry
-end
+require 'taketo'
+require 'taketo/constructs_factory'
+require 'taketo/commands'
+require 'taketo/destination_resolver'
+require 'optparse'
 
 Signal.trap("SIGINT") do
   puts "Terminating"

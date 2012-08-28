@@ -1,4 +1,4 @@
-require File.expand_path('../../../../spec_helper', __FILE__)
+require 'spec_helper'
 require 'taketo/support/named_nodes_collection'
 
 describe "NamedNodesCollection" do

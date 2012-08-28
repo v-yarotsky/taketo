@@ -1,4 +1,4 @@
-require File.expand_path('../../../../spec_helper', __FILE__)
+require 'spec_helper'
 require 'taketo/commands/ssh_command'
 
 include Taketo::Commands
