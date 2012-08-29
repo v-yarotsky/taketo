@@ -85,11 +85,23 @@ describe "BaseConstruct" do
       end
     end
 
-    specify "#has_nodes? should return whether node has child nodes of specified type" do
-      construct.has_nodes?(:foos).should be_false
-      construct.append_foo(foo)
-      construct.has_nodes?(:foos).should be_true
-    end 
+    describe "#has_nodes?" do
+      it "should return whether node has child nodes of specified type" do
+        construct.has_nodes?(:foos).should be_false
+        construct.append_foo(foo)
+        construct.has_nodes?(:foos).should be_true
+      end 
+
+      it "should raise if node can not have children of specified type" do
+        expect { construct.has_nodes?(:quack) }.to raise_error NodesNotDefinedError
+      end
+    end
+  end
+
+  specify "#accept should call visitor" do
+    visitor = stub(:Visitor)
+    visitor.should_receive(:visit).with(construct)
+    construct.accept(visitor)
   end
 end
 

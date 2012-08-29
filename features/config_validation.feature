@@ -15,4 +15,4 @@ Feature:
       | config                                | error                                                                       |
       |                                       | There are no projects. Add some to your config (~/.taketo.rc.rb by default) |
       | project(:foo) {}                      | There is no environments for the following projects: foo                    |
-      | project(:foo) { environment(:bar) {}} | There is no servers for the following environments in project foo: bar      |
+      | project(:foo) { environment(:bar) {}} | There is no servers for the following environments in projects:\nfoo: bar   |

@@ -15,6 +15,7 @@ describe "NamedNodesCollection" do
     collection << node1
     collection.push node2
     collection[0].should == node1
+    collection[:foo].should == node1
     collection.map(&:name).should == [:foo, :bar]
     collection.length.should == 2
     collection.size.should == 2

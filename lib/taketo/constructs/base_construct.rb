@@ -79,6 +79,10 @@ module Taketo
         demodulized = self.class.name.gsub(/.*::/, '')
         demodulized.gsub(/([a-z])([A-Z])/, '\\1_\\2').downcase.to_sym
       end
+
+      def accept(visitor)
+        visitor.visit(self)
+      end
       
     end
   end

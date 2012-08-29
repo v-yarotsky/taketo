@@ -96,7 +96,10 @@ begin
 
   if options.delete(:view)
     node = resolver.get_node
-    puts ConfigPrinter.new.render(node).chomp
+    traverser = ConfigTraverser.new(node)
+    config_printer = ConfigPrinterVisitor.new
+    traverser.visit_depth_first(config_printer)
+    puts config_printer.result
   else
     server = resolver.resolve
     server_command = remote_command(server, options)

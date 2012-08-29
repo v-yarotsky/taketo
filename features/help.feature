@@ -37,6 +37,15 @@ Feature:
     When I run `taketo --config=/tmp/taketo_test_cfg.rb --view`
     Then the output should contain exactly:
       """
+
+      Project: baz
+        Environment: qux
+          Server: bart
+            Host: 2.3.4.5
+            Environment: RAILS_ENV=qux
+              killall - Kill ALL humans
+              console
+      
       Project: foo
         Environment: bar
           Server: default
@@ -45,16 +54,8 @@ Feature:
             User: pivo
             Default location: /var/apps/vodka
             Environment: RAILS_ENV=bar
+              (No commands)
       
-      Project: baz
-        Environment: qux
-          Server: bart
-            Host: 2.3.4.5
-            Environment: RAILS_ENV=qux
-            Commands:
-              console
-              killall - Kill ALL humans
-
       """
 
   Scenario: View particular server
@@ -67,5 +68,6 @@ Feature:
         User: pivo
         Default location: /var/apps/vodka
         Environment: RAILS_ENV=bar
+          (No commands)
 
       """
