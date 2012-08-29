@@ -16,7 +16,7 @@ module Taketo
         if LEVELS[node.node_type] == LEVELS[level]
           result.push node
         else
-          next_level_node_type = LEVELS.key(LEVELS[node.node_type] + 1)
+          next_level_node_type = LEVELS.respond_to?(:key) ? LEVELS.key(LEVELS[node.node_type] + 1) : LEVELS.index(LEVELS[node.node_type] + 1)
           if node.has_nodes?(PLURALS[next_level_node_type]) && LEVELS[node.node_type] < LEVELS[level]
             node.nodes(PLURALS[next_level_node_type]).each { |n| queue.push(n) }
           end
