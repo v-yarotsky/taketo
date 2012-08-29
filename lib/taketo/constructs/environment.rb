@@ -6,9 +6,19 @@ module Taketo
     class Environment < BaseConstruct
       has_nodes :servers, :server
 
+      attr_accessor :project
+
+      def initialize(name)
+        super(name)
+      end
+
+      def project_name
+        @project.name if defined? @project
+      end
+
       def append_server(server)
         server.environment = self
-        nodes(:servers) << server
+        super
       end
     end
   end

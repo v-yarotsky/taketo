@@ -66,6 +66,12 @@ describe "BaseConstruct" do
         construct.foos.should include(foo)
         construct.find_foo(:bar).should == foo
       end
+
+      it "should add query methods for child nodes" do
+        construct.has_foos?.should be_false
+        construct.append_foo(foo)
+        construct.has_foos?.should be_true
+      end
     end
 
     describe "#nodes" do
@@ -78,6 +84,12 @@ describe "BaseConstruct" do
         expect { construct.nodes(:bars) }.to raise_error(NodesNotDefinedError, /bars/)
       end
     end
+
+    specify "#has_nodes? should return whether node has child nodes of specified type" do
+      construct.has_nodes?(:foos).should be_false
+      construct.append_foo(foo)
+      construct.has_nodes?(:foos).should be_true
+    end 
   end
 end
 

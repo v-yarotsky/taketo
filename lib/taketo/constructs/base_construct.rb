@@ -23,18 +23,24 @@ module Taketo
       #
       def self.has_nodes(name_plural, name_singular)
         self.node_types << name_plural
+        includable = Module.new do
+          define_method "append_#{name_singular}" do |object|
+            nodes(name_plural) << object
+          end
 
-        define_method "append_#{name_singular}" do |object|
-          nodes(name_plural) << object
-        end
+          define_method "find_#{name_singular}" do |name|
+            nodes(name_plural).find_by_name(name)
+          end
 
-        define_method "find_#{name_singular}" do |name|
-          nodes(name_plural).find_by_name(name)
+          define_method name_plural do
+            nodes(name_plural)
+          end
+          
+          define_method "has_#{name_plural}?" do
+            nodes(name_plural).any?
+          end
         end
-
-        define_method name_plural do
-          nodes(name_plural)
-        end
+        self.send(:include, includable)
       end
 
       def self.node_types
@@ -60,6 +66,13 @@ module Taketo
           raise NodesNotDefinedError, "#{name_plural} not defined for #{node_type}"
         end
         @nodes[name_plural] ||= Taketo::Support::NamedNodesCollection.new
+      end
+
+      def has_nodes?(name_plural)
+        unless self.class.node_types.include?(name_plural)
+          raise NodesNotDefinedError, "#{name_plural} not defined for #{node_type}"
+        end
+        @nodes.fetch(name_plural) { [] }.any?
       end
 
       def node_type

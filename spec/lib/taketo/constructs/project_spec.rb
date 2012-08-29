@@ -11,6 +11,12 @@ describe "Project" do
     subject.name.should == :foo
   end
   
+  specify "#append_environment should set project attribute on an environment to self" do
+    environment = mock(:Environment, :name => :bar)
+    environment.should_receive(:project=).with(subject)
+    subject.append_environment(environment)
+  end
+
   it_behaves_like "a construct with nodes", :environments, :environment
 end
 

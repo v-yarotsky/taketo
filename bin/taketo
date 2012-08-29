@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+if ENV["TAKETO_DEV"]
+  $:.unshift(File.expand_path('../../lib', __FILE__))
+end
+
 require 'rubygems'
 
 require 'taketo'
@@ -62,7 +66,8 @@ end
 
 def parse_config(config)
   DSL.new.configure(config).tap do |config|
-    ConfigValidator.new(config).validate!
+    traverser = ConfigTraverser.new(config)
+    ConfigValidator.new(traverser).validate!
   end
 end
 

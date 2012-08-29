@@ -18,6 +18,11 @@ describe "Environment" do
     server.should_receive(:environment=).with(subject)
     subject.append_server(server)
   end
+
+  specify "#project_name should return project name" do
+    subject.project = stub(:Project, :name => "TheProject")
+    subject.project_name.should == "TheProject"
+  end 
 end
 
 
