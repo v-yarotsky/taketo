@@ -13,7 +13,7 @@ describe "ConfigValidator" do
   it "should require at least one project" do
     config = stub(:Config, :has_projects? => false)
     traverser.should_receive(:get_all_of_level).with(:config).and_return([config])
-    expect { validator(traverser).ensure_projects_exist }.to raise_error ConfigError, /projects/i
+    expect { validator(traverser).ensure_projects_exist }.to raise_error ConfigError, /no projects/i
   end
 
   it "should require every project to have at least one environment" do
@@ -21,7 +21,7 @@ describe "ConfigValidator" do
     traverser.should_receive(:get_all_of_level).with(:project).twice.and_return([project])
 
     project.should_receive(:has_environments?).and_return(false)
-    expect { validator(traverser).ensure_environments_exist }.to raise_error ConfigError, /project_1/i
+    expect { validator(traverser).ensure_environments_exist }.to raise_error ConfigError, "There is no environments for the following projects: project_1"
 
     project.should_receive(:has_environments?).and_return(true)
     expect { validator(traverser).ensure_environments_exist }.not_to raise_error ConfigError, /project_1/i
@@ -32,7 +32,7 @@ describe "ConfigValidator" do
     traverser.should_receive(:get_all_of_level).with(:environment).twice.and_return([environment])
 
     environment.should_receive(:has_servers?).and_return(false)
-    expect { validator(traverser).ensure_servers_exist }.to raise_error ConfigError, /environment_1/i
+    expect { validator(traverser).ensure_servers_exist }.to raise_error ConfigError, "There is no servers for the following environments in projects:\nQux: environment_1"
 
     environment.should_receive(:has_servers?).and_return(true)
     expect { validator(traverser).ensure_servers_exist }.not_to raise_error ConfigError, /environment_2/i
@@ -46,14 +46,14 @@ describe "ConfigValidator" do
       server_1.stub(:global_alias => :foo)
       server_2.stub(:global_alias => :bar)
       traverser.should_receive(:get_all_of_level).with(:server).and_return([server_1, server_2])
-      expect { validator(traverser).ensure_global_server_aliases_unique }.not_to raise_error(ConfigError, /alias/i)
+      expect { validator(traverser).ensure_global_server_aliases_unique }.not_to raise_error ConfigError, /alias/i
     end
 
     it "should raise error unless unique" do
       server_1.stub(:global_alias => :foo)
       server_2.stub(:global_alias => :foo)
       traverser.should_receive(:get_all_of_level).with(:server).and_return([server_1, server_2])
-      expect { validator(traverser).ensure_global_server_aliases_unique }.to raise_error(ConfigError, /alias/i)
+      expect { validator(traverser).ensure_global_server_aliases_unique }.to raise_error ConfigError, "There are duplicates among global server aliases: foo"
     end
   end
 

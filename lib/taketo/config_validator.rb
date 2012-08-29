@@ -33,8 +33,10 @@ module Taketo
     def ensure_servers_exist
       environments_without_servers = @traverser.get_all_of_level(:environment).reject { |p| p.has_servers? }
       unless environments_without_servers.empty?
+        environments_by_project = environments_without_servers.group_by(&:project_name)
+        message = environments_by_project.map { |project_name, environments| "#{project_name}: #{environments.map(&:name).join(", ")}" }.join("\n")
         raise ConfigError,
-          "There is no servers for the following environments in project #{environments_without_servers.first.project_name}: #{environments_without_servers.map(&:name).join(", ")}"
+          "There is no servers for the following environments in projects:\n#{message}"
       end
     end
 
