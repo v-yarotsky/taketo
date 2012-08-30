@@ -7,7 +7,7 @@ module Taketo
       @result = ""
     end
 
-    visit Taketo::Constructs::Config do |config|
+    visit Config do |config|
       indent(0) do
         if config.has_projects?
           put "Default destination: #{config.default_destination}" if config.default_destination
@@ -17,7 +17,7 @@ module Taketo
       end
     end
 
-    visit Taketo::Constructs::Project do |project|
+    visit Project do |project|
       put
       indent(0) do
         put "Project: #{project.name}"
@@ -25,14 +25,14 @@ module Taketo
       end
     end
 
-    visit Taketo::Constructs::Environment do |environment|
+    visit Environment do |environment|
       indent(1) do
         put "Environment: #{environment.name}"
         indent { put "(No servers)" unless environment.has_servers? }
       end
     end
 
-    visit Taketo::Constructs::Server do |server|
+    visit Server do |server|
       indent(2) do
         put "Server: #{server.name}"
         indent do
@@ -46,7 +46,7 @@ module Taketo
       end
     end
 
-    visit Taketo::Constructs::Command do |command|
+    visit Command do |command|
       indent(4) { put command.name.to_s + (" - " + command.description if command.description).to_s }
     end
 
