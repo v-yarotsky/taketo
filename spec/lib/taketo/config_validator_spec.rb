@@ -57,7 +57,7 @@ describe "ConfigValidator::ConfigValidatorVisitor" do
   it "should require servers to have unique global server aliases" do
     server1 = stub(:Server, :host => 'the-host1', :path => "my_project:my_environment:my_server", :global_alias => 'foo')
     server2 = stub(:Server, :host => 'the-host2', :path => "my_project:my_environment2:my_server3", :global_alias => 'foo')
-    error_message = /my_project:my_environment2:my_server3: global alias 'foo' has already been taken by my_project:my_environment:my_server/
+    error_message = /my_project:my_environment2:my_server3: global alias 'foo' has already been taken.*my_project:my_environment:my_server/
     @visitor = visitor
     expect { @visitor.visit_server(server1) }.not_to raise_error ConfigError, error_message
     expect { @visitor.visit_server(server2) }.to raise_error ConfigError, error_message

@@ -14,23 +14,23 @@ module Taketo
     end
 
     visit Project do |p|
-      raise ConfigError, "#{p.path}: no environments" unless p.has_environments?
+      raise ConfigError, "Project #{p.path}: no environments" unless p.has_environments?
     end
 
     visit Environment do |e|
-      raise ConfigError, "#{e.path}: no servers" unless e.has_servers?
+      raise ConfigError, "Environment #{e.path}: no servers" unless e.has_servers?
     end
 
     visit Server do |s|
       if !String(s.global_alias).empty?
         if @global_server_aliases.key?(s.global_alias)
-          raise ConfigError, "#{s.path}: global alias '#{s.global_alias}' has already been taken by #{@global_server_aliases[s.global_alias].path}"
+          raise ConfigError, "Server #{s.path}: global alias '#{s.global_alias}' has already been taken by server #{@global_server_aliases[s.global_alias].path}"
         else
           @global_server_aliases[s.global_alias] = s
         end
       end
 
-      raise ConfigError, "#{s.path}: host is not defined" if String(s.host).empty?
+      raise ConfigError, "Server #{s.path}: host is not defined" if String(s.host).empty?
     end
 
     visit Command do |c|
