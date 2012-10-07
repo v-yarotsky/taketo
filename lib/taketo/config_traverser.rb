@@ -33,7 +33,7 @@ module Taketo
         next_level_node_type = LEVELS.respond_to?(:key) ? LEVELS.key(LEVELS[node.node_type] + 1) : LEVELS.index(LEVELS[node.node_type] + 1)
         if next_level_node_type && node.has_nodes?(PLURALS[next_level_node_type])
           parents << node
-          node.nodes(PLURALS[next_level_node_type]).each do |n|
+          node.nodes(PLURALS[next_level_node_type]).reverse_each do |n|
             n = wrap_node_with_path(parents, n)
             path_stack.push(n) 
           end

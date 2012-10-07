@@ -51,9 +51,9 @@ describe Taketo::ConfigTraverser do
   end
 
   describe "#visit_depth_first" do
-    it "should traverse in depth with visitor" do
+    it "traverses in depth with visitor" do
       visitor = stub(:Visitor)
-      [config, project_2, project_1, environment_2, server_3, server_2, server_1, environment_1].each do |node|
+      [config, project_1, environment_1, environment_2, server_1, server_2, server_3, project_2].each do |node|
         visitor.should_receive(:visit).with(node).ordered
       end
       traverser.visit_depth_first(visitor)
