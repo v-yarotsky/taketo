@@ -1,7 +1,42 @@
 require 'taketo/config_traverser'
+require 'taketo/config_visitor'
 
 module Taketo
   class ConfigError < StandardError; end
+
+  class ConfigValidatorVisitor < ConfigVisitor
+    def initialize
+      @global_server_aliases = {}
+    end
+
+    visit Config do |c|
+      raise ConfigError, "There are no projects. Add some to your config (~/.taketo.rc.rb by default)" unless c.has_projects?
+    end
+
+    visit Project do |p|
+      raise ConfigError, "#{p.path}: no environments" unless p.has_environments?
+    end
+
+    visit Environment do |e|
+      raise ConfigError, "#{e.path}: no servers" unless e.has_servers?
+    end
+
+    visit Server do |s|
+      if !String(s.global_alias).empty?
+        if @global_server_aliases.key?(s.global_alias)
+          raise ConfigError, "#{s.path}: global alias '#{s.global_alias}' has already been taken by #{@global_server_aliases[s.global_alias].path}"
+        else
+          @global_server_aliases[s.global_alias] = s
+        end
+      end
+
+      raise ConfigError, "#{s.path}: host is not defined" if String(s.host).empty?
+    end
+
+    visit Command do |c|
+      raise ConfigError, "Don't know what to execute on command #{c.name}" if String(c.command).empty?
+    end
+  end
 
   class ConfigValidator
     def initialize(traverser)
@@ -9,45 +44,9 @@ module Taketo
     end
 
     def validate!
-      ensure_projects_exist
-      ensure_environments_exist
-      ensure_servers_exist
-      ensure_global_server_aliases_unique
-    end
-
-    def ensure_projects_exist
-      unless @traverser.get_all_of_level(:config).any? { |c| c.has_projects? }
-        raise ConfigError,
-          "There are no projects. Add some to your config (~/.taketo.rc.rb by default)"
-      end
-    end
-
-    def ensure_environments_exist
-      projects_without_environments = @traverser.get_all_of_level(:project).reject { |p| p.has_environments? }
-      unless projects_without_environments.empty?
-        raise ConfigError,
-          "There is no environments for the following projects: #{projects_without_environments.map(&:name).join(", ")}"
-      end
-    end
-
-    def ensure_servers_exist
-      environments_without_servers = @traverser.get_all_of_level(:environment).reject { |p| p.has_servers? }
-      unless environments_without_servers.empty?
-        environments_by_project = environments_without_servers.group_by(&:project_name)
-        message = environments_by_project.map { |project_name, environments| "#{project_name}: #{environments.map(&:name).join(", ")}" }.join("\n")
-        raise ConfigError,
-          "There is no servers for the following environments in projects:\n#{message}"
-      end
-    end
-
-    def ensure_global_server_aliases_unique
-      aliases = @traverser.get_all_of_level(:server).map(&:global_alias)
-      non_uniq_aliases = aliases.reject(&:nil?).group_by(&:to_sym).reject { |k, v| v.size == 1 }
-      unless non_uniq_aliases.empty?
-        raise ConfigError,
-          "There are duplicates among global server aliases: #{non_uniq_aliases.keys.join(", ")}"
-      end
+      @traverser.visit_depth_first(ConfigValidatorVisitor.new)
     end
   end
+
 end
 

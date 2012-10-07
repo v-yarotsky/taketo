@@ -10,6 +10,7 @@ Feature:
       project :slots do
         environment :staging do
           server :s1 do
+            host "1.2.3.4"
           end
           server :s2 do
             host "2.3.4.5"

@@ -97,12 +97,6 @@ describe "BaseConstruct" do
       end
     end
   end
-
-  specify "#accept should call visitor" do
-    visitor = stub(:Visitor)
-    visitor.should_receive(:visit).with(construct)
-    construct.accept(visitor)
-  end
 end
 
 

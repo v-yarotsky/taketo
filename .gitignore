@@ -6,3 +6,5 @@ tmp/
 nohup.out
 pkg/
 coverage/
+*.sublime-project
+*.sublime-workspace

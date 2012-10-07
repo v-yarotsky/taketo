@@ -9,7 +9,7 @@ module Taketo
 
       ##
       # Adds nodes collections to the construct
-      # 
+      #
       # Example:
       #
       # class Bar < BaseConstruct
@@ -35,7 +35,7 @@ module Taketo
           define_method name_plural do
             nodes(name_plural)
           end
-          
+
           define_method "has_#{name_plural}?" do
             nodes(name_plural).any?
           end
@@ -80,10 +80,6 @@ module Taketo
         demodulized.gsub(/([a-z])([A-Z])/, '\\1_\\2').downcase.to_sym
       end
 
-      def accept(visitor)
-        visitor.visit(self)
-      end
-      
     end
   end
 end

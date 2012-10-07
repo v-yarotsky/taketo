@@ -37,6 +37,13 @@ describe "ConfigVisitor" do
     subject.visit(2.0).should == "2.0"
   end
 
+  it "should skip anonymous classes/modules" do
+    c = Class.new(Numeric) do
+      def to_s; "captured as Numeric"; end
+    end
+    subject.visit(c.new).should == "captured as Numeric"
+  end
+
   it "should raise if doesn't know how to visit" do
     expect { subject.visit([]) }.to raise_error /Array/
   end

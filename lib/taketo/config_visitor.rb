@@ -2,7 +2,7 @@ require 'taketo/constructs'
 
 module Taketo
   def self.downcased_construct_class_name(klass)
-    klass.name.gsub("Taketo::Constructs::", "").gsub(/[A-Z][^A-Z]*/) { |s| s.gsub("::", "").downcase + "_" }.chop 
+    klass.name.gsub("Taketo::Constructs::", "").gsub(/[A-Z][^A-Z]*/) { |s| s.gsub("::", "").downcase + "_" }.chop
   end
 
   class ConfigVisitor
@@ -16,6 +16,7 @@ module Taketo
 
     def visit(obj)
       obj.class.ancestors.each do |ancestor|
+        next unless ancestor.name # skip anonymous classes
         method_name = :"visit_#{Taketo.downcased_construct_class_name(ancestor)}"
         next unless respond_to?(method_name)
         return send(method_name, obj)

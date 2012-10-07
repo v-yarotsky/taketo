@@ -4,7 +4,7 @@ require 'taketo/config_traverser'
 # config           1
 #                 / \
 # project        1   2
-#               / \ 
+#               / \
 # environment  1   2
 #                 /|\
 # server         1 2 3
@@ -41,24 +41,6 @@ describe Taketo::ConfigTraverser do
     environment_2.stub(:nodes).and_return([server_1, server_2, server_3])
   end
 
-  describe "#get_all_of_level" do
-    it "should get a config if :config passed" do
-      traverser.get_all_of_level(:config).to_a.should == [config]
-    end
-
-    it "should get all projects if :project passed" do
-      traverser.get_all_of_level(:project).to_a.should == [project_1, project_2]
-    end
-
-    it "should get all environments if :environment passed" do
-      traverser.get_all_of_level(:environment).to_a.should == [environment_1, environment_2]
-    end
-
-    it "shoudl get all servers if :server passed" do
-      traverser.get_all_of_level(:server).to_a.should == [server_1, server_2, server_3]
-    end
-  end
-
   class PrintingVisitor
     def initialize
       @result = []
@@ -72,7 +54,7 @@ describe Taketo::ConfigTraverser do
     it "should traverse in depth with visitor" do
       visitor = stub(:Visitor)
       [config, project_2, project_1, environment_2, server_3, server_2, server_1, environment_1].each do |node|
-        node.should_receive(:accept).with(visitor).ordered
+        visitor.should_receive(:visit).with(node).ordered
       end
       traverser.visit_depth_first(visitor)
     end

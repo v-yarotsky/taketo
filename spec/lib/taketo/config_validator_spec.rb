@@ -6,63 +6,71 @@ include Taketo
 describe "ConfigValidator" do
   let(:traverser) { stub(:ConfigTraverser) }
 
-  def validator(traverser)
-    Taketo::ConfigValidator.new(traverser)
-  end
-
-  it "should require at least one project" do
-    config = stub(:Config, :has_projects? => false)
-    traverser.should_receive(:get_all_of_level).with(:config).and_return([config])
-    expect { validator(traverser).ensure_projects_exist }.to raise_error ConfigError, /no projects/i
-  end
-
-  it "should require every project to have at least one environment" do
-    project = stub(:Project, :name => :project_1)
-    traverser.should_receive(:get_all_of_level).with(:project).twice.and_return([project])
-
-    project.should_receive(:has_environments?).and_return(false)
-    expect { validator(traverser).ensure_environments_exist }.to raise_error ConfigError, "There is no environments for the following projects: project_1"
-
-    project.should_receive(:has_environments?).and_return(true)
-    expect { validator(traverser).ensure_environments_exist }.not_to raise_error ConfigError, /project_1/i
-  end
-
-  it "should require every environment to have at least one server" do
-    environment = stub(:Environment, :name => :environment_1, :project_name => "Qux")
-    traverser.should_receive(:get_all_of_level).with(:environment).twice.and_return([environment])
-
-    environment.should_receive(:has_servers?).and_return(false)
-    expect { validator(traverser).ensure_servers_exist }.to raise_error ConfigError, "There is no servers for the following environments in projects:\nQux: environment_1"
-
-    environment.should_receive(:has_servers?).and_return(true)
-    expect { validator(traverser).ensure_servers_exist }.not_to raise_error ConfigError, /environment_2/i
-  end
-
-  describe "global server aliases" do
-    let(:server_1) { stub(:Server) }
-    let(:server_2) { stub(:Server) }
-
-    it "should not raise error if unique" do
-      server_1.stub(:global_alias => :foo)
-      server_2.stub(:global_alias => :bar)
-      traverser.should_receive(:get_all_of_level).with(:server).and_return([server_1, server_2])
-      expect { validator(traverser).ensure_global_server_aliases_unique }.not_to raise_error ConfigError, /alias/i
-    end
-
-    it "should raise error unless unique" do
-      server_1.stub(:global_alias => :foo)
-      server_2.stub(:global_alias => :foo)
-      traverser.should_receive(:get_all_of_level).with(:server).and_return([server_1, server_2])
-      expect { validator(traverser).ensure_global_server_aliases_unique }.to raise_error ConfigError, "There are duplicates among global server aliases: foo"
-    end
-  end
-
   describe "#validate!" do
-    let(:validator_instance) { validator(stub.as_null_object) }
-    specify { validator_instance.should_receive(:ensure_projects_exist); validator_instance.validate! }
-    specify { validator_instance.should_receive(:ensure_environments_exist); validator_instance.validate! }
-    specify { validator_instance.should_receive(:ensure_servers_exist); validator_instance.validate! }
-    specify { validator_instance.should_receive(:ensure_global_server_aliases_unique); validator_instance.validate! }
+    it "should visit all nodes with an instance of ConfigValidator::ConfigValidatorVisitor" do
+      validator = ConfigValidator.new(traverser)
+      traverser.should_receive(:visit_depth_first).with(an_instance_of(ConfigValidator::ConfigValidatorVisitor))
+      validator.validate!
+    end
+  end
+end
+
+describe "ConfigValidator::ConfigValidatorVisitor" do
+  def visitor
+    ConfigValidator::ConfigValidatorVisitor.new
+  end
+
+  it "should require config to have projects" do
+    config = stub(:Config, :has_projects? => false)
+    error_message = /no projects/
+    expect { visitor.visit_config(config) }.to raise_error ConfigError, error_message
+
+    config.stub(:has_projects? => true)
+    expect { visitor.visit_config(config) }.not_to raise_error ConfigError, error_message
+  end
+
+  it "should require projects to have environments" do
+    project = stub(:Project, :has_environments? => false, :path => "my_project")
+    error_message = /my_project: no environments/
+    expect { visitor.visit_project(project) }.to raise_error ConfigError, error_message
+
+    project.stub(:has_environments? => true)
+    expect { visitor.visit_project(project) }.not_to raise_error ConfigError, error_message
+  end
+
+  it "should require environments to have servers" do
+    environment = stub(:Environment, :has_servers? => false, :path => "my_project:my_environment")
+    error_message = /my_project:my_environment: no servers/
+    expect { visitor.visit_environment(environment) }.to raise_error ConfigError, error_message
+
+    environment.stub(:has_servers? => true)
+    expect { visitor.visit_environment(environment) }.not_to raise_error ConfigError, error_message
+  end
+
+  it "should require servers to have host" do
+    server = stub(:Server, :host => '', :path => "my_project:my_environment:my_server", :global_alias => nil)
+    error_message = /my_project:my_environment:my_server: host is not defined/
+    expect { visitor.visit_server(server) }.to raise_error ConfigError, error_message
+
+    server.stub(:host => 'the-host')
+    expect { visitor.visit_server(server) }.not_to raise_error ConfigError, error_message
+  end
+
+  it "should require servers to have unique global server aliases" do
+    server1 = stub(:Server, :host => 'the-host1', :path => "my_project:my_environment:my_server", :global_alias => 'foo')
+    server2 = stub(:Server, :host => 'the-host2', :path => "my_project:my_environment2:my_server3", :global_alias => 'foo')
+    error_message = /my_project:my_environment2:my_server3: global alias 'foo' has already been taken by my_project:my_environment:my_server/
+    @visitor = visitor
+    expect { @visitor.visit_server(server1) }.not_to raise_error ConfigError, error_message
+    expect { @visitor.visit_server(server2) }.to raise_error ConfigError, error_message
+  end
+
+  it "should require commands to have command specified" do
+    command = stub(:Command, :command => '', :name => 'qux')
+    error_message = /execute/
+    expect { visitor.visit_command(command) }.to raise_error ConfigError, error_message
+    command.stub(:command => 'foo')
+    expect { visitor.visit_command(command) }.not_to raise_error ConfigError, error_message
   end
 end
 
