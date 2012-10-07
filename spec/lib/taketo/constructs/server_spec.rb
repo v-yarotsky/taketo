@@ -33,10 +33,7 @@ describe "Server" do
   describe "#environment=" do
     let(:environment) { environment = stub(:Environment, :name => :the_environment) }
 
-    it "sets environment" do
-      server.environment = environment
-      expect(server.environment).to eq(environment)
-    end
+    it { should have_accessor(:environment, environment) }
 
     it "sets RAILS_ENV environment variable" do
       server.environment_variables.should == {}

@@ -22,30 +22,30 @@ describe "ConfigVisitor" do
     end
   end
 
-  subject { DummyVisitor.new }
+  subject(:visitor) { DummyVisitor.new }
 
-  it "should define #visit* methods" do
-    subject.visit_string('qwe').should == 'QWE'
-    subject.visit_nil_class(nil).should == 'hooray'
+  it "defines #visit* methods" do
+    expect(visitor.visit_string('qwe')).to eq('QWE')
+    expect(visitor.visit_nil_class(nil)).to eq('hooray')
   end
 
-  it "should dispatch according to class" do
-    subject.visit(700).should == "007"
+  it "dispatches according to class" do
+    expect(visitor.visit(700)).to eq("007")
   end
 
-  it "should take ancestors into account" do
-    subject.visit(2.0).should == "2.0"
+  it "takes ancestors into account" do
+    expect(visitor.visit(2.0)).to eq("2.0")
   end
 
-  it "should skip anonymous classes/modules" do
+  it "skips anonymous classes/modules" do
     c = Class.new(Numeric) do
       def to_s; "captured as Numeric"; end
     end
-    subject.visit(c.new).should == "captured as Numeric"
+    expect(visitor.visit(c.new)).to eq("captured as Numeric")
   end
 
-  it "should raise if doesn't know how to visit" do
-    expect { subject.visit([]) }.to raise_error /Array/
+  it "raises if doesn't know how to visit" do
+    expect { visitor.visit([]) }.to raise_error /Array/
   end
 end
 

@@ -15,35 +15,35 @@ describe "AssociatedNodes" do
 
   describe ".has_nodes" do
     it "adds node type to class's node_types" do
-      TestAssociatedNodes.node_types.should include(:foos)
+      expect(TestAssociatedNodes.node_types).to include(:foos)
     end
 
     specify "#foos returns mutable foos collection" do
       construct.nodes(:foos) << foo
-      construct.foos.should == [foo]
+      expect(construct.foos).to eq([foo])
     end
 
     specify "#append_foo adds a foo to nested foos collection" do
       construct.nodes(:foos) << foo
-      construct.nodes(:foos).should include(foo)
+      expect(construct.nodes(:foos)).to include(foo)
     end
 
     specify "#find_foo returns node with corresponding name" do
       construct.nodes(:foos) << foo
-      construct.find_foo(:bar).should == foo
+      expect(construct.find_foo(:bar)).to eq(foo)
     end
 
     describe "#has_foos?" do
       context "when there are no foos" do
-        it "return false" do
-          construct.has_foos?.should be_false
+        it "returns false" do
+          expect(construct).not_to have_foos
         end
       end
 
       context "when there are some foos" do
         it "returns true" do
           construct.nodes(:foos) << foo
-          construct.has_foos?.should be_true
+          expect(construct).to have_foos
         end
       end
     end
@@ -53,7 +53,7 @@ describe "AssociatedNodes" do
     context "when node is present" do
       it "returns node object with corresponding name" do
         construct.nodes(:foos) << foo
-        construct.find(:foo, :bar).should == foo
+        expect(construct.find(:foo, :bar)).to eq(foo)
       end
     end
 
@@ -71,7 +71,7 @@ describe "AssociatedNodes" do
   describe "#nodes" do
     it "returns nodes collection by plural name" do
       construct.nodes(:foos) << foo
-      construct.nodes(:foos).should == [foo]
+      expect(construct.nodes(:foos)).to eq([foo])
     end
 
     it "raises NodesNotDefinedError if non-specified node requested" do
@@ -83,13 +83,13 @@ describe "AssociatedNodes" do
     context "when nodes are present" do
       it "returns true" do
         construct.nodes(:foos) << foo
-        construct.has_nodes?(:foos).should be_true
+        expect(construct).to have_nodes(:foos)
       end
     end
 
     context "when nodes are absent" do
       it "returns false" do
-        construct.has_nodes?(:foos).should be_false
+        expect(construct).not_to have_nodes(:foos)
       end
     end
 

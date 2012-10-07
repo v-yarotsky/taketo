@@ -50,29 +50,29 @@ describe "DestinationResolver" do
   let(:config) { TestNode.new(:config, nil, project1, project2, project3, project4) }
 
   context "when project, environment and server specified" do
-    it "should return server if it exists" do
-      resolver(config, "foo:bar:s1").resolve.should == server1
+    it "returns server if it exists" do
+      expect(resolver(config, "foo:bar:s1").resolve).to eq(server1)
     end
 
-    it "should raise error if server does not exist" do
+    it "raises error if server does not exist" do
       expect { resolver(config, "foo:bar:noserver").resolve }.to raise_error(NonExistentDestinationError)
     end
   end
 
   context "when there are 2 segments in path" do
     context "when there is matching project - environment pair" do
-      it "should return server if only one specified" do
-        resolver(config, "foo:bar").resolve.should == server1
-        resolver(config, "baz:qux").resolve.should == server2
+      it "returns server if only one specified" do
+        expect(resolver(config, "foo:bar").resolve).to eq(server1)
+        expect(resolver(config, "baz:qux").resolve).to eq(server2)
       end
 
-      it "should raise error if there are multiple servers" do
+      it "raises error if there are multiple servers" do
         expect { resolver(config, "quux:corge").resolve }.to raise_error(AmbiguousDestinationError)
       end
     end
 
     context "when there is no matching project - environment pair" do
-      it "should raise error if no such project - environment pair exist" do
+      it "raises error if no such project - environment pair exist" do
         expect { resolver(config, "chunky:bacon").resolve }.to raise_error(NonExistentDestinationError)
       end
     end
@@ -82,27 +82,27 @@ describe "DestinationResolver" do
     context "when project with given name exists" do
       context "when there's one environment" do
         context "when there's one server" do
-          it "should return the server" do
-            resolver(config, "foo").resolve.should == server1
+          it "returns the server" do
+            expect(resolver(config, "foo").resolve).to eq(server1)
           end
         end
 
         context "when there are multiple servers" do
-          it "should raise error" do
+          it "raises error" do
             expect { resolver(config, "quux").resolve }.to raise_error(AmbiguousDestinationError)
           end
         end
       end
 
       context "when there are multiple environments" do
-        it "should raise error" do
+        it "raises error" do
           expect { resolver(config, "grault").resolve }.to raise_error(AmbiguousDestinationError)
         end
       end
     end
 
     context "when there is no such project" do
-      it "should raise error" do
+      it "raises error" do
         expect { resolver(config, "chunky").resolve }.to raise_error(NonExistentDestinationError)
       end
     end
@@ -113,15 +113,15 @@ describe "DestinationResolver" do
       context "when there's one project" do
         context "when there's one environment" do
           context "when there's one server" do
-            it "should execute command without asking project/environment/server" do
+            it "executes command without asking project/environment/server" do
               config = TestNode.new(:config, nil, project1)
               config.stub(:default_destination => nil)
-              resolver(config, "").resolve.should == server1
+              expect(resolver(config, "").resolve).to eq(server1)
             end
           end
 
           context "when there are multiple servers" do
-            it "should ask for server" do
+            it "asks for server" do
               config = TestNode.new(:config, nil, project3)
               config.stub(:default_destination => nil)
               expect { resolver(config, "").resolve }.to raise_error AmbiguousDestinationError, /server/i
@@ -130,7 +130,7 @@ describe "DestinationResolver" do
         end
 
         context "when there are multiple environments" do
-          it "should ask for environment" do
+          it "asks for environment" do
             config = TestNode.new(:config, nil, project4)
             config.stub(:default_destination => nil)
             expect { resolver(config, "").resolve }.to raise_error AmbiguousDestinationError, /environment/i
@@ -139,7 +139,7 @@ describe "DestinationResolver" do
       end
 
       context "when there are multiple projects" do
-        it "should ask for project" do
+        it "asks for project" do
           config = TestNode.new(:config, nil, project3, project4)
           config.stub(:default_destination => nil)
 
@@ -149,38 +149,38 @@ describe "DestinationResolver" do
     end
 
     context "when there is default destination" do
-      it "should resolve by default destination" do
+      it "resolves by default destination" do
         config.stub(:default_destination => "foo:bar:s1")
-        resolver(config, "").resolve.should == server1
+        expect(resolver(config, "").resolve).to eq(server1)
       end
     end
   end
 
   context "when there is global matching server alias" do
-    it "should resolve by alias" do
-      resolver(config, "the_alias").resolve.should == server1
+    it "resolves by alias" do
+      expect(resolver(config, "the_alias").resolve).to eq(server1)
     end
   end
 
   describe "#get_node" do
-    it "should return server when path has 3 segments and is correct" do
-      resolver(config, "foo:bar:s1").get_node.should == server1
+    it "returns server when path has 3 segments and is correct" do
+      expect(resolver(config, "foo:bar:s1").get_node).to eq(server1)
     end
 
-    it "should return environment when path has 2 segments and is correct" do
-      resolver(config, "foo:bar").get_node.should == environment1
+    it "returns environment when path has 2 segments and is correct" do
+      expect(resolver(config, "foo:bar").get_node).to eq(environment1)
     end
 
-    it "should return project when path has 1 segment and is correct" do
-      resolver(config, "foo").get_node.should == project1
+    it "returns project when path has 1 segment and is correct" do
+      expect(resolver(config, "foo").get_node).to eq(project1)
     end
 
-    it "should return the config if path has is empty and there's no default destination" do
+    it "returns the config if path has is empty and there's no default destination" do
       config.stub(:default_destination => nil)
-      resolver(config, "").get_node.should == config
+      expect(resolver(config, "").get_node).to eq(config)
     end
 
-    it "should raise NonExistentDestinationError when path is not correct" do
+    it "raises NonExistentDestinationError when path is not correct" do
       config.should_receive(:find).with(:project, :i).and_raise(KeyError)
       expect { resolver(config, "i").get_node }.to raise_error(NonExistentDestinationError)
     end

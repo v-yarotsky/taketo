@@ -6,7 +6,7 @@ include Taketo
 describe "ConstructsFactory" do
   let(:factory) { Taketo::ConstructsFactory.new }
 
-  specify "#create should delegate to appropriate method according to the type" do
+  specify "#create delegates to appropriate method according to the type" do
     factory.should_receive(:create_config)
     factory.create(:config)
 
@@ -14,28 +14,28 @@ describe "ConstructsFactory" do
     factory.create(:project, :foo)
   end
 
-  specify "#create_config should create a config object" do
-    factory.create_config.should be_an_instance_of(Taketo::Constructs::Config)
+  specify "#create_config creates a config object" do
+    expect(factory.create_config).to be_an_instance_of(Taketo::Constructs::Config)
   end
 
-  specify "#create_project should create a project object" do
+  specify "#create_project creates a project object" do
     project = factory.create_project(:foo)
-    project.should be_an_instance_of(Taketo::Constructs::Project)
+    expect(project).to be_an_instance_of(Taketo::Constructs::Project)
   end
 
-  specify "#create_environment should create an environment object" do
+  specify "#create_environment creates an environment object" do
     environment = factory.create_environment(:foo)
-    environment.should be_an_instance_of(Taketo::Constructs::Environment)
+    expect(environment).to be_an_instance_of(Taketo::Constructs::Environment)
   end
 
-  specify "#create_server should create a server object" do
+  specify "#create_server creates a server object" do
     server = factory.create_server(:foo)
-    server.should be_an_instance_of(Taketo::Constructs::Server)
+    expect(server).to be_an_instance_of(Taketo::Constructs::Server)
   end
 
-  specify "#create_command should create a command object" do
+  specify "#create_command creates a command object" do
     command = factory.create_command(:foo)
-    command.should be_an_instance_of(Taketo::Constructs::Command)
+    expect(command).to be_an_instance_of(Taketo::Constructs::Command)
   end
 end
 

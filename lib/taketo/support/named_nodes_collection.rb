@@ -15,6 +15,7 @@ module Taketo
 
       def push(node)
         @nodes << node unless find_by_name(node.name)
+        self
       end
       alias :<< :push
 
