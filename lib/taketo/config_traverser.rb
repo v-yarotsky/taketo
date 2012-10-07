@@ -8,7 +8,7 @@ module Taketo
 
     class NodeWithPath < SimpleDelegator
       extend Forwardable
-      def_delegators :__getobj__, :class, :ancestors # avoid ancestry tree troubles
+      def_delegators :__getobj__, :class, :ancestors, :== # avoid ancestry tree troubles
 
       def initialize(node, path_string)
         super(node)
