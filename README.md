@@ -92,6 +92,10 @@ You can use shared server configs to reduce duplication:
     end
   end
 
+  shared_server_config :some_other_shared_config do |folder|
+    location File.join("/var", folder)
+  end
+
   project :my_project do
     environment :staging do
       server :s1 do
@@ -101,7 +105,7 @@ You can use shared server configs to reduce duplication:
 
       server :s2 do
         host :s2 do
-        include_shared_server_config(:my_staging)
+        include_shared_server_config(:my_staging => [], :some_other_shared_config => "qux")
       end
     end
   end
@@ -109,14 +113,23 @@ You can use shared server configs to reduce duplication:
 
 This will give you ```console``` commands available both on s1 and s2  
 
-To-Do:
-------
-
-* Add support for defaults
-* Add support for generating shortcuts
-
 The Changelog:
 --------------
+
+### v0.0.7 (08.10.2012) ###
+* Add ability to include several shared server config at once
+  Use hash as include_shared_server_config parameter to include
+  multiple shared server configs with arguments, like:
+  ```ruby
+    include_shared_server_config(:foo => :some_arg, :bar => [:arg1, :arg2])
+  ```
+  or just enumerate them if no arguments needed:
+  ```ruby
+    include_shared_server_configs(:baz, :quux)
+  ```
+  
+  NOTE: This change will break your config if you've used parametrized
+        shared server configs before; rewrite them using hash-form
 
 ### v0.0.6 (26.07.2012) ###
 * Add identity_file server config option

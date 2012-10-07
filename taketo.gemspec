@@ -9,6 +9,27 @@ Gem::Specification.new do |s|
   s.name = "taketo"
   s.summary = "A tiny helper utility to make access to servers eaiser " \
     "for different projects and environments"
+  s.description <<-DESC
+    The aim of the project is to aid quick access to often used servers for web-developers
+
+    With config similar to the following, one could make his life easier:
+
+    project :my_project do
+      environment :staging do
+        server do
+          host "192.168.1.1"
+          location "/var/www/prj1"
+          env :TERM => "xterm-256color"
+        end
+      end
+    end
+
+    put it in ~/.taketo.rc.rb (or wherever you want using --config)
+    and `taketo my_project` effectively becomes:
+    `ssh -t 192.168.1.1 "cd /var/www/prj1; TERM=xterm-256color RAILS_ENV=staging bash"`
+
+    see http://github.com/v-yarotsky/taketo for additional instructions
+  DESC
 
   s.version = Taketo::VERSION.dup
   s.authors = ["Vladimir Yarotsky"]
