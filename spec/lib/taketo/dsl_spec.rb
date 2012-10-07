@@ -82,19 +82,34 @@ describe "DSL" do
   end
 
   describe "#include_shared_server_config" do
-    it "executes the block on dsl object in server scope" do
+    it "executes the block on dsl object in server scope for given shared config names" do
       dsl(scopes[:server], factory.create(:server)) do |c|
-        c.stub(:shared_server_configs => { :foo => proc { any_method_call_here } })
+        c.stub(:shared_server_configs => { :foo => proc { any_method_call_here }, :bar => proc { second_method_call_here } })
         c.should_receive(:any_method_call_here)
-        c.include_shared_server_config(:foo)
+        c.should_receive(:second_method_call_here)
+        c.include_shared_server_config(:foo, :bar)
       end
     end
 
-    it "accepts arguments" do
-      dsl(scopes[:server], factory.create(:server)) do |c|
-        c.stub(:shared_server_configs => { :foo => proc { |qux| any_method_call_here(qux) } })
-        c.should_receive(:any_method_call_here).with(321)
-        c.include_shared_server_config(:foo, 321)
+    context "when the only argument is hash where shared config names are keys" do
+      context "when hash values are arrays" do
+        it "includes config corresponding to hash key and passes exploded arguments" do
+          dsl(scopes[:server], factory.create(:server)) do |c|
+            c.stub(:shared_server_configs => { :foo => proc { |a, b| any_method_call_here(a, b) } })
+            c.should_receive(:any_method_call_here).with(321, 322)
+            c.include_shared_server_config(:foo => [321, 322])
+          end
+        end
+      end
+
+      context "when hash values are single values" do
+        it "includes config corresponding to hash key and passes the argument" do
+          dsl(scopes[:server], factory.create(:server)) do |c|
+            c.stub(:shared_server_configs => { :foo => proc { |qux| any_method_call_here(qux) } })
+            c.should_receive(:any_method_call_here).with(321)
+            c.include_shared_server_config(:foo => 321)
+          end
+        end
       end
     end
 

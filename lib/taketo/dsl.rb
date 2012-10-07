@@ -74,9 +74,20 @@ module Taketo
       @shared_server_configs.store(name.to_sym, blk)
     end
 
-    define_method_in_scope(:include_shared_server_config, :server) do |name, *args|
-      instance_exec(*args, &shared_server_configs[name])
+    define_method_in_scope(:include_shared_server_config, :server) do |*args|
+      if args.first.is_a?(Hash)
+        configs_and_arguments = args.shift
+        configs_and_arguments.each do |config_name, arguments|
+          instance_exec(*arguments, &shared_server_configs[config_name])
+        end
+      else
+        args.each do |config_name|
+          instance_exec(&shared_server_configs[config_name])
+        end
+      end
     end
+    alias :include_shared_server_configs :include_shared_server_config
+
 
     private
 
