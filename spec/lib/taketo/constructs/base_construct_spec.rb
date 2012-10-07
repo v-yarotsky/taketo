@@ -12,6 +12,10 @@ describe "BaseConstruct" do
     construct.node_type.should == :test_base_construct
   end
 
+  specify "#qualified_name returns node type and name as string" do
+    expect(construct.qualified_name).to eq('test_base_construct my_node')
+  end
+
 end
 
 

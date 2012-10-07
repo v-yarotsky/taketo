@@ -16,9 +16,7 @@ describe "ConfigValidator" do
 end
 
 describe "ConfigValidator::ConfigValidatorVisitor" do
-  def visitor
-    ConfigValidator::ConfigValidatorVisitor.new
-  end
+  subject(:visitor) { ConfigValidator::ConfigValidatorVisitor.new }
 
   it "should require config to have projects" do
     config = stub(:Config, :has_projects? => false)

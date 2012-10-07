@@ -9,14 +9,12 @@ module Taketo
     class NodeWithPath < SimpleDelegator
       extend Forwardable
       def_delegators :__getobj__, :class, :ancestors, :== # avoid ancestry tree troubles
+      
+      attr_reader :path
 
       def initialize(node, path_string)
         super(node)
-        @path = path_string
-      end
-
-      def path
-        @path.dup
+        @path = path_string.freeze
       end
     end
 
