@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.name = "taketo"
   s.summary = "A tiny helper utility to make access to servers eaiser " \
     "for different projects and environments"
-  s.description <<-DESC
+  s.description = <<-DESC
     The aim of the project is to aid quick access to often used servers for web-developers
 
     With config similar to the following, one could make his life easier:
