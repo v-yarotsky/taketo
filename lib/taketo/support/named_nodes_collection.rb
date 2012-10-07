@@ -29,6 +29,15 @@ module Taketo
       def find_by_name(name)
         @nodes.detect { |n| n.name == name }
       end
+
+      def ==(other)
+        return true if other.equal?(self)
+        @nodes == other.is_a?(NamedNodesCollection) ? other.nodes : other
+      end
+
+      protected
+      
+      attr_reader :nodes
     end
   end
 end

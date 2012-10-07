@@ -4,7 +4,7 @@ require 'taketo/constructs/command'
 include Taketo
 
 describe "Command" do
-  subject { Taketo::Constructs::Command.new(:the_command) }
+  subject(:command) { Taketo::Constructs::Command.new(:the_command) }
 
   it { should have_accessor(:command) }
   it { should have_accessor(:description) }
@@ -16,26 +16,26 @@ describe "Command" do
            :default_location => "/var/apps/the app")
     end
 
-    it "should pick up server's environment variables and location" do
-      subject.command = "rails c"
-      subject.render(server).should == "cd /var/apps/the\\ app; FOO=bar\\ baz rails c"
+    it "picks up server's environment variables and location" do
+      command.command = "rails c"
+      expect(command.render(server)).to eq("cd /var/apps/the\\ app; FOO=bar\\ baz rails c")
     end
 
-    it "should let user override default directory" do
-      subject.command = "rails c"
-      subject.render(server, :directory => "/var/qux").should == "cd /var/qux; FOO=bar\\ baz rails c"
+    it "lets user override default directory" do
+      command.command = "rails c"
+      expect(command.render(server, :directory => "/var/qux")).to eq("cd /var/qux; FOO=bar\\ baz rails c")
     end
   end
 
   describe ".default" do
-    it "should return 'bash' command" do
-      Taketo::Constructs::Command.default.command.should == "bash"
+    it "returns 'bash' command" do
+      expect(Taketo::Constructs::Command.default.command).to eq("bash")
     end
   end
 
   describe ".explicit_command" do
-    it "should return given command string encapsulated" do
-      Taketo::Constructs::Command.explicit_command("qq").command.should == "qq"
+    it "returns given command string encapsulated" do
+      expect(Taketo::Constructs::Command.explicit_command("qq").command).to eq("qq")
     end
   end
 end

@@ -5,16 +5,16 @@ require 'taketo/constructs/project'
 include Taketo
 
 describe "Project" do
-  subject { Taketo::Constructs::Project.new(:foo) }
+  subject(:project) { Taketo::Constructs::Project.new(:foo) }
 
-  it "should have name" do
-    subject.name.should == :foo
+  it "has name" do
+    expect(project.name).to eq(:foo)
   end
   
-  specify "#append_environment should set project attribute on an environment to self" do
+  specify "#append_environment sets project attribute on an environment to self" do
     environment = mock(:Environment, :name => :bar)
-    environment.should_receive(:project=).with(subject)
-    subject.append_environment(environment)
+    environment.should_receive(:project=).with(project)
+    project.append_environment(environment)
   end
 
   it_behaves_like "a construct with nodes", :environments, :environment

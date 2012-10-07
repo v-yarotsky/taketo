@@ -9,7 +9,6 @@ module Taketo
 
       def initialize(server, options = {})
         @server = server
-        @environment = @server.environment
       end
 
       def render(rendered_command)
@@ -17,9 +16,6 @@ module Taketo
       end
 
       def host
-        unless @server.host
-          raise ArgumentError, "host for server #{@server.name} in #{@environment.name} is not defined!"
-        end
         shellescape @server.host
       end
 

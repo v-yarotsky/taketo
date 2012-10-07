@@ -5,10 +5,10 @@ require 'taketo/constructs/server'
 include Taketo
 
 describe "Server" do
-  subject { Taketo::Constructs::Server.new(:foo) }
+  subject(:server) { Taketo::Constructs::Server.new(:foo) }
 
-  it "should have name" do
-    subject.name.should == :foo
+  it "has name" do
+    expect(server.name).to eq(:foo)
   end
 
   it { should have_accessor(:host) }
@@ -25,30 +25,30 @@ describe "Server" do
     end
   end
 
-  it "should have default command" do
+  it "has default command" do
     Taketo::Constructs::Command.should_receive(:default).and_return(:qux)
-    subject.default_command.should == :qux
+    expect(server.default_command).to eq(:qux)
   end
 
   describe "#environment=" do
     let(:environment) { environment = stub(:Environment, :name => :the_environment) }
 
-    it "should set environment" do
-      subject.environment = environment
-      subject.environment.should == environment
+    it "sets environment" do
+      server.environment = environment
+      expect(server.environment).to eq(environment)
     end
 
-    it "should set RAILS_ENV environment variable" do
-      subject.environment_variables.should == {}
-      subject.environment = environment
-      subject.environment_variables[:RAILS_ENV].should == environment.name.to_s
+    it "sets RAILS_ENV environment variable" do
+      server.environment_variables.should == {}
+      server.environment = environment
+      expect(server.environment_variables[:RAILS_ENV]).to eq(environment.name.to_s)
     end
   end
 
-  it "should set environment variables" do
-    subject.env :FOO => "bar"
-    subject.env :BAR => "baz"
-    subject.environment_variables.should include(:FOO => "bar", :BAR => "baz")
+  it "sets environment variables" do
+    server.env :FOO => "bar"
+    server.env :BAR => "baz"
+    expect(server.environment_variables).to include(:FOO => "bar", :BAR => "baz")
   end
 
   it_behaves_like "a construct with nodes", :commands, :command

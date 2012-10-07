@@ -34,6 +34,11 @@ describe "NamedNodesCollection" do
     collection.length.should == 1
     collection.first.should == node1
   end
+
+  it "should compare itself to array" do
+    collection << node1
+    collection.should == [node1]
+  end
 end
 
 
