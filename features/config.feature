@@ -4,7 +4,7 @@ Feature: taketo config
   I want to be able configure taketo
 
   Scenario: Shared server configs
-    When I have the following config in "/tmp/taketo_test_cfg.rb"
+    When I have the following config
       """
       shared_server_config :sc1 do
         port 9999 #can contain any server config options
@@ -20,14 +20,14 @@ Feature: taketo config
         end
       end
       """
-    And I successfully run `taketo slots:staging:s1 --config=/tmp/taketo_test_cfg.rb --dry-run`
+    And I run taketo slots:staging:s1 --dry-run
     Then the output should contain
       """
       ssh -t -p 9999 1.2.3.4 "cd /var/qux; RAILS_ENV=staging bash"
       """
 
   Scenario: Shared server configs with arguments
-    When I have the following config in "/tmp/taketo_test_cfg.rb"
+    When I have the following config
       """
       shared_server_config :sc_args1 do |port_num|
         port port_num
@@ -46,14 +46,14 @@ Feature: taketo config
         end
       end
       """
-    And I successfully run `taketo slots:staging:s1 --config=/tmp/taketo_test_cfg.rb --dry-run`
+    And I run taketo slots:staging:s1 --dry-run
     Then the output should contain
       """
       ssh -t -p 9999 1.2.3.4 "cd /var/qux; RAILS_ENV=staging bash"
       """
 
   Scenario: Set environment variables
-    When I have the following config in "/tmp/taketo_test_cfg.rb"
+    When I have the following config
       """
       project :slots do
         environment :staging do
@@ -65,7 +65,7 @@ Feature: taketo config
         end
       end
       """
-    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run`
+    And I run taketo --dry-run
     Then the output should contain
       """
       RAILS_ENV=staging
@@ -74,9 +74,9 @@ Feature: taketo config
       """
       FOO=the\ value
       """
-      
+
   Scenario: Reopen config scopes
-    When I have the following config in "/tmp/taketo_test_cfg.rb"
+    When I have the following config
       """
       project :slots do
         environment :staging do
@@ -94,11 +94,11 @@ Feature: taketo config
         end
       end
       """
-    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb slots:staging --dry-run`
+    And I run taketo slots:staging --dry-run
     Then the output should match /ssh -t 1\.2\.3\.4 "(RAILS_ENV=staging FOO=bar|FOO=bar RAILS_ENV=staging) bash"/
 
   Scenario: Unique server alias
-    When I have the following config in "/tmp/taketo_test_cfg.rb"
+    When I have the following config
       """
       project :slots do
         environment :staging do
@@ -112,7 +112,7 @@ Feature: taketo config
         end
       end
       """
-    And I successfully run `taketo ss2 --config=/tmp/taketo_test_cfg.rb --dry-run`
+    And I run taketo ss2 --dry-run
     Then the output should contain
       """
       ssh -t 2.3.4.5 "RAILS_ENV=staging bash"

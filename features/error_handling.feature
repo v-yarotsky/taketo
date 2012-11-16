@@ -4,7 +4,7 @@ Feature:
   I want to see meaningful errors when I accidentally specify bad location
 
   Background:
-    When I have the following config in "/tmp/taketo_test_cfg.rb"
+    When I have the following config
       """
       default_destination "slots:staging:s2"
       project :slots do
@@ -20,10 +20,10 @@ Feature:
       """
 
   Scenario: Non-existent location
-    And I run `taketo slots:staging:qqq --config=/tmp/taketo_test_cfg.rb --dry-run`
+    And I run taketo slots:staging:qqq --dry-run
     Then the stderr should contain "server qqq not found for environment staging"
 
   Scenario: Ambiguous location
-    And I run `taketo slots:staging --config=/tmp/taketo_test_cfg.rb --dry-run`
+    And I run taketo slots:staging --dry-run
     Then the stderr should contain "There are multiple servers for environment staging: s1, s2"
 

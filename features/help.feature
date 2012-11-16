@@ -4,7 +4,7 @@ Feature:
   I want to view what's set up in config quickly
 
   Background:
-    When I have the following config in "/tmp/taketo_test_cfg.rb"
+    When I have the following config
     """
     project :foo do
       environment :bar do
@@ -34,7 +34,7 @@ Feature:
     """
 
   Scenario: View full config
-    When I run `taketo --config=/tmp/taketo_test_cfg.rb --view`
+    When I run taketo --view
     Then the output should contain exactly:
       """
 
@@ -55,11 +55,11 @@ Feature:
             Environment: RAILS_ENV=qux
               console
               killall - Kill ALL humans
-      
+
       """
 
   Scenario: View particular server
-    When I run `taketo --config=/tmp/taketo_test_cfg.rb --view foo:bar:default`
+    When I run taketo --view foo:bar:default
     Then the output should contain exactly:
       """
       Server: default

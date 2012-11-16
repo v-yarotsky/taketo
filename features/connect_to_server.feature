@@ -5,7 +5,7 @@ Feature:
   configurable with simple DSL
 
   Scenario: SSH to server
-    When I have the following config in "/tmp/taketo_test_cfg.rb"
+    When I have the following config
       """
       project :slots do
         environment :staging do
@@ -22,14 +22,14 @@ Feature:
       end
 
       """
-    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run slots:staging:s1`
+    And I run taketo --dry-run slots:staging:s1
     Then the output should contain
       """
       ssh -t deployer@1.2.3.4 "cd /var/apps/slots; RAILS_ENV=staging bash"
       """
 
   Scenario: SSH to the only server
-    When I have the following config in "/tmp/taketo_test_cfg.rb"
+    When I have the following config
       """
       project :slots do
         environment :staging do
@@ -40,14 +40,14 @@ Feature:
         end
       end
       """
-    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run`
+    And I run taketo --dry-run
     Then the output should contain
       """
       ssh -t 1.2.3.4 "cd /var/apps/slots; RAILS_ENV=staging bash"
       """
 
   Scenario: Default destination
-    When I have the following config in "/tmp/taketo_test_cfg.rb"
+    When I have the following config
       """
       default_destination "slots:staging:s2"
       project :slots do
@@ -61,14 +61,14 @@ Feature:
         end
       end
       """
-    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run`
+    And I run taketo --dry-run
     Then the output should contain
       """
       ssh -t 2.3.4.5 "RAILS_ENV=staging bash"
       """
 
   Scenario: SSH key file
-    When I have the following config in "/tmp/taketo_test_cfg.rb"
+    When I have the following config
       """
       project :slots do
         environment :staging do
@@ -79,7 +79,7 @@ Feature:
         end
       end
       """
-    And I successfully run `taketo --config=/tmp/taketo_test_cfg.rb --dry-run`
+    And I run taketo --dry-run
     Then the output should contain
       """
       ssh -t -i /home/gor/.ssh/foo\ bar 2.3.4.5 "RAILS_ENV=staging bash"
