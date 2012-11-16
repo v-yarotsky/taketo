@@ -84,14 +84,14 @@ describe "DSL" do
   describe "#include_shared_server_config" do
     it "executes the block on dsl object in server scope for given shared config names" do
       dsl(scopes[:server], factory.create(:server)) do |c|
-        c.stub(:shared_server_configs => { :foo => proc { any_method_call_here }, :bar => proc { second_method_call_here } })
-        c.should_receive(:any_method_call_here)
-        c.should_receive(:second_method_call_here)
+        c.stub(:shared_server_configs => { :foo => proc { call_from_foo }, :bar => proc { call_from_bar } })
+        c.should_receive(:call_from_foo)
+        c.should_receive(:call_from_bar)
         c.include_shared_server_config(:foo, :bar)
       end
     end
 
-    context "when the only argument is hash where shared config names are keys" do
+    context "when the argument is hash where shared config names are keys" do
       context "when hash values are arrays" do
         it "includes config corresponding to hash key and passes exploded arguments" do
           dsl(scopes[:server], factory.create(:server)) do |c|
@@ -109,6 +109,17 @@ describe "DSL" do
             c.should_receive(:any_method_call_here).with(321)
             c.include_shared_server_config(:foo => 321)
           end
+        end
+      end
+    end
+
+    context "whne there are symbol arguments (names of shared configs) and a hash" do
+      it "includes config corresponding to symbol arguments and hash keys" do
+        dsl(scopes[:server], factory.create(:server)) do |c|
+          c.stub(:shared_server_configs => { :foo => proc { call_from_foo }, :bar => proc { |qux| call_from_bar(qux) } })
+          c.should_receive(:call_from_foo)
+          c.should_receive(:call_from_bar).with(123)
+          c.include_shared_server_config(:foo, :bar => 123)
         end
       end
     end

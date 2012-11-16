@@ -66,7 +66,7 @@ Destination resolving works intelligently. Given the following config:
       end
     end
   end
-  
+
   project :my_project2 do
     environment :staging do
       server :s2 do
@@ -76,8 +76,8 @@ Destination resolving works intelligently. Given the following config:
   end
 ```
 
-```taketo my_project:staging``` will ssh to s1 with host = 1.2.3.4  
-```taketo my_project2``` will ssh to s2 with host = 2.3.4.5   
+```taketo my_project:staging``` will ssh to s1 with host = 1.2.3.4
+```taketo my_project2``` will ssh to s2 with host = 2.3.4.5
 ```taketo mps1``` will ssh to ps1 with host = 3.4.5.6 - note the use of global alias
 
 Note that default destination can be specified via ```default_destination``` config option
@@ -105,13 +105,13 @@ You can use shared server configs to reduce duplication:
 
       server :s2 do
         host :s2 do
-        include_shared_server_config(:my_staging => [], :some_other_shared_config => "qux")
+        include_shared_server_config(:my_staging, :some_other_shared_config => "qux")
       end
     end
   end
 ```
 
-This will give you ```console``` commands available both on s1 and s2  
+This will give you ```console``` commands available both on s1 and s2
 
 The Changelog:
 --------------
@@ -127,7 +127,7 @@ The Changelog:
   ```ruby
     include_shared_server_configs(:baz, :quux)
   ```
-  
+
   NOTE: This change will break your config if you've used parametrized
         shared server configs before; rewrite them using hash-form
 
@@ -155,3 +155,14 @@ The Changelog:
 * Initial release
 * Support for simplest configs
 
+
+TO-DO:
+------
+
+* Shared server configs without arguments
+* Global server defaults
+* Override default commands per server
+* Define servers outside projects and environments
+* Export SSH config (i.e. for scp)
+* Destination completion
+* Command completion

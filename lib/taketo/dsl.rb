@@ -75,15 +75,8 @@ module Taketo
     end
 
     define_method_in_scope(:include_shared_server_config, :server) do |*args|
-      if args.first.is_a?(Hash)
-        configs_and_arguments = args.shift
-        configs_and_arguments.each do |config_name, arguments|
-          instance_exec(*arguments, &shared_server_configs[config_name])
-        end
-      else
-        args.each do |config_name|
-          instance_exec(&shared_server_configs[config_name])
-        end
+      extract_config_names_and_arguments(args).each do |config_name, arguments|
+        instance_exec(*arguments, &shared_server_configs[config_name])
       end
     end
     alias :include_shared_server_configs :include_shared_server_config
@@ -110,6 +103,13 @@ module Taketo
       parent_scope_object.send("append_#{scope}", current_scope_object)
       @scope.pop
       @current_scope_object = parent_scope_object
+    end
+
+    def extract_config_names_and_arguments(args)
+      hashes, names = args.partition { |arg| arg.is_a? Hash }
+      configs_from_hashes = hashes.inject({}, &:merge)
+      configs_from_names = Hash[names.map { |config_name| [config_name.to_sym, []] }]
+      configs_from_hashes.merge(configs_from_names)
     end
 
   end
