@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'taketo/dsl'
 
 describe "Taketo DSL" do
-  it "should parse config and instantiate objects" do
+  it "parses config and instantiate objects" do
     factory = Taketo::ConstructsFactory.new
     config = Taketo::DSL.new(factory).configure do
       shared_server_config(:commands) do
@@ -44,7 +44,7 @@ describe "Taketo DSL" do
 
     project.environments.length.should == 2
     staging = project.environments[:staging]
-    
+
     staging.servers.length.should == 1
     staging_server = staging.servers[:default]
     staging_server.name.should == :default

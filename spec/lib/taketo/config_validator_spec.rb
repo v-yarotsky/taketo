@@ -7,7 +7,7 @@ describe "ConfigValidator" do
   let(:traverser) { stub(:ConfigTraverser) }
 
   describe "#validate!" do
-    it "should visit all nodes with an instance of ConfigValidator::ConfigValidatorVisitor" do
+    it "visits all nodes with an instance of ConfigValidator::ConfigValidatorVisitor" do
       validator = ConfigValidator.new(traverser)
       traverser.should_receive(:visit_depth_first).with(an_instance_of(ConfigValidator::ConfigValidatorVisitor))
       validator.validate!
@@ -18,7 +18,7 @@ end
 describe "ConfigValidator::ConfigValidatorVisitor" do
   subject(:visitor) { ConfigValidator::ConfigValidatorVisitor.new }
 
-  it "should require config to have projects" do
+  it "requires config to have projects" do
     config = stub(:Config, :has_projects? => false)
     error_message = /no projects/
     expect { visitor.visit_config(config) }.to raise_error ConfigError, error_message
@@ -27,7 +27,7 @@ describe "ConfigValidator::ConfigValidatorVisitor" do
     expect { visitor.visit_config(config) }.not_to raise_error ConfigError, error_message
   end
 
-  it "should require projects to have environments" do
+  it "requires projects to have environments" do
     project = stub(:Project, :has_environments? => false, :path => "my_project")
     error_message = /my_project: no environments/
     expect { visitor.visit_project(project) }.to raise_error ConfigError, error_message
@@ -36,7 +36,7 @@ describe "ConfigValidator::ConfigValidatorVisitor" do
     expect { visitor.visit_project(project) }.not_to raise_error ConfigError, error_message
   end
 
-  it "should require environments to have servers" do
+  it "requires environments to have servers" do
     environment = stub(:Environment, :has_servers? => false, :path => "my_project:my_environment")
     error_message = /my_project:my_environment: no servers/
     expect { visitor.visit_environment(environment) }.to raise_error ConfigError, error_message
@@ -45,7 +45,7 @@ describe "ConfigValidator::ConfigValidatorVisitor" do
     expect { visitor.visit_environment(environment) }.not_to raise_error ConfigError, error_message
   end
 
-  it "should require servers to have host" do
+  it "requires servers to have host" do
     server = stub(:Server, :host => '', :path => "my_project:my_environment:my_server", :global_alias => nil)
     error_message = /my_project:my_environment:my_server: host is not defined/
     expect { visitor.visit_server(server) }.to raise_error ConfigError, error_message
@@ -54,7 +54,7 @@ describe "ConfigValidator::ConfigValidatorVisitor" do
     expect { visitor.visit_server(server) }.not_to raise_error ConfigError, error_message
   end
 
-  it "should require servers to have unique global server aliases" do
+  it "requires servers to have unique global server aliases" do
     server1 = stub(:Server, :host => 'the-host1', :path => "my_project:my_environment:my_server", :global_alias => 'foo')
     server2 = stub(:Server, :host => 'the-host2', :path => "my_project:my_environment2:my_server3", :global_alias => 'foo')
     error_message = /my_project:my_environment2:my_server3: global alias 'foo' has already been taken.*my_project:my_environment:my_server/
@@ -63,7 +63,7 @@ describe "ConfigValidator::ConfigValidatorVisitor" do
     expect { @visitor.visit_server(server2) }.to raise_error ConfigError, error_message
   end
 
-  it "should require commands to have command specified" do
+  it "requires commands to have command specified" do
     command = stub(:Command, :command => '', :name => 'qux')
     error_message = /execute/
     expect { visitor.visit_command(command) }.to raise_error ConfigError, error_message
