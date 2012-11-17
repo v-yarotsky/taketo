@@ -116,12 +116,28 @@ This will give you ```console``` commands available both on s1 and s2
 The Changelog:
 --------------
 
+### v0.0.8 (17.11.2012) ###
+* Add per-config, per-project and per-environment default server config support, i.e.
+  ```ruby
+    default_server_config { env :TERM => 'xterm-256color' }  # Global default server config
+
+    project :p1 do
+      default_server_config { env :FOO => 'bar' } # global default server config is merged
+      ...
+    end
+  ```
+
+* Shared server configs can be included without redundant empty-array arguments, i.e.
+  ```ruby
+    include_shared_server_configs(:foo, :bar, :baz => [:arg1, :arg2], :qux => :arg3)
+  ```
+
 ### v0.0.7 (08.10.2012) ###
 * Add ability to include several shared server config at once
   Use hash as include_shared_server_config parameter to include
   multiple shared server configs with arguments, like:
   ```ruby
-    include_shared_server_config(:foo => :some_arg, :bar => [:arg1, :arg2])
+    include_shared_server_configs(:foo => :some_arg, :bar => [:arg1, :arg2])
   ```
   or just enumerate them if no arguments needed:
   ```ruby
