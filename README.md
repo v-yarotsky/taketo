@@ -138,8 +138,14 @@ Also it's possible to specify default server configuration for any scope (whole 
 
 Default configs are merged appropriately.
 
+
+An SSH config file can be generated from taketo config. To do so, run ```taketo --generate-ssh-config```.
+
 The Changelog:
 --------------
+
+### v0.0.10 (17.11.2012) ###
+* Add ability to generate ssh config
 
 ### v0.0.9 (17.11.2012) ###
 * Add default_command server config option
@@ -203,8 +209,6 @@ The Changelog:
 TO-DO:
 ------
 
-* Override default commands per server
 * Define servers outside projects and environments
-* Export SSH config (i.e. for scp)
 * Destination completion
 * Command completion
