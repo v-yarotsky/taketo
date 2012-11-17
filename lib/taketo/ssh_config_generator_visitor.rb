@@ -1,10 +1,9 @@
 require 'taketo/config_visitor'
+require 'taketo/printer'
 
 module Taketo
   class SSHConfigGeneratorVisitor < ConfigVisitor
-    def initialize
-      @result = ""
-    end
+    include Printer
 
     visit Server do |server|
       put "Host #{server.global_alias || server.host}"
@@ -17,20 +16,6 @@ module Taketo
 
     visit Object do |_|
       # catch all
-    end
-
-    def result
-      @result.chomp
-    end
-
-    private
-
-    def put(str = "")
-      @result += str + "\n"
-    end
-
-    def put_optional(str, value)
-      put "#{str} #{value}" if value
     end
   end
 end

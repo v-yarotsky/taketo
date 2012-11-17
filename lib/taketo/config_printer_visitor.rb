@@ -1,16 +1,14 @@
 require 'taketo/config_visitor'
+require 'taketo/printer'
 
 module Taketo
   class ConfigPrinterVisitor < ConfigVisitor
-    def initialize
-      @indent_level = 0
-      @result = ""
-    end
+    include Printer
 
     visit Config do |config|
       indent(0) do
         if config.has_projects?
-          put "Default destination: #{config.default_destination}" if config.default_destination
+          put_optional "Default destination:", config.default_destination
         else
           put "There are no projects yet..."
         end
@@ -37,9 +35,9 @@ module Taketo
         put "Server: #{server.name}"
         indent do
           put "Host: #{server.host}"
-          put "Port: #{server.port}" if server.port
-          put "User: #{server.username}" if server.username
-          put "Default location: #{server.default_location}" if server.default_location
+          put_optional "Port:", server.port
+          put_optional "User:", server.username
+          put_optional "Default location:", server.default_location
           put "Default command: #{server.default_command}"
           put "Environment: " + server.environment_variables.map { |n, v| "#{n}=#{v}" }.join(" ")
           put "Commands:" if server.has_commands?
@@ -49,20 +47,6 @@ module Taketo
 
     visit Command do |command|
       indent(4) { put command.name.to_s + (" - " + command.description if command.description).to_s }
-    end
-
-    def result
-      @result.chomp
-    end
-
-    def indent(level = nil)
-      @first_indent ||= level || @indent_level
-      level ? @indent_level = level - @first_indent : @indent_level += 1
-      yield
-    end
-
-    def put(str = nil)
-      @result += ("  " * @indent_level + str.to_s).rstrip.chomp + "\n"
     end
   end
 end
