@@ -30,14 +30,14 @@ describe "Server" do
     expect(server.default_command).to eq(:qux)
   end
 
-  describe "#environment=" do
-    let(:environment) { environment = stub(:Environment, :name => :the_environment) }
+  describe "#parent=" do
+    let(:environment) { environment = stub(:Environment, :name => :the_environment, :default_server_config => proc {}) }
 
     it { should have_accessor(:environment, environment) }
 
     it "sets RAILS_ENV environment variable" do
       server.environment_variables.should == {}
-      server.environment = environment
+      server.parent = environment
       expect(server.environment_variables[:RAILS_ENV]).to eq(environment.name.to_s)
     end
   end

@@ -15,11 +15,6 @@ module Taketo
       def project_name
         @project.name if defined? @project
       end
-
-      def append_server(server)
-        server.environment = self
-        super
-      end
     end
   end
 end

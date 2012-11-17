@@ -8,11 +8,15 @@ describe "DSL" do
   extend DSLSpec
   include DSLSpec
 
-  shared_examples "a scoped construct" do |name, parent_scope_name, with_block|
-    parent_scope = scopes[parent_scope_name]
-    it { should be_appropriate_construct(name, :foo).with_block(with_block).under(parent_scope) }
+  shared_examples "a scoped construct" do |name, parents, with_block|
+    parents = Array(parents)
 
-    scopes.except(parent_scope_name).each do |inappropriate_scope|
+    parents.each do |parent_scope_name|
+      parent_scope = scopes[parent_scope_name]
+      it { should be_appropriate_construct(name, :foo).with_block(with_block).under(parent_scope) }
+    end
+
+    scopes.except(*parents).each do |inappropriate_scope|
       it { should_not be_appropriate_construct(name, :foo).with_block(with_block).under(inappropriate_scope) }
     end
   end
@@ -52,21 +56,43 @@ describe "DSL" do
         c.send(scope_name, :bar) {}                                                        #     c.project(:bar) {}
       end                                                                                  #   end
     end                                                                                    # end
+
+    it "sets #{scope_name}'s parent to the #{parent_scope_name} scope object" do           # it "sets project's parent to the config scope object" do
+      dsl(parent_scope, factory.create(parent_scope_name)) do |c|                          #   dsl([:config], factory.create(:config)) do |c|
+        stub_find_or_create_scope_object(c, scope_name, :bar)                              #     stub_find_or_create_scope_object(c, :project, :bar)
+        factory.send(scope_name).should_receive(:parent=).with(c.current_scope_object)     #     factory.project.should_receive(:parent=).with(c.current_scope_object)
+        c.send(scope_name, :bar) {}                                                        #     c.project(:bar) {}
+      end                                                                                  #   end
+    end                                                                                    #
   end
 
-  shared_examples "a scoped method" do |attribute_name, parent_scope_name, parent_scope_method, example_value|
-    it_behaves_like "a scoped construct", attribute_name, parent_scope_name, false
+  shared_examples "a scoped method" do |attribute_name, parent_scope_names, parent_scope_method, example_value|
+    it_behaves_like "a scoped construct", attribute_name, parent_scope_names, false
 
-    it "calls #{parent_scope_method} on current #{parent_scope_name}" do                        # it "calls default_location= on current server" do
-      dsl(scopes[parent_scope_name], factory.create(parent_scope_name, :foo)) do |c|            #   dsl([:config, :project, :environment, :server], factory.create(:server, :foo)) do |c|
-        factory.send(parent_scope_name).should_receive(parent_scope_method).with(example_value) #     factory.server.should_receive(:default_location=).with('/var/app/')
-        c.send(attribute_name, example_value)                                                   #   c.location "/var/app"
-      end                                                                                       # end
+    Array(parent_scope_names).each do |parent_scope_name|
+      it "calls #{parent_scope_method} on current #{parent_scope_name}" do                        # it "calls default_location= on current server" do
+        dsl(scopes[parent_scope_name], factory.create(parent_scope_name, :foo)) do |c|            #   dsl([:config, :project, :environment, :server], factory.create(:server, :foo)) do |c|
+          factory.send(parent_scope_name).should_receive(parent_scope_method).with(example_value) #     factory.server.should_receive(:default_location=).with('/var/app/')
+          c.send(attribute_name, example_value)                                                   #   c.location "/var/app"
+        end                                                                                       # end
+      end
     end
   end
 
   describe "#default_destination" do
     it_behaves_like "a scoped method", :default_destination, :config, :default_destination=, "foo:bar:baz"
+  end
+
+  describe "#default_server_config" do
+    it_behaves_like "a scoped construct", :default_server_config, [:config, :project, :environment]
+
+    it "stores a block" do
+      dsl(scopes[:config], factory.create(:config)) do |c|
+        cfg = proc { any_method_call_here }
+        factory.config.should_receive(:default_server_config=).with(cfg)
+        c.default_server_config(&cfg)
+      end
+    end
   end
 
   describe "#shared_server_config" do
@@ -141,6 +167,20 @@ describe "DSL" do
 
   describe "#server" do
     it_behaves_like "a scope", :server, :environment
+
+    it "evaluates default_server_config" do
+      dsl(scopes[:environment], factory.create(:environment, :foo)) do |c|
+        stub_find_or_create_scope_object(c, :server, :bar)
+
+        default_server_config = proc { some_setup }
+        factory.server.stub(:default_server_config => default_server_config)
+
+        c.should_receive(:some_setup)
+
+        c.server(:bar) do
+        end
+      end
+    end
 
     it "has name optional" do
       dsl(scopes[:environment], factory.create(:environment, :foo)) do |c|

@@ -2,30 +2,27 @@ require 'taketo/constructs_factory'
 
 module Taketo
   class DSL
-    class ScopeError < StandardError;  end
+    class ScopeError  < StandardError; end
     class ConfigError < StandardError; end
 
     class << self
-      def define_scope(scope, parent_scope, options = {})
-        define_method scope do |*args, &block|
-          unless current_scope?(parent_scope)
-            raise ScopeError,
-              "#{scope} can't be defined in #{current_scope} scope"
-          end
+      def define_scope(scope, parent_scope, options = {}, &block)
+        define_method scope do |*args, &blk|
+          ensure_nesting_allowed!(scope, parent_scope)
           name = args.shift || options[:default_name] or raise(ArgumentError, "Name not specified")
+
           scope_object = current_scope_object.find(scope, name) { @factory.create(scope, name) }
+
           in_scope(scope, scope_object) do
-            block.call
+            instance_exec(current_scope_object, &block) if block
+            blk.call
           end
         end
       end
 
-      def define_method_in_scope(name, parent_scope, &block)
+      def define_method_in_scope(name, *parent_scopes, &block)
         define_method name do |*args, &blk|
-          unless current_scope?(parent_scope)
-            raise ScopeError,
-              "#{name} can't be defined in #{current_scope} scope"
-          end
+          ensure_nesting_allowed!(name, parent_scopes)
           args.push blk if blk
           instance_exec(*args, &block)
         end
@@ -56,7 +53,11 @@ module Taketo
 
     define_scope :project, :config
     define_scope :environment, :project
-    define_scope :server, :environment, :default_name => :default
+
+    define_scope :server, :environment, :default_name => :default do |s|
+      instance_eval(&s.default_server_config)
+    end
+
     define_scope :command, :server
 
     define_method_in_scope(:default_destination, :config) { |destination|   current_scope_object.default_destination = destination }
@@ -69,6 +70,10 @@ module Taketo
     define_method_in_scope(:identity_file, :server)       { |identity_file| current_scope_object.identity_file = identity_file     }
     define_method_in_scope(:execute, :command)            { |command|       current_scope_object.command = command                 }
     define_method_in_scope(:desc, :command)               { |description|   current_scope_object.description = description         }
+
+    define_method_in_scope(:default_server_config, :config, :project, :environment) do |blk|
+      current_scope_object.default_server_config = blk
+    end
 
     define_method_in_scope(:shared_server_config, :config) do |name, blk|
       @shared_server_configs.store(name.to_sym, blk)
@@ -99,10 +104,17 @@ module Taketo
     def in_scope(scope, new_scope_object)
       parent_scope_object, @current_scope_object = @current_scope_object, new_scope_object
       @scope.push(scope)
-      yield
       parent_scope_object.send("append_#{scope}", current_scope_object)
+      current_scope_object.parent = parent_scope_object
+      yield
       @scope.pop
       @current_scope_object = parent_scope_object
+    end
+
+    def ensure_nesting_allowed!(scope, parent_scopes)
+      if Array(parent_scopes).none? { |s| current_scope?(s) }
+        raise ScopeError, "#{scope} can't be defined in #{current_scope} scope"
+      end
     end
 
     def extract_config_names_and_arguments(args)

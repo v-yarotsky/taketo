@@ -19,9 +19,10 @@ module Taketo
         @environment_variables.merge!(env_variables)
       end
 
-      def environment=(environment)
+      def parent=(environment)
         env(:RAILS_ENV => environment.name.to_s)
         @environment = environment
+        super
       end
 
       def default_command

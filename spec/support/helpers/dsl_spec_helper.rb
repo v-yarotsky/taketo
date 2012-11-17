@@ -7,23 +7,23 @@ module DSLSpec
     end
 
     def create_config(*args)
-      @config ||= RSpec::Mocks::Mock.new(:Config).as_null_object
+      @config ||= RSpec::Mocks::Mock.new(:Config, :default_server_config => proc {}).as_null_object
     end
 
     def create_project(name = :foo)
-      @project ||= RSpec::Mocks::Mock.new(:Project, :name => name).as_null_object
+      @project ||= RSpec::Mocks::Mock.new(:Project, :name => name, :default_server_config => proc {}).as_null_object
     end
 
     def create_environment(name = :foo)
-      @environment ||= RSpec::Mocks::Mock.new(:Environment, :name => name).as_null_object
+      @environment ||= RSpec::Mocks::Mock.new(:Environment, :name => name, :default_server_config => proc {}).as_null_object
     end
 
     def create_server(name = :foo)
-      @server ||= RSpec::Mocks::Mock.new(:Server, :name => name).as_null_object
+      @server ||= RSpec::Mocks::Mock.new(:Server, :name => name, :default_server_config => proc {}).as_null_object
     end
 
     def create_command(name = :the_cmd)
-      @command ||= RSpec::Mocks::Mock.new(:Command, :name => name).as_null_object
+      @command ||= RSpec::Mocks::Mock.new(:Command, :name => name, :default_server_config => proc {}).as_null_object
     end
   end
 
