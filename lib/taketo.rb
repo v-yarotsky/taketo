@@ -8,5 +8,4 @@ require 'taketo/dsl'
 require 'taketo/commands'
 require 'taketo/config_traverser'
 require 'taketo/config_validator'
-require 'taketo/config_printer_visitor'
 

@@ -46,7 +46,13 @@ def parse_options
     end
 
     opts.on("-v", "--view", "Show config contents and exit") do |v|
+      require 'taketo/config_printer_visitor'
       options[:view] = v
+    end
+
+    opts.on("--generate-ssh-config", "Generate SSH config from taketo config") do |g|
+      require 'taketo/ssh_config_generator_visitor'
+      options[:generate_ssh_config] = g
     end
 
     opts.separator "Special options:"
@@ -100,6 +106,11 @@ begin
     config_printer = ConfigPrinterVisitor.new
     traverser.visit_depth_first(config_printer)
     puts config_printer.result
+  elsif options.delete(:generate_ssh_config)
+    traverser = ConfigTraverser.new(config)
+    ssh_config_generator = SSHConfigGeneratorVisitor.new
+    traverser.visit_depth_first(ssh_config_generator)
+    puts ssh_config_generator.result
   else
     server = resolver.resolve
     server_command = remote_command(server, options)
