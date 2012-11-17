@@ -38,5 +38,10 @@ describe "Command" do
       expect(Taketo::Constructs::Command.explicit_command("qq").command).to eq("qq")
     end
   end
+
+  specify "#to_s returns just command" do
+    command.command = "hello_there"
+    expect(command.to_s).to eq("hello_there")
+  end
 end
 

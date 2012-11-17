@@ -13,11 +13,15 @@ module Taketo
       end
 
       def self.explicit_command(command_string)
-        new(:explicit_command).tap { |cmd| cmd.command = command_string }
+        new(:explicit_command).tap { |cmd| cmd.command = command_string.to_s }
       end
 
       def render(server, options = {})
         %Q[#{location(server, options)} #{environment_variables(server)} #{command}].strip.squeeze(" ")
+      end
+
+      def to_s
+        command.to_s
       end
 
       private

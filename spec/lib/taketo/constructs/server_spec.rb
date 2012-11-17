@@ -15,7 +15,6 @@ describe "Server" do
   it { should have_accessor(:port) }
   it { should have_accessor(:username) }
   it { should have_accessor(:default_location) }
-  it { should have_accessor(:default_command) }
   it { should have_accessor(:global_alias) }
   it { should have_accessor(:identity_file) }
 
@@ -25,9 +24,27 @@ describe "Server" do
     end
   end
 
-  it "has default command" do
-    Taketo::Constructs::Command.should_receive(:default).and_return(:qux)
-    expect(server.default_command).to eq(:qux)
+  describe "#default_command" do
+    before(:each) { stub_const("Taketo::Constructs::Command", Class.new) }
+
+    it "returns Command.default if nothing defined" do
+      Taketo::Constructs::Command.should_receive(:default).and_return(:qux)
+      expect(server.default_command).to eq(:qux)
+    end
+
+    it "returns existing defined command if default command name is set" do
+      command = stub(:Command, :name => :foo)
+      server.commands << command
+      server.default_command = :foo
+      expect(server.default_command).to eq(command)
+    end
+
+    it "returns explicit command if default command not found by name" do
+      command = stub(:Command)
+      Taketo::Constructs::Command.should_receive(:explicit_command).with("tmux attach || tmux new-session").and_return(command)
+      server.default_command = "tmux attach || tmux new-session"
+      expect(server.default_command).to eq(command)
+    end
   end
 
   describe "#parent=" do

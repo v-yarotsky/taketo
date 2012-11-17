@@ -118,3 +118,60 @@ Feature: taketo config
       ssh -t 2.3.4.5 "RAILS_ENV=staging bash"
       """
 
+  Scenario: Override default location specified for server
+    When I have the following config
+      """
+      project :slots do
+        environment :staging do
+          server do
+            location '/var/foo'
+            host "1.2.3.4"
+          end
+        end
+      end
+      """
+    When I run taketo --dry-run --directory /var/www slots:staging
+    Then the output should contain
+      """
+      ssh -t 1.2.3.4 "cd /var/www; RAILS_ENV=staging bash"
+      """
+
+  Scenario: Default server command
+    When I have the following config
+      """
+      project :slots do
+        environment :staging do
+          server do
+            host "1.2.3.4"
+
+            default_command :tmux
+
+            command :tmux do
+              execute "tmux attach || tmux new-session"
+            end
+          end
+        end
+      end
+      """
+    When I run taketo --dry-run slots:staging
+    Then the output should contain
+      """
+      ssh -t 1.2.3.4 "RAILS_ENV=staging tmux attach || tmux new-session"
+      """
+    When I have the following config
+      """
+      project :slots do
+        environment :staging do
+          server do
+            host "1.2.3.4"
+            default_command "do_something"
+          end
+        end
+      end
+      """
+    When I run taketo --dry-run slots:staging
+    Then the output should contain
+      """
+      ssh -t 1.2.3.4 "RAILS_ENV=staging do_something"
+      """
+

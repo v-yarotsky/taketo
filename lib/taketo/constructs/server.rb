@@ -26,7 +26,11 @@ module Taketo
       end
 
       def default_command
-        defined?(@default_command) ? @default_command : Command.default
+        if defined? @default_command
+          find_command(@default_command) || Command.explicit_command(@default_command)
+        else
+          Command.default
+        end
       end
     end
   end

@@ -29,6 +29,7 @@ describe "ConfigPrinterVisitor" do
            :port => 8000,
            :username => "bob",
            :default_location => "/var/app",
+           :default_command => "tmux",
            :environment_variables => { :FOO => "bar", :BOO => "baz" })
     end
 
@@ -41,13 +42,20 @@ describe "ConfigPrinterVisitor" do
   Port: 8000
   User: bob
   Default location: /var/app
+  Default command: tmux
   Environment: (FOO=bar BOO=baz|BOO=baz FOO=bar)])
     end
 
-    it "renders appropriate message if there are no commands" do
+    it "does not renders commands section header if there are no commands defined" do
       server.stub(:has_commands? => false)
       printer.visit_server(server)
-      expect(printer.result).to include("(No commands)")
+      expect(printer.result).not_to match(/commands/i)
+    end
+
+    it "renders commands if defined" do
+      server.stub(:has_commands? => true)
+      printer.visit_server(server)
+      expect(printer.result).to include("Commands:")
     end
   end
 

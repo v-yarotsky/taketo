@@ -219,6 +219,10 @@ describe "DSL" do
       it_behaves_like "a scoped method", :identity_file, :server, :identity_file=, "/home/gor/.ssh/qqq"
     end
 
+    describe "#default_command" do
+      it_behaves_like "a scoped method", :default_command, :server, :default_command=, :tmux
+    end
+
     describe "#command" do
       it_behaves_like "a scope", :command, :server
 

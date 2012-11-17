@@ -34,9 +34,3 @@ Feature:
       ssh -t 1.2.3.4 "cd /var/apps/slots; RAILS_ENV=staging rails c"
       """
 
-  Scenario: Override default location specified for server
-    When I run taketo --dry-run --directory /var/www slots:staging
-    Then the output should contain
-      """
-      ssh -t 1.2.3.4 "cd /var/www; RAILS_ENV=staging bash"
-      """

@@ -68,6 +68,7 @@ module Taketo
     define_method_in_scope(:global_alias,:server)         { |alias_name|    current_scope_object.global_alias = alias_name         }
     define_method_in_scope(:env, :server)                 { |env|           current_scope_object.env(env)                          }
     define_method_in_scope(:identity_file, :server)       { |identity_file| current_scope_object.identity_file = identity_file     }
+    define_method_in_scope(:default_command, :server)     { |command|       current_scope_object.default_command = command         }
     define_method_in_scope(:execute, :command)            { |command|       current_scope_object.command = command                 }
     define_method_in_scope(:desc, :command)               { |description|   current_scope_object.description = description         }
 

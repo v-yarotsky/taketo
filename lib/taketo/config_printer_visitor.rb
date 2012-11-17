@@ -40,8 +40,9 @@ module Taketo
           put "Port: #{server.port}" if server.port
           put "User: #{server.username}" if server.username
           put "Default location: #{server.default_location}" if server.default_location
+          put "Default command: #{server.default_command}"
           put "Environment: " + server.environment_variables.map { |n, v| "#{n}=#{v}" }.join(" ")
-          indent { put "(No commands)" unless server.has_commands? }
+          put "Commands:" if server.has_commands?
         end
       end
     end

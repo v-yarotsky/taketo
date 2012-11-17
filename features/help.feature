@@ -21,8 +21,9 @@ Feature:
       environment :qux do
         server :bart do
           host "2.3.4.5"
+          default_command :console
           command :console do
-            execute "something_to_execute"
+            execute "rails c"
           end
           command :killall do
             execute "killall humans"
@@ -45,14 +46,16 @@ Feature:
             Port: 5678
             User: pivo
             Default location: /var/apps/vodka
+            Default command: bash
             Environment: RAILS_ENV=bar
-              (No commands)
 
       Project: baz
         Environment: qux
           Server: bart
             Host: 2.3.4.5
+            Default command: rails c
             Environment: RAILS_ENV=qux
+            Commands:
               console
               killall - Kill ALL humans
 
@@ -67,7 +70,7 @@ Feature:
         Port: 5678
         User: pivo
         Default location: /var/apps/vodka
+        Default command: bash
         Environment: RAILS_ENV=bar
-          (No commands)
 
       """
