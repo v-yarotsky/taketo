@@ -105,7 +105,7 @@ You can use shared server configs to reduce duplication:
 
       server :s2 do
         host :s2 do
-        include_shared_server_config(:my_staging, :some_other_shared_config => "qux")
+        include_shared_server_configs(:my_staging, :some_other_shared_config => "qux")
       end
     end
   end
@@ -175,8 +175,6 @@ The Changelog:
 TO-DO:
 ------
 
-* Shared server configs without arguments
-* Global server defaults
 * Override default commands per server
 * Define servers outside projects and environments
 * Export SSH config (i.e. for scp)
