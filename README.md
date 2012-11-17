@@ -33,6 +33,7 @@ puts a config into ```~/.taketo.rc.rb```:
         port 10001
         user "app"
         localtion "/var/app"
+        default_command "tmux attach"
         env :TERM => "xterm-256color"
         command :console do
           execute "rails c"
@@ -44,7 +45,9 @@ puts a config into ```~/.taketo.rc.rb```:
 ```
 
 Then execute ```taketo my_project:staging:server -c console``` to execute the "rails c" with corresponding environment variables set on desired server
-or just ```taketo my_project:staging:server``` to open bash
+or just ```taketo my_project:staging:server``` to attach to tmux on the server
+
+```default_command``` can be either name of defined server command, or explicit command string. Initially, default command is 'bash'.
 
 To have a brief overview of the config run ```taketo [destination] --view```
 
@@ -113,8 +116,33 @@ You can use shared server configs to reduce duplication:
 
 This will give you ```console``` commands available both on s1 and s2
 
+Also it's possible to specify default server configuration for any scope (whole config, project or an environment):
+
+```ruby
+  default_server_config do
+    env :TERM => "xterm-256color"
+  end
+
+  project :my_project do
+    default_server_config do # will also include global default server config
+      location '/var/apps'
+    end
+
+    ...
+  end
+
+  project :my_project2 do
+    ...
+  end
+```
+
+Default configs are merged appropriately.
+
 The Changelog:
 --------------
+
+### v0.0.9 (17.11.2012) ###
+* Add default_command server config option
 
 ### v0.0.8 (17.11.2012) ###
 * Add per-config, per-project and per-environment default server config support, i.e.
