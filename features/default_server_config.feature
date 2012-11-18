@@ -1,6 +1,5 @@
 Feature: taketo config's default server config
   In order to reduce duplication
-  As a taketo user
   I want to be able set default configs for servers in particular scopes
 
   Background:
