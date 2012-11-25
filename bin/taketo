@@ -121,6 +121,7 @@ rescue SystemExit
   # Do nothing
 rescue Exception => e
   STDERR.puts "An error occurred: #{e.message}"
+  exit 1
   raise if options && options[:debug]
 end
 

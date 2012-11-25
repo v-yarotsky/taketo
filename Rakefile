@@ -12,22 +12,18 @@ end
 
 require 'rake'
 require 'rspec/core/rake_task'
-require 'cucumber'
-require 'cucumber/rake/task'
 
 RSpec::Core::RakeTask.new do |t|
   t.pattern = 'spec/lib/**/*_spec.rb'
 end
 
-RSpec::Core::RakeTask.new do |t|
+RSpec::Core::RakeTask.new(:integration_spec) do |t|
   t.pattern = 'spec/integration/**/*_spec.rb'
-  t.name = :integration_spec
 end
 
-Cucumber::Rake::Task.new(:features) do |t|
-  t.cucumber_opts = "features --tags ~@wip --format pretty -x"
-  t.fork = false
+RSpec::Core::RakeTask.new(:acceptance_spec) do |t|
+  t.pattern = 'spec/acceptance/**/*_spec.rb'
 end
 
-task :default => [:spec, :features]
+task :default => [:spec, :acceptance_spec]
 
