@@ -3,7 +3,6 @@ require 'open4'
 
 ENV['PATH'] = "#{File.expand_path('../../bin', __FILE__)}#{File::PATH_SEPARATOR}#{ENV['PATH']}"
 ENV['RUBYOPT'] = '-Ilib'
-ENV["TAKETO_DEV"] = 'true'
 
 module AcceptanceSpecDSL
   module Feature

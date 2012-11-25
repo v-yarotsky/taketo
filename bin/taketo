@@ -1,9 +1,5 @@
 #!/usr/bin/env ruby
 
-if ENV["TAKETO_DEV"]
-  $:.unshift(File.expand_path('../../lib', __FILE__))
-end
-
 require 'rubygems'
 
 require 'taketo'
