@@ -40,26 +40,6 @@ feature "connect to server" do
     stdout.should == %Q{ssh -t 1.2.3.4 "cd /var/apps/slots; RAILS_ENV=staging bash"}
   end
 
-  scenario "Default destination" do
-    create_config <<-CONFIG
-      default_destination "slots:staging:s2"
-      project :slots do
-        environment :staging do
-          server :s1 do
-            host "1.2.3.4"
-          end
-          server :s2 do
-            host "2.3.4.5"
-          end
-        end
-      end
-    CONFIG
-
-    run "taketo --dry-run"
-    exit_status.should be_success
-    stdout.should == %Q{ssh -t 2.3.4.5 "RAILS_ENV=staging bash"}
-  end
-
   scenario "ssh without password" do
     create_config <<-CONFIG
       project :slots do
