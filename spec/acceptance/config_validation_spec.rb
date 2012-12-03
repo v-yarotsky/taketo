@@ -1,18 +1,26 @@
 require 'acceptance_spec_helper'
 
 feature "Config validation" do
-  scenario "No projects defined" do
+  scenario "No servers defined" do
     create_config <<-CONFIG
     CONFIG
 
     run "taketo"
     exit_status.should_not be_success
-    stderr.should include("There are no projects. Add some to your config (~/.taketo.rc.rb by default)")
+    stderr.should include("There are no servers. Add some to your config (~/.taketo.rc.rb by default)")
   end
 
   scenario "Project has no environments" do
     create_config <<-CONFIG
       project :foo do
+      end
+
+      project :bar do
+        environment :baz do
+          server :qux do
+            host '1.2.3.4'
+          end
+        end
       end
     CONFIG
 
@@ -25,6 +33,14 @@ feature "Config validation" do
     create_config <<-CONFIG
       project :foo do
         environment :bar do
+        end
+      end
+
+      project :bar do
+        environment :baz do
+          server :qux do
+            host '1.2.3.4'
+          end
         end
       end
     CONFIG

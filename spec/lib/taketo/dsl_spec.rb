@@ -21,49 +21,51 @@ describe "DSL" do
     end
   end
 
-  shared_examples "a scope" do |scope_name, parent_scope_name|
-    parent_scope = scopes[parent_scope_name]
+  shared_examples "a scope" do |scope_name, parent_scope_names|
+    it_behaves_like "a scoped construct", scope_name, Array(parent_scope_names), true
 
-    it_behaves_like "a scoped construct", scope_name, parent_scope_name, true
+    Array(parent_scope_names).each do |parent_scope_name|
+      parent_scope = scopes[parent_scope_name]
 
-    it { should enclose_scope(scope_name).under(parent_scope) }
+      it { should enclose_scope(scope_name).under(parent_scope) }
 
-    it "creates a #{scope_name} and set it as current scope object" do       # it "creates project and set it as current scope object"
-      dsl(parent_scope, factory.create(parent_scope_name)) do |c|            #   dsl([:config], factory.create(:config)) do |c|
-        stub_find_or_create_scope_object(c, scope_name, :bar)                #     stub_find_or_create_scope_object(c, :project, :bar)
-        c.send(scope_name, :bar) do                                          #     c.project(:bar) do
-          expect(c.current_scope_object).not_to be_nil                       #       expect(c.current_scope_object).not_to be_nil
-          expect(c.current_scope_object).to eq(factory.send(scope_name))     #       expect(c.current_scope_object).to eq(factory.project)
-        end                                                                  #     end
-      end                                                                    #   end
-    end                                                                      # end
+      it "creates a #{scope_name} and set it as current scope object" do       # it "creates project and set it as current scope object"
+        dsl(parent_scope, factory.create(parent_scope_name)) do |c|            #   dsl([:config], factory.create(:config)) do |c|
+          stub_find_or_create_scope_object(c, scope_name, :bar)                #     stub_find_or_create_scope_object(c, :project, :bar)
+          c.send(scope_name, :bar) do                                          #     c.project(:bar) do
+            expect(c.current_scope_object).not_to be_nil                       #       expect(c.current_scope_object).not_to be_nil
+            expect(c.current_scope_object).to eq(factory.send(scope_name))     #       expect(c.current_scope_object).to eq(factory.project)
+          end                                                                  #     end
+        end                                                                    #   end
+      end                                                                      # end
 
-    it "does not leak #{scope_name} as current scope object" do              # it "does not leak project as current scope object"
-      dsl(parent_scope, factory.create(parent_scope_name)) do |c|            #   dsl([:config], factory.create(:config)) do |c|
-        stub_find_or_create_scope_object(c, scope_name, :bar)                #     stub_find_or_create_scope_object(c, :project, :bar)
-        c.send(scope_name, :bar) do                                          #     c.project(:bar) do
-          expect(c.current_scope_object).to eq(factory.send(scope_name))     #       expect(c.current_scope_object).to eq(factory.project)
-        end                                                                  #     end
-        expect(c.current_scope_object).not_to eq(factory.send(scope_name))   #     expect(c.current_scope_object).not_to eq(factory.project)
-      end                                                                    #   end
-    end                                                                      # end
+      it "does not leak #{scope_name} as current scope object" do              # it "does not leak project as current scope object"
+        dsl(parent_scope, factory.create(parent_scope_name)) do |c|            #   dsl([:config], factory.create(:config)) do |c|
+          stub_find_or_create_scope_object(c, scope_name, :bar)                #     stub_find_or_create_scope_object(c, :project, :bar)
+          c.send(scope_name, :bar) do                                          #     c.project(:bar) do
+            expect(c.current_scope_object).to eq(factory.send(scope_name))     #       expect(c.current_scope_object).to eq(factory.project)
+          end                                                                  #     end
+          expect(c.current_scope_object).not_to eq(factory.send(scope_name))   #     expect(c.current_scope_object).not_to eq(factory.project)
+        end                                                                    #   end
+      end                                                                      # end
 
-    it "adds a #{scope_name} to the #{parent_scope_name}'s #{scope_name}s collection" do   # it "adds a project to the config's projects collection" do
-      dsl(parent_scope, factory.create(parent_scope_name)) do |c|                          #   dsl([:config], factory.create(:config)) do |c|
-        stub_find_or_create_scope_object(c, scope_name, :bar)                              #     stub_find_or_create_scope_object(c, :project, :bar)
-        c.current_scope_object.should_receive("append_#{scope_name}").                     #     c.current_scope_object.should_receive(:append_project).
-          with(factory.send(scope_name))                                                   #       with(factory.project)
-        c.send(scope_name, :bar) {}                                                        #     c.project(:bar) {}
-      end                                                                                  #   end
-    end                                                                                    # end
+      it "adds a #{scope_name} to the #{parent_scope_name}'s #{scope_name}s collection" do   # it "adds a project to the config's projects collection" do
+        dsl(parent_scope, factory.create(parent_scope_name)) do |c|                          #   dsl([:config], factory.create(:config)) do |c|
+          stub_find_or_create_scope_object(c, scope_name, :bar)                              #     stub_find_or_create_scope_object(c, :project, :bar)
+          c.current_scope_object.should_receive("append_#{scope_name}").                     #     c.current_scope_object.should_receive(:append_project).
+            with(factory.send(scope_name))                                                   #       with(factory.project)
+          c.send(scope_name, :bar) {}                                                        #     c.project(:bar) {}
+        end                                                                                  #   end
+      end                                                                                    # end
 
-    it "sets #{scope_name}'s parent to the #{parent_scope_name} scope object" do           # it "sets project's parent to the config scope object" do
-      dsl(parent_scope, factory.create(parent_scope_name)) do |c|                          #   dsl([:config], factory.create(:config)) do |c|
-        stub_find_or_create_scope_object(c, scope_name, :bar)                              #     stub_find_or_create_scope_object(c, :project, :bar)
-        factory.send(scope_name).should_receive(:parent=).with(c.current_scope_object)     #     factory.project.should_receive(:parent=).with(c.current_scope_object)
-        c.send(scope_name, :bar) {}                                                        #     c.project(:bar) {}
-      end                                                                                  #   end
-    end                                                                                    #
+      it "sets #{scope_name}'s parent to the #{parent_scope_name} scope object" do           # it "sets project's parent to the config scope object" do
+        dsl(parent_scope, factory.create(parent_scope_name)) do |c|                          #   dsl([:config], factory.create(:config)) do |c|
+          stub_find_or_create_scope_object(c, scope_name, :bar)                              #     stub_find_or_create_scope_object(c, :project, :bar)
+          factory.send(scope_name).should_receive(:parent=).with(c.current_scope_object)     #     factory.project.should_receive(:parent=).with(c.current_scope_object)
+          c.send(scope_name, :bar) {}                                                        #     c.project(:bar) {}
+        end                                                                                  #   end
+      end                                                                                    #
+    end
   end
 
   shared_examples "a scoped method" do |attribute_name, parent_scope_names, parent_scope_method, example_value|
@@ -166,7 +168,7 @@ describe "DSL" do
   end
 
   describe "#server" do
-    it_behaves_like "a scope", :server, :environment
+    it_behaves_like "a scope", :server, [:environment, :config, :project]
 
     it "evaluates default_server_config" do
       dsl(scopes[:environment], factory.create(:environment, :foo)) do |c|

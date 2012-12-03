@@ -6,9 +6,12 @@ module Taketo
     class ConfigError < StandardError; end
 
     class << self
-      def define_scope(scope, parent_scope, options = {}, &block)
+      def define_scope(scope, *args, &block)
+        options = args.last.is_a?(Hash) ? args.pop : {}
+        parent_scopes = args
+
         define_method scope do |*args, &blk|
-          ensure_nesting_allowed!(scope, parent_scope)
+          ensure_nesting_allowed!(scope, parent_scopes)
           name = args.shift || options[:default_name] or raise(ArgumentError, "Name not specified")
 
           scope_object = current_scope_object.find(scope, name) { @factory.create(scope, name) }
@@ -54,7 +57,7 @@ module Taketo
     define_scope :project, :config
     define_scope :environment, :project
 
-    define_scope :server, :environment, :default_name => :default do |s|
+    define_scope :server, :environment, :project, :config, :default_name => :default do |s|
       instance_eval(&s.default_server_config)
     end
 

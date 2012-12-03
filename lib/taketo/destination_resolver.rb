@@ -74,6 +74,22 @@ module Taketo
       raise NonExistentDestinationError, message || $!.message
     end
 
+    class Servers < ConfigVisitor
+      attr_reader :servers
+
+      def initialize
+        @servers = []
+      end
+
+      visit Server do |s|
+        @servers << s
+      end
+
+      def servers_with_aliases
+        @servers.select(&:global_alias)
+      end
+    end
+
     def servers_with_aliases
       @config.nodes(:projects).map { |p| p.nodes(:environments).map { |e| e.nodes(:servers).reject { |s| s.global_alias.nil? }.map { |s| [s.global_alias, s] } } }.flatten(2)
     end

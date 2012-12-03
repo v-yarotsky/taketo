@@ -262,4 +262,17 @@ feature "Config DSL" do
     stdout.should == %q{ssh -t -i /home/gor/.ssh/foo\ bar 2.3.4.5 "RAILS_ENV=staging bash"}
   end
 
+  xscenario "server outside project" do
+    create_config <<-CONFIG
+      server :my_server do
+        host "1.2.3.4"
+      end
+    CONFIG
+
+    run "taketo my_server --dry-run"
+    puts stderr
+    exit_status.should be_success
+    stdout.should == %q{ssh -t 1.2.3.4 bash}
+  end
+
 end

@@ -13,9 +13,5 @@ module Taketo
       put_optional "IdentityFile", server.identity_file
       put
     end
-
-    visit Object do |_|
-      # catch all
-    end
   end
 end

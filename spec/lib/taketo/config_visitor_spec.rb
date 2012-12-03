@@ -43,9 +43,5 @@ describe "ConfigVisitor" do
     end
     expect(visitor.visit(c.new)).to eq("captured as Numeric")
   end
-
-  it "raises if doesn't know how to visit" do
-    expect { visitor.visit([]) }.to raise_error /Array/
-  end
 end
 

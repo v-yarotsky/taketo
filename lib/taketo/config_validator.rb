@@ -10,7 +10,7 @@ module Taketo
     end
 
     visit Config do |c|
-      raise ConfigError, "There are no projects. Add some to your config (~/.taketo.rc.rb by default)" unless c.has_projects?
+      raise ConfigError, "There are no servers. Add some to your config (~/.taketo.rc.rb by default)" unless c.has_servers?
     end
 
     visit Project do |p|

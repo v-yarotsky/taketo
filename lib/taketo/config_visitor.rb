@@ -21,8 +21,6 @@ module Taketo
         next unless respond_to?(method_name)
         return send(method_name, obj)
       end
-
-      raise "Don't know how to visit #{obj.class}"
     end
   end
 end

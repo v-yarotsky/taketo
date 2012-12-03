@@ -18,12 +18,12 @@ end
 describe "ConfigValidator::ConfigValidatorVisitor" do
   subject(:visitor) { ConfigValidator::ConfigValidatorVisitor.new }
 
-  it "requires config to have projects" do
-    config = stub(:Config, :has_projects? => false)
-    error_message = /no projects/
+  it "requires config to have servers" do
+    config = stub(:Config, :has_servers? => false)
+    error_message = /no servers/
     expect { visitor.visit_config(config) }.to raise_error ConfigError, error_message
 
-    config.stub(:has_projects? => true)
+    config.stub(:has_servers? => true)
     expect { visitor.visit_config(config) }.not_to raise_error ConfigError, error_message
   end
 
