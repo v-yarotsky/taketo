@@ -1,53 +1,31 @@
 require 'spec_helper'
+require 'support/helpers/construct_spec_helper'
 require 'taketo/destination_resolver'
 require 'taketo/support/named_nodes_collection'
 
 include Taketo
 
 describe "DestinationResolver" do
-  class TestNode
-    attr_reader :name, :node_type
-    def initialize(node_type, name, *nodes)
-      @node_type, @name, @nodes = node_type, name, nodes
-    end
+  include ConstructsFixtures
 
-    def find(type, name)
-      @nodes.detect { |s| s.name == name } or raise KeyError, name.to_s
-    end
-
-    def nodes(type)
-      @nodes
-    end
-
-    def global_alias
-      :the_alias if name == :s1 && node_type == :server
-    end
-  end
-
-  [:project, :environment, :server].each do |node_type|
-    define_method node_type do |name, *nodes|
-      TestNode.new(node_type, name, *nodes)
-    end
-  end
-
-  let(:server1) { server(:s1) }
-  let(:environment1) { environment(:bar, server1) }
-  let(:project1) { project(:foo, environment1) }
+  let(:server1) { s = server(:s1); s.global_alias = :the_alias; s }
+  let(:environment1) { environment(:bar, :servers => server1) }
+  let(:project1) { project(:foo, :environments => environment1) }
 
   let(:server2) { server(:s2) }
-  let(:environment2) { environment(:qux, server2) }
-  let(:project2) { project(:baz, environment2) }
+  let(:environment2) { environment(:qux, :servers => server2) }
+  let(:project2) { project(:baz, :environments => environment2) }
 
   let(:server3) { server(:s3) }
   let(:server4) { server(:s4) }
-  let(:environment3) { environment(:corge, server3, server4) }
-  let(:project3) { environment(:quux, environment3) }
+  let(:environment3) { environment(:corge, :servers => [server3, server4]) }
+  let(:project3) { project(:quux, :environments => environment3) }
 
-  let(:environment4) { environment(:garply, server(:s5), server(:s6)) }
-  let(:environment5) { environment(:waldo, server(:s7)) }
-  let(:project4) { project(:grault, environment4, environment5) }
+  let(:environment4) { environment(:garply, :servers => [server(:s5), server(:s6)]) }
+  let(:environment5) { environment(:waldo, :servers => server(:s7)) }
+  let(:project4) { project(:grault, :environments => [environment4, environment5]) }
 
-  let(:config) { TestNode.new(:config, nil, project1, project2, project3, project4) }
+  let(:config) { create_config(:projects => [project1, project2, project3, project4]) }
 
   context "when project, environment and server specified" do
     it "returns server if it exists" do
@@ -114,43 +92,38 @@ describe "DestinationResolver" do
         context "when there's one environment" do
           context "when there's one server" do
             it "executes command without asking project/environment/server" do
-              config = TestNode.new(:config, nil, project1)
-              config.stub(:default_destination => nil)
+              config = create_config(:projects => project1)
               expect(resolver(config, "").resolve).to eq(server1)
             end
           end
 
           context "when there are multiple servers" do
             it "asks for server" do
-              config = TestNode.new(:config, nil, project3)
-              config.stub(:default_destination => nil)
-              expect { resolver(config, "").resolve }.to raise_error AmbiguousDestinationError, /server/i
+              config = create_config(:projects => project3)
+              expect { resolver(config, "").resolve }.to raise_error AmbiguousDestinationError, /s3.*s4/i
             end
           end
         end
 
         context "when there are multiple environments" do
           it "asks for environment" do
-            config = TestNode.new(:config, nil, project4)
-            config.stub(:default_destination => nil)
-            expect { resolver(config, "").resolve }.to raise_error AmbiguousDestinationError, /environment/i
+            config = create_config(:projects => project4)
+            expect { resolver(config, "").resolve }.to raise_error AmbiguousDestinationError, /garply:s5.*garply:s6.*waldo:s7/i
           end
         end
       end
 
       context "when there are multiple projects" do
         it "asks for project" do
-          config = TestNode.new(:config, nil, project3, project4)
-          config.stub(:default_destination => nil)
-
-          expect { resolver(config, "").resolve }.to raise_error AmbiguousDestinationError, /projects/i
+          config = create_config(:projects => [project3, project4])
+          expect { resolver(config, "").resolve }.to raise_error AmbiguousDestinationError, /corge:s3.*corge:s4.*garply:s5.*garply:s6.*waldo:s7/i
         end
       end
     end
 
     context "when there is default destination" do
       it "resolves by default destination" do
-        config.stub(:default_destination => "foo:bar:s1")
+        config.default_destination = "foo:bar:s1"
         expect(resolver(config, "").resolve).to eq(server1)
       end
     end
@@ -176,22 +149,16 @@ describe "DestinationResolver" do
     end
 
     it "returns the config if path has is empty and there's no default destination" do
-      config.stub(:default_destination => nil)
       expect(resolver(config, "").get_node).to eq(config)
     end
 
     it "raises NonExistentDestinationError when path is not correct" do
-      config.should_receive(:find).with(:project, :i).and_raise(KeyError)
       expect { resolver(config, "i").get_node }.to raise_error(NonExistentDestinationError)
     end
   end
 
   def resolver(*args)
     DestinationResolver.new(*args)
-  end
-
-  def list(*items)
-    Taketo::Support::NamedNodesCollection.new(items)
   end
 
 end

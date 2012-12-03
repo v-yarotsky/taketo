@@ -4,14 +4,17 @@ require 'taketo/associated_nodes'
 module Taketo
   module Constructs
     class BaseConstruct
-
       include AssociatedNodes
-      attr_reader :name, :default_server_config
+
+      attr_accessor :parent
+      attr_reader :name
+      attr_writer :default_server_config
 
       def initialize(name)
         super
         @name = name
         @default_server_config = proc {}
+        @parent = NullConstruct
       end
 
       def node_type
@@ -22,19 +25,40 @@ module Taketo
       ##
       # Override in subclasses if needed
       def parent=(parent)
-        @default_server_config = parent.default_server_config
+        @parent = parent
       end
 
-      def default_server_config=(config)
-        default = @default_server_config
-        @default_server_config = proc { instance_eval(&default); instance_eval(&config) }
+      def parents
+        result = []
+        p = parent
+        while p != NullConstruct
+          result << p
+          p = p.parent
+        end
+        result
+      end
+
+      def path
+        parents.reverse_each.map(&:name).concat([self.name]).reject(&:nil?).join(":")
+      end
+
+      def default_server_config
+        parent_default_server_config = parent.default_server_config
+        own_default_server_config = @default_server_config
+        proc { instance_eval(&parent_default_server_config); instance_eval(&own_default_server_config)}
       end
 
       def qualified_name
         "#{node_type} #{self.name}"
       end
-
     end
+
+    class NullConstructClass
+      def default_server_config; proc {}; end
+    end
+
+    NullConstruct = NullConstructClass.new
+
   end
 end
 

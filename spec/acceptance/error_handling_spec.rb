@@ -19,13 +19,13 @@ feature "Resolve host error handling" do
   scenario "Non-existent location" do
     run "taketo slots:staging:qqq --dry-run"
     exit_status.should_not be_success
-    stderr.should include("server qqq not found for environment staging")
+    stderr.should include("Can't find server for path slots:staging:qqq")
   end
 
   scenario "Ambiguous location" do
     run "taketo slots:staging --dry-run"
     exit_status.should_not be_success
-    stderr.should include("There are multiple servers for environment staging: s1, s2")
+    stderr.should include("There are multiple possible destinations: slots:staging:s1, slots:staging:s2")
   end
 end
 

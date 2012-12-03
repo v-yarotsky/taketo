@@ -16,15 +16,47 @@ describe "BaseConstruct" do
     expect(construct.qualified_name).to eq('test_base_construct my_node')
   end
 
-  specify "#parent= sets default server config to parent's default server config" do
-    parent_default_server_config = proc {}
-    construct.parent = stub(:default_server_config => parent_default_server_config)
-    expect(construct.default_server_config).to eq(parent_default_server_config)
+  describe "#parent=" do
+    it "stores parent" do
+      parent = stub
+      construct.parent = parent
+      construct.parent.should == parent
+    end
+  end
+
+  shared_context "parents" do
+    let(:grand_parent) { TestBaseConstruct.new(:grand_parent) }
+    let(:parent) { TestBaseConstruct.new(:parent) }
+
+    before(:each) do
+      parent.parent = grand_parent
+      construct.parent = parent
+    end
+  end
+
+  describe "#parents" do
+    include_context "parents"
+
+    it "returns parent nodes up until NullConstruct" do
+      expect(construct.parents).to eq([parent, grand_parent])
+    end
+  end
+
+  specify "#parents returns an empty array if there are no parents" do
+    expect(construct.parents).to eq([])
+  end
+
+  describe "#path" do
+    include_context "parents"
+
+    it "returns names of parents separated by :" do
+      expect(construct.path).to eq("grand_parent:parent:my_node")
+    end
   end
 
   describe "#default_server_config=" do
     let(:default_server_config) { proc { call_from_self } }
-    let(:context) { stub }
+    let(:context) { stub(:Context) }
 
     it "sets default server config" do
       construct.default_server_config = default_server_config

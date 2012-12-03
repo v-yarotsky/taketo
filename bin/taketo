@@ -117,7 +117,10 @@ rescue SystemExit
   # Do nothing
 rescue Exception => e
   STDERR.puts "An error occurred: #{e.message}"
+  if options && options[:debug]
+    STDERR.puts e.backtrace
+    raise
+  end
   exit 1
-  raise if options && options[:debug]
 end
 

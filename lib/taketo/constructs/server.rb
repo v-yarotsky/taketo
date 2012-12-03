@@ -6,7 +6,7 @@ module Taketo
   module Constructs
     class Server < BaseConstruct
       attr_reader :environment_variables
-      attr_accessor :host, :port, :username, :default_location, :default_command, :environment, :global_alias, :identity_file
+      attr_accessor :host, :port, :username, :default_location, :default_command, :global_alias, :identity_file
 
       has_nodes :commands, :command
 
@@ -19,10 +19,9 @@ module Taketo
         @environment_variables.merge!(env_variables)
       end
 
-      def parent=(environment)
-        env(:RAILS_ENV => environment.name.to_s)
-        @environment = environment
+      def parent=(parent)
         super
+        env(:RAILS_ENV => parent.name.to_s) if parent.is_a?(Environment)
       end
 
       def default_command

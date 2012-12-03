@@ -43,7 +43,7 @@ module TaketoAcceptanceSpec
   end
 
   def run(command)
-    pid, stdin, stdout, stderr = Open4.popen4("#{command} --config #{DEFAULT_TEST_CONFIG_PATH}")
+    pid, stdin, stdout, stderr = Open4.popen4("#{command} --config #{DEFAULT_TEST_CONFIG_PATH} --debug")
     @stdout = stdout.read.chomp.freeze
     @stderr = stderr.read.chomp.freeze
     _, @exit_status = Process.waitpid2(pid)

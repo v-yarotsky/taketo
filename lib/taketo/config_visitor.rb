@@ -23,5 +23,21 @@ module Taketo
       end
     end
   end
+
+  def SimpleCollector(*types)
+    Class.new(ConfigVisitor) do
+      attr_reader :result
+
+      def initialize
+        @result = []
+      end
+
+      types.each do |t|
+        visit t do |n|
+          @result << n
+        end
+      end
+    end
+  end
 end
 

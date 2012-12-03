@@ -48,9 +48,7 @@ describe "Server" do
   end
 
   describe "#parent=" do
-    let(:environment) { environment = stub(:Environment, :name => :the_environment, :default_server_config => proc {}) }
-
-    it { should have_accessor(:environment, environment) }
+    let(:environment) { environment = Taketo::Constructs::Environment.new(:the_environment) }
 
     it "sets RAILS_ENV environment variable" do
       server.environment_variables.should == {}

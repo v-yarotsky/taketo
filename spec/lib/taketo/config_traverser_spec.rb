@@ -1,62 +1,49 @@
 require 'spec_helper'
+require 'support/helpers/construct_spec_helper'
 require 'taketo/config_traverser'
 
-# config           1
-#                 / \
-# project        1   2
+# config           1--
+#                 / \ \
+# project        1   2 server_3
 #               / \
 # environment  1   2
 #                 /|\
 # server         1 2 3
 
 describe Taketo::ConfigTraverser do
-  let(:server_1) { stub(:Server1, :node_type => :server, :name => :server_1).as_null_object }
-  let(:server_2) { stub(:Server2, :node_type => :server, :name => :server_2).as_null_object }
-  let(:server_3) { stub(:Server3, :node_type => :server, :name => :server_3).as_null_object }
+  include ConstructsFixtures
 
-  let(:environment_1) { stub(:Environment1, :node_type => :environment, :name => :environment_1) }
-  let(:environment_2) { stub(:Environment2, :node_type => :environment, :name => :environment_2, :servers => [server_1, server_2, server_3]) }
+  let(:server_1) { server(:Server1) }
+  let(:server_2) { server(:Server2) }
+  let(:server_3) { server(:Server3) }
 
-  let(:project_1) { stub(:Project1, :node_type => :project, :name => :project_1, :environments => [environment_1, environment_2]) }
-  let(:project_2) { stub(:Project2, :node_type => :project, :name => :project_2) }
+  let(:environment_1) { environment(:Environment1) }
+  let(:environment_2) { environment(:Environment2, :servers => [server_1, server_2]) }
 
-  let(:config) { stub(:Config, :node_type => :config, :projects => [project_1, project_2], :name => :config) }
+  let(:project_1) { project(:Project1, :environments => [environment_1, environment_2]) }
+  let(:project_2) { project(:Project2) }
+
+  let(:config) { create_config(:projects => [project_1, project_2], :servers => server_3) }
 
   let(:traverser) { described_class.new(config) }
 
-  before do
-    config.stub(:has_nodes?).with(:projects).and_return(true)
-    config.stub(:nodes).with(:projects).and_return([project_1, project_2])
-
-    project_1.stub(:has_nodes?).with(:environments).and_return(true)
-    project_1.stub(:nodes).with(:environments).and_return([environment_1, environment_2])
-
-    project_2.stub(:has_nodes?).with(:environments).and_return(false)
-    project_2.should_not_receive(:nodes)
-
-    environment_1.stub(:has_nodes?).with(:servers).and_return(false)
-    environment_1.should_not_receive(:nodes)
-
-    environment_2.stub(:has_nodes?).with(:servers).and_return(true)
-    environment_2.stub(:nodes).and_return([server_1, server_2, server_3])
-  end
-
   class PrintingVisitor
+    attr_reader :result
+
     def initialize
       @result = []
     end
 
-    def visit(type)
+    def visit(node)
+      @result << node.name
     end
   end
 
   describe "#visit_depth_first" do
     it "traverses in depth with visitor" do
-      visitor = stub(:Visitor)
-      [config, project_1, environment_1, environment_2, server_1, server_2, server_3, project_2].each do |node|
-        visitor.should_receive(:visit).with(node).ordered
-      end
+      visitor = PrintingVisitor.new
       traverser.visit_depth_first(visitor)
+      visitor.result.should == [config, server_3, project_1, environment_1, environment_2, server_1, server_2, project_2].map(&:name)
     end
   end
 end
