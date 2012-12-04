@@ -3,4 +3,9 @@ module Taketo
   end
 end
 
-Dir.glob(File.expand_path('../constructs/*.rb', __FILE__)).each { |c| require c }
+require 'taketo/constructs/base_construct'
+require 'taketo/constructs/config'
+require 'taketo/constructs/project'
+require 'taketo/constructs/environment'
+require 'taketo/constructs/server'
+require 'taketo/constructs/command'

@@ -28,7 +28,9 @@ module Taketo
     end
 
     def resolve_by_global_alias
-      servers.select(&:global_alias).detect { |s| s.global_alias == @path.to_sym }
+      unless @path.to_s.empty?
+        servers.select(&:global_alias).detect { |s| s.global_alias == @path.to_sym }
+      end
     end
 
     def resolve_by_path
