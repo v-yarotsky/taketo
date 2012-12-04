@@ -144,6 +144,10 @@ An SSH config file can be generated from taketo config. To do so, run ```taketo 
 The Changelog:
 --------------
 
+### v0.1.0 (04.12.2012) ###
+* Servers can now be outside projects and environments (userful for standalone servers)
+* SSH config is being generated both for hostnames and global aliases
+
 ### v0.0.10 (17.11.2012) ###
 * Add ability to generate ssh config
 
