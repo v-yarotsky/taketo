@@ -1,0 +1,35 @@
+#compdef taketo
+
+typeset curcontext state line cmds ret
+
+curcontext="$curcontext"
+ret=1
+
+_taketo() {
+  _arguments -C \
+      '(--command)--command[Command to execute on destination server]' \
+      '(--directory)--directory[Directory on destination server to cd to]' \
+      '(--config)--config[Use custom config file]' \
+      '(--view)--view[Show config contents in a tree form]' \
+      '(--dry-run)--dry-run[Print out what would be run]' \
+      '(--generate-ssh-config)--generate-ssh-config[Generate SSH config from taketo config]' \
+      '(--version)--version[Display taketo version and exit]' \
+    '1: :->dest' && ret=0
+
+  _taketo_destinations() {
+    matching_destinations=(`taketo --matches $@ 2> /dev/null`)
+  }
+
+  local -a matching_destinations
+  local expl
+
+  case $state in
+    dest)
+      _taketo_destinations
+      _wanted matching_destinations expl 'all matching destinations' _multi_parts -i : matching_destinations
+      ;;
+  esac
+}
+
+_taketo "$@"
+
