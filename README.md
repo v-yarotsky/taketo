@@ -213,6 +213,5 @@ The Changelog:
 TO-DO:
 ------
 
-* Define servers outside projects and environments
 * Destination completion
 * Command completion
