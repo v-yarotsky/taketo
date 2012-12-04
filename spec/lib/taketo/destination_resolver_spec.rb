@@ -127,6 +127,15 @@ describe "DestinationResolver" do
         expect(resolver(config, "").resolve).to eq(server1)
       end
     end
+
+    context "when there is exact match and partial match" do
+      it "resolves to exact match" do
+        s1 = server(:server1)
+        s10 = server(:server10)
+        config = create_config(:servers => [s1, s10])
+        expect(resolver(config, "server1").resolve).to eq(s1)
+      end
+    end
   end
 
   context "when there is global matching server alias" do

@@ -58,7 +58,8 @@ module Taketo
       when 1
         results.first
       else
-        raise AmbiguousDestinationError,
+        exact_match = results.detect { |n| n.path == @path }
+        exact_match or raise AmbiguousDestinationError,
           "There are multiple possible destinations: #{results.map(&:path).join(", ")}"
       end
     end
