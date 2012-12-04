@@ -21,7 +21,9 @@ describe "DestinationResolver" do
   let(:environment3) { environment(:corge, :servers => [server3, server4]) }
   let(:project3) { project(:quux, :environments => environment3) }
 
-  let(:environment4) { environment(:garply, :servers => [server(:s5), server(:s6)]) }
+  let(:server5) { server(:s5) }
+  let(:server6) { server(:s6) }
+  let(:environment4) { environment(:garply, :servers => [server5, server6]) }
   let(:environment5) { environment(:waldo, :servers => server(:s7)) }
   let(:project4) { project(:grault, :environments => [environment4, environment5]) }
 

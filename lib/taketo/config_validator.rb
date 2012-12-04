@@ -14,7 +14,7 @@ module Taketo
     end
 
     visit Project do |p|
-      raise ConfigError, "Project #{p.path}: no environments" unless p.has_environments?
+      raise ConfigError, "Project #{p.path}: no servers" unless p.has_servers?
     end
 
     visit Environment do |e|

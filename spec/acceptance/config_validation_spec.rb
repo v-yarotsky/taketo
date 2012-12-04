@@ -10,7 +10,7 @@ feature "Config validation" do
     stderr.should include("There are no servers. Add some to your config (~/.taketo.rc.rb by default)")
   end
 
-  scenario "Project has no environments" do
+  scenario "Project has no servers" do
     create_config <<-CONFIG
       project :foo do
       end
@@ -26,28 +26,7 @@ feature "Config validation" do
 
     run "taketo"
     exit_status.should_not be_success
-    stderr.should include("Project foo: no environments")
-  end
-
-  scenario "Environment has no servers" do
-    create_config <<-CONFIG
-      project :foo do
-        environment :bar do
-        end
-      end
-
-      project :bar do
-        environment :baz do
-          server :qux do
-            host '1.2.3.4'
-          end
-        end
-      end
-    CONFIG
-
-    run "taketo"
-    exit_status.should_not be_success
-    stderr.should include("Environment foo:bar: no servers")
+    stderr.should include("Project foo: no servers")
   end
 
   scenario "Server has no host defined" do

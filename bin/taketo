@@ -6,6 +6,7 @@ require 'taketo'
 require 'taketo/constructs_factory'
 require 'taketo/commands'
 require 'taketo/destination_resolver'
+require 'taketo/destination_matcher'
 require 'optparse'
 
 Signal.trap("SIGINT") do
@@ -61,6 +62,10 @@ def parse_options
       options[:debug] = d
     end
 
+    opts.on("--matches") do |m|
+      options[:matches] = m
+    end
+
   end.parse!
 
   options
@@ -96,7 +101,9 @@ begin
   destination_path = ARGV.shift.to_s
   resolver         = DestinationResolver.new(config, destination_path)
 
-  if options.delete(:view)
+  if options.delete(:matches)
+    puts DestinationMatcher.new(resolver.servers).matches.join(" ")
+  elsif options.delete(:view)
     node = resolver.get_node
     traverser = ConfigTraverser.new(node)
     config_printer = ConfigPrinterVisitor.new

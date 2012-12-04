@@ -18,22 +18,15 @@ end
 describe "ConfigValidator::ConfigValidatorVisitor" do
   subject(:visitor) { ConfigValidator::ConfigValidatorVisitor.new }
 
-  it "requires config to have servers" do
-    config = stub(:Config, :has_servers? => false)
-    error_message = /no servers/
-    expect { visitor.visit_config(config) }.to raise_error ConfigError, error_message
+  { :Config => nil, :Project => "my_project" }.each do |node_type, path|
+    it "requires #{node_type} to have servers" do
+      node = stub(node_type, :has_servers? => false, :path => path)
+      error_message = /#{path ? path + ": " : ""}no servers/
+      expect { visitor.send("visit_#{node_type.to_s.downcase}", node) }.to raise_error ConfigError, error_message
 
-    config.stub(:has_servers? => true)
-    expect { visitor.visit_config(config) }.not_to raise_error ConfigError, error_message
-  end
-
-  it "requires projects to have environments" do
-    project = stub(:Project, :has_environments? => false, :path => "my_project")
-    error_message = /my_project: no environments/
-    expect { visitor.visit_project(project) }.to raise_error ConfigError, error_message
-
-    project.stub(:has_environments? => true)
-    expect { visitor.visit_project(project) }.not_to raise_error ConfigError, error_message
+      node.stub(:has_servers? => true)
+      expect { visitor.send("visit_#{node_type.to_s.downcase}", node) }.not_to raise_error ConfigError, error_message
+    end
   end
 
   it "requires environments to have servers" do
