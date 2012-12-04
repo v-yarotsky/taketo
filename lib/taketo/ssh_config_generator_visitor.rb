@@ -6,7 +6,12 @@ module Taketo
     include Printer
 
     visit Server do |server|
-      put "Host #{server.global_alias || server.host}"
+      put_server(server, server.global_alias) unless server.global_alias.to_s.empty?
+      put_server(server, server.host)
+    end
+
+    def put_server(server, host)
+      put "Host #{host}"
       put "Hostname #{server.host}"
       put_optional "Port", server.port
       put_optional "User", server.username

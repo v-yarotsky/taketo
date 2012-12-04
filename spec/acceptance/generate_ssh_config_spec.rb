@@ -35,6 +35,9 @@ IdentityFile ~/.ssh/id_rsa
 
 Host bazqux
 Hostname 2.3.4.5
+
+Host 2.3.4.5
+Hostname 2.3.4.5
     SSH_CONFIG
   end
 end
