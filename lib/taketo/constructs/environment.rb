@@ -1,4 +1,5 @@
 require 'taketo/constructs/base_construct'
+require 'taketo/constructs/project'
 require 'taketo/support'
 
 module Taketo
@@ -6,14 +7,16 @@ module Taketo
     class Environment < BaseConstruct
       has_nodes :servers, :server
 
-      attr_accessor :project
-
       def initialize(name)
         super(name)
       end
 
       def project_name
-        @project.name if defined? @project
+        if parent.is_a?(Project)
+          parent.name
+        else
+          ""
+        end
       end
     end
   end

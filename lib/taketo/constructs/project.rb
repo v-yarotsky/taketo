@@ -7,11 +7,6 @@ module Taketo
       has_nodes :environments, :environment
       has_nodes :servers, :server
 
-      def append_environment(environment)
-        environment.project = self
-        super
-      end
-
       def has_servers?
         has_nodes?(:servers) || environments.any?(&:has_servers?)
       end

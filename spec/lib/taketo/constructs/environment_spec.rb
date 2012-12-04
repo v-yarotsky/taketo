@@ -14,7 +14,7 @@ describe "Environment" do
   it_behaves_like "a construct with nodes", :servers, :server
 
   specify "#project_name returns project name" do
-    environment.project = stub(:Project, :name => "TheProject")
+    environment.parent = Taketo::Constructs::Project.new("TheProject")
     expect(environment.project_name).to eq("TheProject")
   end
 end
