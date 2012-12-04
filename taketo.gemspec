@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.specification_version = 3
 
   s.executables = ["taketo"]
-  s.files = Dir.glob("{bin,lib,spec}/**/*") + %w[Gemfile Gemfile.lock Rakefile LICENSE.txt README.md VERSION]
+  s.files = Dir.glob("{bin,lib,spec,script}/**/*") + %w[Gemfile Gemfile.lock Rakefile LICENSE.txt README.md VERSION]
   s.require_paths = ["lib"]
 
   s.add_development_dependency("rspec", "~> 2.11")

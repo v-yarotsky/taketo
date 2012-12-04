@@ -141,8 +141,14 @@ Default configs are merged appropriately.
 
 An SSH config file can be generated from taketo config. To do so, run ```taketo --generate-ssh-config```.
 
+
+Taketo has autocompletion support for ZSH; completion file can be found at: scripts/zsh/completion/_taketo
+
 The Changelog:
 --------------
+
+### v0.1.1 (04.12.2012) ###
+* Add basic autocompletion support for ZSH, see scripts/zsh/completion
 
 ### v0.1.0 (04.12.2012) ###
 * Servers can now be outside projects and environments (userful for standalone servers)
@@ -213,5 +219,4 @@ The Changelog:
 TO-DO:
 ------
 
-* Destination completion
 * Command completion
