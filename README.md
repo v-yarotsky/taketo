@@ -20,6 +20,21 @@ backward compatibility is not guaranteed.
 
 Suggestions and contributions are highly appreciated :)
 
+Installation:
+-------------
+
+The installation is as simple as typing ```gem install taketo```
+However, I recommend doing a few things for better user experience:
+
+1. In ~/.zshrc create an alias for taketo:
+   ```alias to="taketo"```
+2. In case you use RVM, I recommend to create a wrapper for taketo,
+   which would use newest ruby: ```rvm wrapper ruby-1.9.3-p194-perf@global --no-prefix taketo```.  
+   Of course, you will need to install taketo for corresponding ruby and gemset.
+   Also, keep in mind that the fewer gems are installed into the gemset, the faster things will work.
+3. In case you use ZSH – install [taketo ZSH completion](https://raw.github.com/v-yarotsky/taketo/master/scripts/zsh/completion/_taketo).
+   For [Oh-My-Zsh](https://github.com/robbyrussell/oh-my-zsh) you can put it in ~/.oh-my-zsh/plugins/taketo/_taketo
+  
 Usage:
 ------
 
