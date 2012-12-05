@@ -26,7 +26,7 @@ Installation:
 The installation is as simple as typing ```gem install taketo```
 However, I recommend doing a few things for better user experience:
 
-1. In ~/.zshrc create an alias for taketo:
+1. In ~/.zshrc (or ~/.bashrc if you use Bash) create an alias for taketo:
    ```alias to="taketo"```
 2. In case you use RVM, I recommend to create a wrapper for taketo,
    which would use newest ruby: ```rvm wrapper ruby-1.9.3-p194-perf@global --no-prefix taketo```.  
@@ -157,7 +157,6 @@ Default configs are merged appropriately.
 An SSH config file can be generated from taketo config. To do so, run ```taketo --generate-ssh-config```.
 
 
-Taketo has autocompletion support for ZSH; completion file can be found at: scripts/zsh/completion/_taketo
 
 The Changelog:
 --------------
