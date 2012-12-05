@@ -15,8 +15,9 @@ Taketo is known to work on:
 Important note:
 ---------------
 
-The project is currently actively developed, thus it may contain bugs;
-backward compatibility is not guaranteed.
+The project is currently being actively developed, thus it may contain bugs;
+backward compatibility is not guaranteed. However, I'll provide instructions on
+how to migrate config file in case of breaking changes.
 
 Suggestions and contributions are highly appreciated :)
 
