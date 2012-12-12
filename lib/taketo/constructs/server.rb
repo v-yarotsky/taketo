@@ -24,6 +24,10 @@ module Taketo
         env(:RAILS_ENV => parent.name.to_s) if parent.is_a?(Environment)
       end
 
+      def global_alias=(alias_name)
+        @global_alias = alias_name.to_s
+      end
+
       def default_command
         if defined? @default_command
           find_command(@default_command) || Command.explicit_command(@default_command)

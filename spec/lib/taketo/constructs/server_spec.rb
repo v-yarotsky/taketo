@@ -15,7 +15,7 @@ describe "Server" do
   it { should have_accessor(:port) }
   it { should have_accessor(:username) }
   it { should have_accessor(:default_location) }
-  it { should have_accessor(:global_alias) }
+  it { should have_accessor(:global_alias, "something") }
   it { should have_accessor(:identity_file) }
 
   module Taketo
@@ -55,6 +55,11 @@ describe "Server" do
       server.parent = environment
       expect(server.environment_variables[:RAILS_ENV]).to eq(environment.name.to_s)
     end
+  end
+
+  specify "#global_alias= stores string" do
+    server.global_alias = :foo
+    expect(server.global_alias).to eq("foo")
   end
 
   it "sets environment variables" do
