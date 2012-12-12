@@ -35,7 +35,7 @@ However, I recommend doing a few things for better user experience:
    Also, keep in mind that the fewer gems are installed into the gemset, the faster things will work.
 3. In case you use ZSH – install [taketo ZSH completion](https://raw.github.com/v-yarotsky/taketo/master/scripts/zsh/completion/_taketo).
    For [Oh-My-Zsh](https://github.com/robbyrussell/oh-my-zsh) you can put it in ~/.oh-my-zsh/plugins/taketo/_taketo
-  
+
 Usage:
 ------
 
@@ -161,6 +161,9 @@ An SSH config file can be generated from taketo config. To do so, run ```taketo 
 
 The Changelog:
 --------------
+
+### v0.1.2 (12.12.2012) ###
+* Fix server aliases bug, bump version to 0.1.2 at 12.12.2012 :)
 
 ### v0.1.1 (04.12.2012) ###
 * Add basic autocompletion support for ZSH, see scripts/zsh/completion
