@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'support/helpers/construct_spec_helper'
 require 'taketo/destination_resolver'
-require 'taketo/support/named_nodes_collection'
 
 include Taketo
 
@@ -161,6 +160,10 @@ describe "DestinationResolver" do
 
     it "returns the config if path has is empty and there's no default destination" do
       expect(resolver(config, "").get_node).to eq(config)
+    end
+
+    it "resolves to server by global server alias" do
+      expect(resolver(config, "the_alias").get_node).to eq(server1)
     end
 
     it "raises NonExistentDestinationError when path is not correct" do

@@ -39,6 +39,10 @@ module Taketo
     end
 
     def get_node
+      resolve_by_global_alias || get_node_by_path
+    end
+
+    def get_node_by_path
       matching_nodes = nodes.select { |n| n.path == @path }
       disambiguate(matching_nodes)
     end
