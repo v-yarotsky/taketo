@@ -3,6 +3,7 @@ Take Me To
 
 [![Build Status](https://secure.travis-ci.org/v-yarotsky/taketo.png)](http://travis-ci.org/v-yarotsky/taketo)
 [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/v-yarotsky/taketo)
+[![Gem Version](https://badge.fury.io/rb/taketo.png)](http://badge.fury.io/rb/taketo)
 
 A tiny helper utility to make access to servers easier for different projects and environments.
 
