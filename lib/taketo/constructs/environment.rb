@@ -6,6 +6,7 @@ module Taketo
   module Constructs
     class Environment < BaseConstruct
       has_nodes :servers, :server
+      has_nodes :groups, :group
 
       def initialize(name)
         super(name)
@@ -17,6 +18,10 @@ module Taketo
         else
           ""
         end
+      end
+
+      def has_servers?
+        has_nodes?(:servers) || groups.any?(&:has_servers?)
       end
     end
   end

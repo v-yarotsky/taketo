@@ -11,6 +11,7 @@ describe "Environment" do
     expect(environment.name).to eq(:foo)
   end
 
+  it_behaves_like "a construct with nodes", :groups, :group
   it_behaves_like "a construct with nodes", :servers, :server
 
   specify "#project_name returns project name" do

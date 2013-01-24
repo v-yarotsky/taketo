@@ -1,6 +1,6 @@
 module DSLSpec
   class TestConstructsFactory
-    attr_reader :config, :project, :environment, :server, :command
+    attr_reader :config, :project, :environment, :server, :group, :command
 
     def create(type, *args)
       send("create_#{type}", *args)
@@ -20,6 +20,10 @@ module DSLSpec
 
     def create_server(name = :foo)
       @server ||= RSpec::Mocks::Mock.new(:Server, :name => name, :default_server_config => proc {}).as_null_object
+    end
+
+    def create_group(name = :foo)
+      @group ||= RSpec::Mocks::Mock.new(:Group, :name => name, :default_server_config => proc {}).as_null_object
     end
 
     def create_command(name = :the_cmd)
@@ -51,12 +55,14 @@ module DSLSpec
   end
 
   def scopes
+    # TODO add different variants
     scopes_hash = {
       :config      => [:config],
       :project     => [:config, :project],
       :environment => [:config, :project, :environment],
-      :server      => [:config, :project, :environment, :server],
-      :command     => [:config, :project, :environment, :server, :command]
+      :group       => [:config, :project, :environment, :group],
+      :server      => [:config, :project, :environment, :group, :server],
+      :command     => [:config, :project, :environment, :group, :server, :command]
     }
 
     def scopes_hash.except(*keys)

@@ -52,6 +52,10 @@ def parse_options
       options[:generate_ssh_config] = g
     end
 
+    opts.on("--list", "List servers in given group") do |v|
+      options[:list] = v
+    end
+
     opts.separator "Special options:"
 
     opts.on("--dry-run", "Print out what would be run") do |v|
@@ -114,6 +118,13 @@ begin
     ssh_config_generator = SSHConfigGeneratorVisitor.new
     traverser.visit_depth_first(ssh_config_generator)
     puts ssh_config_generator.result
+  elsif options.delete(:list)
+    node = resolver.get_node
+    traverser = ConfigTraverser.new(node)
+    require 'taketo/group_list_visitor'
+    lister = GroupListVisitor.new
+    traverser.visit_depth_first(lister)
+    puts lister.result
   else
     server = resolver.resolve
     server_command = remote_command(server, options)

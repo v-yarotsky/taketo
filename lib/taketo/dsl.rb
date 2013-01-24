@@ -56,8 +56,9 @@ module Taketo
 
     define_scope :project, :config
     define_scope :environment, :project
+    define_scope :group, :environment, :project, :config
 
-    define_scope :server, :environment, :project, :config, :default_name => :default do |s|
+    define_scope :server, :environment, :project, :config, :group, :default_name => :default do |s|
       instance_eval(&s.default_server_config)
     end
 
@@ -75,7 +76,7 @@ module Taketo
     define_method_in_scope(:execute, :command)            { |command|       current_scope_object.command = command                 }
     define_method_in_scope(:desc, :command)               { |description|   current_scope_object.description = description         }
 
-    define_method_in_scope(:default_server_config, :config, :project, :environment) do |blk|
+    define_method_in_scope(:default_server_config, :config, :project, :environment, :group) do |blk|
       current_scope_object.default_server_config = blk
     end
 
@@ -101,7 +102,7 @@ module Taketo
       current_scope == scope
     end
 
-    [:config, :project, :environment, :server, :command].each do |scope|
+    [:config, :project, :environment, :server, :command, :group].each do |scope|
       define_method("#{scope}_scope?") { current_scope == scope }
     end
 

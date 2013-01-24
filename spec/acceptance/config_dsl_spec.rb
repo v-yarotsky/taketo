@@ -274,4 +274,27 @@ feature "Config DSL" do
     stdout.should == %q{ssh -t 1.2.3.4 "bash"}
   end
 
+  scenario "groups" do
+    create_config <<-CONFIG
+      project :slots do
+        group :frontends do
+          server :s1 do
+            host '1.2.3.4'
+          end
+
+          server :s2 do
+            host '2.3.4.5'
+          end
+        end
+
+        server :s3 do
+          host '3.4.5.6'
+        end
+      end
+    CONFIG
+
+    run "taketo --list slots:frontends"
+    exit_status.should be_success
+    stdout.should == "slots:frontends:s1\nslots:frontends:s2"
+  end
 end

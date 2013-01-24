@@ -6,9 +6,10 @@ module Taketo
     class Project < BaseConstruct
       has_nodes :environments, :environment
       has_nodes :servers, :server
+      has_nodes :groups, :group
 
       def has_servers?
-        has_nodes?(:servers) || environments.any?(&:has_servers?)
+        has_nodes?(:servers) || environments.any?(&:has_servers?) || groups.any?(&:has_servers?)
       end
     end
   end

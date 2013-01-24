@@ -1,7 +1,9 @@
 require 'taketo/constructs'
 
 module Taketo
-  def self.downcased_construct_class_name(klass)
+  extend self
+
+  def downcased_construct_class_name(klass)
     klass.name.gsub("Taketo::Constructs::", "").gsub(/[A-Z][^A-Z]*/) { |s| s.gsub("::", "").downcase + "_" }.chop
   end
 

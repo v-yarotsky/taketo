@@ -29,15 +29,15 @@ describe "DSL" do
 
       it { should enclose_scope(scope_name).under(parent_scope) }
 
-      it "creates a #{scope_name} and set it as current scope object" do       # it "creates project and set it as current scope object"
-        dsl(parent_scope, factory.create(parent_scope_name)) do |c|            #   dsl([:config], factory.create(:config)) do |c|
-          stub_find_or_create_scope_object(c, scope_name, :bar)                #     stub_find_or_create_scope_object(c, :project, :bar)
-          c.send(scope_name, :bar) do                                          #     c.project(:bar) do
-            expect(c.current_scope_object).not_to be_nil                       #       expect(c.current_scope_object).not_to be_nil
-            expect(c.current_scope_object).to eq(factory.send(scope_name))     #       expect(c.current_scope_object).to eq(factory.project)
-          end                                                                  #     end
-        end                                                                    #   end
-      end                                                                      # end
+      it "creates a #{scope_name} under #{parent_scope_name} and set it as current scope object" do   # it "creates project and set it as current scope object"
+        dsl(parent_scope, factory.create(parent_scope_name)) do |c|                                   #   dsl([:config], factory.create(:config)) do |c|
+          stub_find_or_create_scope_object(c, scope_name, :bar)                                       #     stub_find_or_create_scope_object(c, :project, :bar)
+          c.send(scope_name, :bar) do                                                                 #     c.project(:bar) do
+            expect(c.current_scope_object).not_to be_nil                                              #       expect(c.current_scope_object).not_to be_nil
+            expect(c.current_scope_object).to eq(factory.send(scope_name))                            #       expect(c.current_scope_object).to eq(factory.project)
+          end                                                                                         #     end
+        end                                                                                           #   end
+      end                                                                                             # end
 
       it "does not leak #{scope_name} as current scope object" do              # it "does not leak project as current scope object"
         dsl(parent_scope, factory.create(parent_scope_name)) do |c|            #   dsl([:config], factory.create(:config)) do |c|
@@ -86,7 +86,7 @@ describe "DSL" do
   end
 
   describe "#default_server_config" do
-    it_behaves_like "a scoped construct", :default_server_config, [:config, :project, :environment]
+    it_behaves_like "a scoped construct", :default_server_config, [:config, :project, :environment, :group]
 
     it "stores a block" do
       dsl(scopes[:config], factory.create(:config)) do |c|
@@ -167,8 +167,12 @@ describe "DSL" do
     it_behaves_like "a scope", :environment, :project
   end
 
+  describe "#group" do
+    it_behaves_like "a scope", :group, [:project, :environment, :config]
+  end
+
   describe "#server" do
-    it_behaves_like "a scope", :server, [:environment, :config, :project]
+    it_behaves_like "a scope", :server, [:environment, :config, :project, :group]
 
     it "evaluates default_server_config" do
       dsl(scopes[:environment], factory.create(:environment, :foo)) do |c|
