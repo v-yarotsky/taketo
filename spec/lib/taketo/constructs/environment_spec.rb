@@ -18,6 +18,10 @@ describe "Environment" do
     environment.parent = Taketo::Constructs::Project.new("TheProject")
     expect(environment.project_name).to eq("TheProject")
   end
+
+  specify "#rails_env returns name as string" do
+    environment.rails_env.should == "foo"
+  end
 end
 
 

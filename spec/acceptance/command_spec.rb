@@ -13,8 +13,9 @@ feature "Run explicit command on remote host" do
     CONFIG
 
     run "taketo --dry-run --command 'TERM=xterm-256color bash'"
-    exit_status.should be_success
     stdout.should == %Q{ssh -t 1.2.3.4 "RAILS_ENV=staging TERM=xterm-256color bash"}
+    stderr.should be_empty
+    exit_status.should be_success
   end
 end
 

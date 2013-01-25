@@ -20,6 +20,10 @@ module Taketo
         end
       end
 
+      def rails_env
+        name.to_s
+      end
+
       def has_servers?
         has_nodes?(:servers) || groups.any?(&:has_servers?)
       end

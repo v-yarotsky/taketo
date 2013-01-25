@@ -32,7 +32,6 @@ feature "Global server alias" do
 
   scenario "Unique server alias" do
     run "taketo --view"
-    exit_status.should be_success
     stdout.should == <<-CONFIG_OUTLINE.chomp
 
 Project: foo
@@ -55,11 +54,11 @@ Project: baz
         console
         killall - Kill ALL humans
     CONFIG_OUTLINE
+    exit_status.should be_success
   end
 
   scenario "View particular server config" do
     run "taketo foo:bar:default --view"
-    exit_status.should be_success
     stdout.should == <<-CONFIG_OUTLINE.chomp
 Server: default
   Host: 1.2.3.4
@@ -69,6 +68,7 @@ Server: default
   Default command: bash
   Environment: RAILS_ENV=bar
     CONFIG_OUTLINE
+    exit_status.should be_success
   end
 end
 

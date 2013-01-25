@@ -48,12 +48,16 @@ describe "Server" do
   end
 
   describe "#parent=" do
-    let(:environment) { environment = Taketo::Constructs::Environment.new(:the_environment) }
+    let(:environment) { stub(:Environment, :rails_env => 'the_env') }
 
     it "sets RAILS_ENV environment variable" do
       server.environment_variables.should == {}
       server.parent = environment
-      expect(server.environment_variables[:RAILS_ENV]).to eq(environment.name.to_s)
+      expect(server.environment_variables[:RAILS_ENV]).to eq(environment.rails_env)
+    end
+
+    it "does not fail if parent doesn't provide #rails_env" do
+      expect { server.parent = 1 }.not_to raise_error
     end
   end
 

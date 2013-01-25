@@ -15,8 +15,9 @@ feature "Aids completion with matches" do
     CONFIG
 
     run "taketo s1 --matches"
-    exit_status.should be_success
     stdout.should =~ %r{(foo:s1 s10|s10 foo:s1)}
+    stderr.should be_empty
+    exit_status.should be_success
   end
 end
 

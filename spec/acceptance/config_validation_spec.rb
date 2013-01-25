@@ -6,8 +6,8 @@ feature "Config validation" do
     CONFIG
 
     run "taketo"
-    exit_status.should_not be_success
     stderr.should include("There are no servers. Add some to your config (~/.taketo.rc.rb by default)")
+    exit_status.should_not be_success
   end
 
   scenario "Project has no servers" do
@@ -25,8 +25,8 @@ feature "Config validation" do
     CONFIG
 
     run "taketo"
-    exit_status.should_not be_success
     stderr.should include("Project foo: no servers")
+    exit_status.should_not be_success
   end
 
   scenario "Server has no host defined" do
@@ -40,8 +40,8 @@ feature "Config validation" do
     CONFIG
 
     run "taketo"
-    exit_status.should_not be_success
     stderr.should include("Server foo:bar:default: host is not defined")
+    exit_status.should_not be_success
   end
 
   scenario "Duplicate global server alias" do
@@ -62,8 +62,8 @@ feature "Config validation" do
     CONFIG
 
     run "taketo"
-    exit_status.should_not be_success
     stderr.should include("Server foo:bar:s2: global alias 'a1' has already been taken by server foo:bar:s1")
+    exit_status.should_not be_success
   end
 
   scenario "Command without definition" do
@@ -81,8 +81,8 @@ feature "Config validation" do
     CONFIG
 
     run "taketo"
-    exit_status.should_not be_success
     stderr.should include("Don't know what to execute on command qux")
+    exit_status.should_not be_success
   end
 end
 
