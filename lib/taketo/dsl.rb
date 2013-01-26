@@ -6,9 +6,9 @@ module Taketo
     class ConfigError < StandardError; end
 
     class << self
-      def define_scope(scope, *args, &block)
-        options = args.last.is_a?(Hash) ? args.pop : {}
-        parent_scopes = args
+      def define_scope(scope, *parent_scopes_and_options, &block)
+        options = parent_scopes_and_options.last.is_a?(Hash) ? parent_scopes_and_options.pop : {}
+        parent_scopes = parent_scopes_and_options
 
         define_method scope do |*args, &blk|
           ensure_nesting_allowed!(scope, parent_scopes)
@@ -20,6 +20,10 @@ module Taketo
             instance_exec(current_scope_object, &block) if block
             blk.call
           end
+        end
+
+        define_method("#{scope}_scope?") do
+          current_scope == scope
         end
       end
 
@@ -100,10 +104,6 @@ module Taketo
 
     def current_scope?(scope)
       current_scope == scope
-    end
-
-    [:config, :project, :environment, :server, :command, :group].each do |scope|
-      define_method("#{scope}_scope?") { current_scope == scope }
     end
 
     def in_scope(scope, new_scope_object)

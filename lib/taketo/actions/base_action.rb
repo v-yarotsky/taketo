@@ -1,4 +1,3 @@
-require 'taketo/destination_resolver'
 require 'taketo/config_traverser'
 require 'taketo/config_validator'
 
@@ -22,10 +21,6 @@ module Taketo
             ConfigValidator.new(traverser).validate!
           end
         end
-      end
-
-      def resolver
-        @resolver ||= DestinationResolver.new(config, destination_path)
       end
     end
 

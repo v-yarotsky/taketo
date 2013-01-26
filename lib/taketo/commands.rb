@@ -3,4 +3,5 @@ module Taketo
   end
 end
 
-Dir.glob(File.expand_path('../commands/*.rb', __FILE__)).each { |c| require c }
+require 'taketo/commands/ssh_command'
+

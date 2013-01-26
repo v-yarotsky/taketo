@@ -21,6 +21,10 @@ module Taketo
       raise ConfigError, "Environment #{e.path}: no servers" unless e.has_servers?
     end
 
+    visit Group do |g|
+      raise ConfigError, "Group #{g.path}: no servers" unless g.has_servers?
+    end
+
     visit Server do |s|
       if !String(s.global_alias).empty?
         if @global_server_aliases.key?(s.global_alias)

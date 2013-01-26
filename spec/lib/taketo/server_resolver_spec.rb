@@ -1,10 +1,10 @@
 require 'spec_helper'
 require 'support/helpers/construct_spec_helper'
-require 'taketo/destination_resolver'
+require 'taketo/server_resolver'
 
 include Taketo
 
-describe "DestinationResolver" do
+describe "ServerResolver" do
   include ConstructsFixtures
 
   let(:server1) { s = server(:s1); s.global_alias = :the_alias; s }
@@ -145,34 +145,8 @@ describe "DestinationResolver" do
     end
   end
 
-  describe "#get_node" do
-    it "returns server when path has 3 segments and is correct" do
-      expect(resolver(config, "foo:bar:s1").get_node).to eq(server1)
-    end
-
-    it "returns environment when path has 2 segments and is correct" do
-      expect(resolver(config, "foo:bar").get_node).to eq(environment1)
-    end
-
-    it "returns project when path has 1 segment and is correct" do
-      expect(resolver(config, "foo").get_node).to eq(project1)
-    end
-
-    it "returns the config if path has is empty and there's no default destination" do
-      expect(resolver(config, "").get_node).to eq(config)
-    end
-
-    it "resolves to server by global server alias" do
-      expect(resolver(config, "the_alias").get_node).to eq(server1)
-    end
-
-    it "raises NonExistentDestinationError when path is not correct" do
-      expect { resolver(config, "i").get_node }.to raise_error(NonExistentDestinationError)
-    end
-  end
-
   def resolver(*args)
-    DestinationResolver.new(*args)
+    ServerResolver.new(*args)
   end
 
 end

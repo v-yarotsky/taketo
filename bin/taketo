@@ -30,9 +30,9 @@ def parse_options
     opts.on("-c COMMAND", "--command", "Command to execute on destination server",
             "  (COMMAND either declared in config or passed as an argument)")                    { |v| options[:command] = v }
     opts.on("-d DIRECTORY", "--directory", "Directory on destination server to cd to")           { |v| options[:directory] = v }
-    opts.on("-v", "--view", "Show config contents and exit")                                     { |v| options[:action] = :view }
+    opts.on("-v", "--view", "Show config contents and exit")                                     { |v| options[:action] = :view; options[:view] = true }
     opts.on("--generate-ssh-config", "Generate SSH config from taketo config")                   { |v| options[:action] = :generate_ssh_config }
-    opts.on("--list", "List servers in given group")                                             { |v| options[:action] = :list }
+    opts.on("--list", "List servers in given group")                                             { |v| options[:action] = :list; options[:list] = true }
 
     opts.separator "Special options:"
 

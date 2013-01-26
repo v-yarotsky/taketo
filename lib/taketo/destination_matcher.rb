@@ -1,7 +1,7 @@
 module Taketo
   class DestinationMatcher
-    def initialize(servers)
-      @servers = servers
+    def initialize(nodes)
+      @nodes = nodes
     end
 
     def matches
@@ -11,11 +11,11 @@ module Taketo
     private
 
     def path_matches
-      @servers.map(&:path)
+      @nodes.map(&:path)
     end
 
     def global_alias_matches
-      @servers.map(&:global_alias).map(&:to_s).reject(&:empty?)
+      @nodes.select { |n| n.respond_to?(:global_alias) }.map(&:global_alias).map(&:to_s).reject(&:empty?)
     end
   end
 end

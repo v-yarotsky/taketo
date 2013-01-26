@@ -18,7 +18,7 @@ feature "Resolve host error handling" do
 
   scenario "Non-existent location" do
     run "taketo slots:staging:qqq --dry-run"
-    stderr.should include("Can't find server for path slots:staging:qqq")
+    stderr.should include("Can't find such destination: slots:staging:qqq")
     exit_status.should_not be_success
   end
 

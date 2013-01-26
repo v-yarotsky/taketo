@@ -5,7 +5,7 @@ module Taketo
   class AmbiguousDestinationError < StandardError; end
   class NonExistentDestinationError < StandardError; end
 
-  class DestinationResolver
+  class NodeResolver
     def initialize(config, path)
       @config = config
       if String(path).empty? && !String(config.default_destination).empty?
@@ -15,34 +15,11 @@ module Taketo
       @traverser = ConfigTraverser.new(@config)
     end
 
-    def servers
-      @servers ||= begin
-        collector = SimpleCollector(Taketo::Constructs::Server).new
-        @traverser.visit_depth_first(collector)
-        collector.result
-      end
-    end
-
     def resolve
-      resolve_by_global_alias || resolve_by_path
-    end
-
-    def resolve_by_global_alias
-      unless @path.to_s.empty?
-        servers.select(&:global_alias).detect { |s| s.global_alias == @path.to_s }
-      end
+      resolve_by_path
     end
 
     def resolve_by_path
-      matching_servers = servers.select { |s| s.path =~ /^#@path/ }
-      disambiguate(matching_servers)
-    end
-
-    def get_node
-      resolve_by_global_alias || get_node_by_path
-    end
-
-    def get_node_by_path
       matching_nodes = nodes.select { |n| n.path == @path }
       disambiguate(matching_nodes)
     end
@@ -58,7 +35,7 @@ module Taketo
     def disambiguate(results)
       case results.length
       when 0
-        raise NonExistentDestinationError, "Can't find server for path #@path"
+        raise NonExistentDestinationError, "Can't find such destination: #@path"
       when 1
         results.first
       else
@@ -69,4 +46,5 @@ module Taketo
     end
   end
 end
+
 
