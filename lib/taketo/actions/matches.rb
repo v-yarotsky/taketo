@@ -8,8 +8,6 @@ module Taketo
   module Actions
 
     class Matches < BaseAction
-      include ServerAction
-
       def initialize(options)
         super
         if options[:list]

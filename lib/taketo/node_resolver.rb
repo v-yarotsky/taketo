@@ -28,7 +28,7 @@ module Taketo
       @nodes ||= begin
         collector = SimpleCollector(Taketo::Constructs::BaseConstruct).new
         @traverser.visit_depth_first(collector)
-        collector.result
+        collector.result.reject { |n| Taketo::Constructs::Command === n }
       end
     end
 
