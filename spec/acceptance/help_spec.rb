@@ -2,6 +2,8 @@ require 'acceptance_spec_helper'
 
 feature "Global server alias" do
   background { config_exists <<-CONFIG }
+    default_destination 'foo:bar'
+
     project :foo do
       environment :bar do
         server do

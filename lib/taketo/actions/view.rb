@@ -10,6 +10,7 @@ module Taketo
       include NodeAction
 
       def run
+        config.default_destination = nil
         node = resolver.resolve
         traverser = ConfigTraverser.new(node)
         config_printer = ConfigPrinterVisitor.new
