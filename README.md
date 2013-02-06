@@ -165,6 +165,8 @@ Taketo is especially useful in conjunction with [tmuxall](https://github.com/v-y
 
     $ taketo my_project:frontends --list | sed 's/^/taketo /' | tmuxall -n MY_PROJECT_FRONTENDS
 
+This will work since taketo v0.2.0, so stay tuned
+
 The Changelog:
 --------------
 
