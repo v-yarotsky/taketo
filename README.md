@@ -161,7 +161,7 @@ An SSH config file can be generated from taketo config. To do so, run ```taketo 
 Tips:
 -----
 
-Taketo is especially useful in conjunction with (tmuxall)[https://github.com/v-yarotsky/tmuxall] gem:
+Taketo is especially useful in conjunction with [tmuxall](https://github.com/v-yarotsky/tmuxall) gem:
 
     $ taketo my_project:frontends --list | sed 's/^/taketo /' | tmuxall -n MY_PROJECT_FRONTENDS
 
