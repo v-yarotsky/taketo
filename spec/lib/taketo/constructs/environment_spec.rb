@@ -12,7 +12,7 @@ describe "Environment" do
   end
 
   it_behaves_like "a construct with nodes", :groups, :group
-  it_behaves_like "a construct with nodes", :servers, :server
+  it_behaves_like "a node with servers"
 
   specify "#project_name returns project name" do
     environment.parent = Taketo::Constructs::Project.new("TheProject")

@@ -29,6 +29,21 @@ feature "Config validation" do
     exit_status.should_not be_success
   end
 
+  scenario "Group has no servers" do
+    create_config <<-CONFIG
+      server do
+        host '1.2.3.4'
+      end
+
+      group :testgroup do
+      end
+    CONFIG
+
+    run "taketo"
+    stderr.should include("Group testgroup: no servers")
+    exit_status.should_not be_success
+  end
+
   scenario "Server has no host defined" do
     create_config <<-CONFIG
       project :foo do

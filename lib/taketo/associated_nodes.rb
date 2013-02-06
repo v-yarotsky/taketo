@@ -78,6 +78,10 @@ module Taketo
         @nodes.fetch(name_plural) { [] }.any?
       end
 
+      def has_deeply_nested_nodes?(name_plural)
+        has_nodes?(name_plural) || self.class.node_types.any? { |n| nodes(n).any? { |node| node.has_deeply_nested_nodes?(name_plural) } }
+      end
+
       ##
       # Ovverride for better error messages
       def qualified_name

@@ -23,7 +23,7 @@ describe "Group" do
     end
   end
 
-  it_behaves_like "a construct with nodes", :servers, :server
+  it_behaves_like "a node with servers"
 end
 
 

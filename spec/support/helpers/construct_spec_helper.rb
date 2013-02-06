@@ -15,6 +15,15 @@ shared_examples "a construct with nodes" do |name_plural, name_singular|
   end                                                                      # end
 end
 
+shared_examples "a node with servers" do
+  it_behaves_like "a construct with nodes", :servers, :server
+
+  specify "#has_servers? should perform deep search on child nodes" do
+    subject.should_receive(:has_deeply_nested_nodes?).with(:servers)
+    subject.has_servers?
+  end
+end
+
 module ConstructsFixtures
   include Taketo::Constructs
 

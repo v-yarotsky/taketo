@@ -9,7 +9,7 @@ module Taketo
       has_nodes :groups, :group
 
       def has_servers?
-        has_nodes?(:servers) || environments.any?(&:has_servers?) || groups.any?(&:has_servers?)
+        has_deeply_nested_nodes?(:servers)
       end
     end
   end

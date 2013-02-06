@@ -289,7 +289,7 @@ feature "Config DSL" do
     exit_status.should be_success
   end
 
-  scenario "groups" do
+  scenario "group at project level" do
     create_config <<-CONFIG
       project :slots do
         group :frontends do
@@ -313,4 +313,26 @@ feature "Config DSL" do
     stderr.should be_empty
     exit_status.should be_success
   end
+
+  scenario "groups at config level" do
+    create_config <<-CONFIG
+      group :beer do
+        server do
+          host '1.2.3.4'
+        end
+      end
+
+      project :bars do
+        server do
+          host '3.4.5.6'
+        end
+      end
+    CONFIG
+
+    run "taketo --list beer"
+    stdout.should == "beer:default"
+    stderr.should be_empty
+    exit_status.should be_success
+  end
 end
+
