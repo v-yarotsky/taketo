@@ -31,7 +31,7 @@ However, I recommend doing a few things for better user experience:
 1. In ~/.zshrc (or ~/.bashrc if you use Bash) create an alias for taketo:
    ```alias to="taketo"```
 2. In case you use RVM, I recommend to create a wrapper for taketo,
-   which would use newest ruby: ```rvm wrapper ruby-1.9.3-p194-perf@global --no-prefix taketo```.  
+   which would use newest ruby: ```rvm wrapper ruby-1.9.3-p194-perf@global --no-prefix taketo```.
    Of course, you will need to install taketo for corresponding ruby and gemset.
    Also, keep in mind that the fewer gems are installed into the gemset, the faster things will work.
 3. In case you use ZSH – install [taketo ZSH completion](https://raw.github.com/v-yarotsky/taketo/master/scripts/zsh/completion/_taketo).
@@ -169,6 +169,13 @@ This will work since taketo v0.2.0, so stay tuned
 
 The Changelog:
 --------------
+
+### v0.2.0.alpha (11.02.2013) ###
+* Add support for server groups. The list of servers in particular group can be obtained
+  with the following command:
+  ```taketo <group_name> --list```
+
+  This becomes especially useful with [tmuxall](https://github.com/v-yarotsky/tmuxall).
 
 ### v0.1.2 (12.12.2012) ###
 * Fix server aliases bug, bump version to 0.1.2 at 12.12.2012 :)
