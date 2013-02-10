@@ -6,6 +6,7 @@ module Taketo
   module Constructs
     class Environment < BaseConstruct
       has_nodes :servers, :server
+      has_nodes :groups, :group
 
       def initialize(name)
         super(name)
@@ -17,6 +18,14 @@ module Taketo
         else
           ""
         end
+      end
+
+      def rails_env
+        name.to_s
+      end
+
+      def has_servers?
+        has_deeply_nested_nodes?(:servers)
       end
     end
   end

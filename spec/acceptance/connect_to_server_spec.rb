@@ -19,8 +19,9 @@ feature "connect to server" do
     CONFIG
 
     run "taketo slots:staging:s1 --dry-run"
-    exit_status.should be_success
     stdout.should == %Q{ssh -t deployer@1.2.3.4 "cd /var/apps/slots; RAILS_ENV=staging bash"}
+    stderr.should be_empty
+    exit_status.should be_success
   end
 
   scenario "ssh to the only server" do
@@ -36,8 +37,9 @@ feature "connect to server" do
     CONFIG
 
     run "taketo --dry-run"
-    exit_status.should be_success
     stdout.should == %Q{ssh -t 1.2.3.4 "cd /var/apps/slots; RAILS_ENV=staging bash"}
+    stderr.should be_empty
+    exit_status.should be_success
   end
 
   scenario "ssh without password" do
@@ -53,8 +55,9 @@ feature "connect to server" do
     CONFIG
 
     run "taketo --dry-run"
-    exit_status.should be_success
     stdout.should == %q{ssh -t -i /home/gor/.ssh/foo\ bar 2.3.4.5 "RAILS_ENV=staging bash"}
+    stderr.should be_empty
+    exit_status.should be_success
   end
 end
 

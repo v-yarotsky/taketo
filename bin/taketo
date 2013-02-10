@@ -2,12 +2,10 @@
 
 require 'rubygems'
 
-require 'taketo'
-require 'taketo/constructs_factory'
-require 'taketo/commands'
-require 'taketo/destination_resolver'
-require 'taketo/destination_matcher'
 require 'optparse'
+require 'taketo'
+require 'taketo/commands'
+require 'taketo/actions'
 
 Signal.trap("SIGINT") do
   puts "Terminating"
@@ -19,107 +17,37 @@ include Taketo
 DEFAULT_CONFIG_FILE = File.join(ENV['HOME'], ".taketo.rc.rb")
 
 def parse_options
-  options = { :config => DEFAULT_CONFIG_FILE }
+  options = { :config => DEFAULT_CONFIG_FILE, :action => :login }
 
   OptionParser.new do |opts|
     opts.banner = "Usage: taketo [destination] [options]"
     opts.version = ::Taketo::VERSION
+
     opts.separator ""
     opts.separator "Common options:"
 
-    opts.on("-f CONFIG", "--config", "Use custom config file (default: #{DEFAULT_CONFIG_FILE})") do |c|
-      options[:config] = c
-    end
-
+    opts.on("-f CONFIG", "--config", "Use custom config file (default: #{DEFAULT_CONFIG_FILE})") { |v| options[:config] = v }
     opts.on("-c COMMAND", "--command", "Command to execute on destination server",
-            "  (COMMAND either declared in config or passed as an argument)") do |c|
-      raise OptionParser::MissingArgument if String(c).strip.empty?
-      options[:command] = c
-    end
-
-    opts.on("-d DIRECTORY", "--directory", "Directory on destination server to cd to") do |d|
-      raise OptionParser::MissingArgument if String(d).strip.empty?
-      options[:directory] = d
-    end
-
-    opts.on("-v", "--view", "Show config contents and exit") do |v|
-      require 'taketo/config_printer_visitor'
-      options[:view] = v
-    end
-
-    opts.on("--generate-ssh-config", "Generate SSH config from taketo config") do |g|
-      require 'taketo/ssh_config_generator_visitor'
-      options[:generate_ssh_config] = g
-    end
+            "  (COMMAND either declared in config or passed as an argument)")                    { |v| options[:command] = v }
+    opts.on("-d DIRECTORY", "--directory", "Directory on destination server to cd to")           { |v| options[:directory] = v }
+    opts.on("-v", "--view", "Show config contents and exit")                                     { |v| options[:action] = :view; options[:view] = true }
+    opts.on("--generate-ssh-config", "Generate SSH config from taketo config")                   { |v| options[:action] = :generate_ssh_config }
+    opts.on("--list", "List servers in given group")                                             { |v| options[:action] = :list; options[:list] = true }
 
     opts.separator "Special options:"
 
-    opts.on("--dry-run", "Print out what would be run") do |v|
-      options[:dry_run] = v
-    end
-
-    opts.on("--debug") do |d|
-      options[:debug] = d
-    end
-
-    opts.on("--matches") do |m|
-      options[:matches] = m
-    end
-
+    opts.on("--dry-run", "Print out what would be run") { |v| options[:dry_run] = v }
+    opts.on("--debug")                                  { |v| options[:debug] = v }
+    opts.on("--matches")                                { |v| options[:action] = :matches }
   end.parse!
 
-  options
-end
-
-def parse_config(config)
-  DSL.new.configure(config).tap do |config|
-    traverser = ConfigTraverser.new(config)
-    ConfigValidator.new(traverser).validate!
-  end
-end
-
-def remote_command(server, options)
-  command = options[:command]
-  if String(command).empty?
-    server.default_command
-  else
-    server.find_command(command.to_sym) || Constructs::Command.explicit_command(command)
-  end
-end
-
-def execute(shell_command, options)
-  if options[:dry_run]
-    puts shell_command
-  else
-    system shell_command
-  end
+  options.merge!(:destination_path => ARGV.shift.to_s)
 end
 
 begin
-  options          = parse_options
-  config           = parse_config(options[:config])
-  destination_path = ARGV.shift.to_s
-  resolver         = DestinationResolver.new(config, destination_path)
-
-  if options.delete(:matches)
-    puts DestinationMatcher.new(resolver.servers).matches.join(" ")
-  elsif options.delete(:view)
-    node = resolver.get_node
-    traverser = ConfigTraverser.new(node)
-    config_printer = ConfigPrinterVisitor.new
-    traverser.visit_depth_first(config_printer)
-    puts config_printer.result
-  elsif options.delete(:generate_ssh_config)
-    traverser = ConfigTraverser.new(config)
-    ssh_config_generator = SSHConfigGeneratorVisitor.new
-    traverser.visit_depth_first(ssh_config_generator)
-    puts ssh_config_generator.result
-  else
-    server = resolver.resolve
-    server_command = remote_command(server, options)
-    command_to_execute = Commands::SSHCommand.new(server).render(server_command.render(server, options))
-    execute(command_to_execute, options)
-  end
+  options = parse_options
+  action = Actions[options[:action]].new(options)
+  action.run
 rescue SystemExit
   # Do nothing
 rescue Exception => e

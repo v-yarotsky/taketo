@@ -21,7 +21,7 @@ module Taketo
 
       def parent=(parent)
         super
-        env(:RAILS_ENV => parent.name.to_s) if parent.is_a?(Environment)
+        env(:RAILS_ENV => parent.rails_env) if parent.respond_to?(:rails_env)
       end
 
       def global_alias=(alias_name)

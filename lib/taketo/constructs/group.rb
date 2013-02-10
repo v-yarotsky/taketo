@@ -3,10 +3,12 @@ require 'taketo/support'
 
 module Taketo
   module Constructs
-    class Project < BaseConstruct
-      has_nodes :environments, :environment
+    class Group < BaseConstruct
       has_nodes :servers, :server
-      has_nodes :groups, :group
+
+      def rails_env
+        parent.rails_env if parent.respond_to?(:rails_env)
+      end
 
       def has_servers?
         has_deeply_nested_nodes?(:servers)
@@ -14,4 +16,5 @@ module Taketo
     end
   end
 end
+
 

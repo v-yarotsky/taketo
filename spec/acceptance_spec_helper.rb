@@ -19,7 +19,7 @@ module AcceptanceSpecDSL
       alias :scenario :it
       alias :xscenario :xit
       alias :given :let
-      alias :given! :let!
+      alias :given! :let
     end
   end
 end

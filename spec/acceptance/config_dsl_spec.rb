@@ -21,8 +21,9 @@ feature "Config DSL" do
     CONFIG
 
     run "taketo slots:staging --dry-run"
-    exit_status.should be_success
     stdout.should =~ %r{ssh -t 1.2.3.4 "(RAILS_ENV=staging FOO=bar|FOO=bar RAILS_ENV=staging) bash"}
+    stderr.should be_empty
+    exit_status.should be_success
   end
 
   scenario "Command" do
@@ -41,8 +42,9 @@ feature "Config DSL" do
     CONFIG
 
     run "taketo slots:staging --dry-run --command console"
-    exit_status.should be_success
     stdout.should == %Q{ssh -t 1.2.3.4 "cd /var/apps/slots; RAILS_ENV=staging rails c"}
+    stderr.should be_empty
+    exit_status.should be_success
   end
 
   context "Default command" do
@@ -70,14 +72,16 @@ feature "Config DSL" do
 
     scenario "Explicit default command" do
       run "taketo slots:staging:s1 --dry-run"
-      exit_status.should be_success
       stdout.should == %q{ssh -t 1.2.3.4 "RAILS_ENV=staging rails c"}
+      stderr.should be_empty
+      exit_status.should be_success
     end
 
     scenario "Default command defined in config" do
       run "taketo slots:staging:s2 --dry-run"
-      exit_status.should be_success
       stdout.should == %q{ssh -t 2.3.4.5 "RAILS_ENV=staging tmux attach || tmux new-session"}
+      stderr.should be_empty
+      exit_status.should be_success
     end
   end
 
@@ -94,8 +98,9 @@ feature "Config DSL" do
     CONFIG
 
     run "taketo --dry-run"
-    exit_status.should be_success
     stdout.should == %q{ssh -t 1.2.3.4 "cd /var/foo; RAILS_ENV=staging bash"}
+    stderr.should be_empty
+    exit_status.should be_success
   end
 
   context "Per-Scope default server config" do
@@ -127,13 +132,16 @@ feature "Config DSL" do
 
     scenario "Global default server config" do
       run "taketo shoes --dry-run"
-      exit_status.should be_success
       stdout.should =~ /ssh -t 2\.3\.4\.5 "(RAILS_ENV=production FOO=bar|FOO=bar RAILS_ENV=production) bash"/
+      stderr.should be_empty
+      exit_status.should be_success
     end
 
     scenario "Project default server config" do
       run "taketo slots --dry-run"
       stdout.should =~ /ssh -t 1\.2\.3\.4 "cd .mnt.apps; (RAILS_ENV=staging FOO=bar|FOO=bar RAILS_ENV=staging) bash"/
+      stderr.should be_empty
+      exit_status.should be_success
     end
   end
 
@@ -156,8 +164,9 @@ feature "Config DSL" do
       CONFIG
 
       run "taketo slots:staging:s1 --dry-run"
-      exit_status.should be_success
       stdout.should == %q{ssh -t -p 9999 1.2.3.4 "cd /var/qux; RAILS_ENV=staging bash"}
+      stderr.should be_empty
+      exit_status.should be_success
     end
 
     scenario "Shared server config with arguments" do
@@ -181,8 +190,9 @@ feature "Config DSL" do
       CONFIG
 
       run "taketo slots:staging:s1 --dry-run"
-      exit_status.should be_success
       stdout.should == %q{ssh -t -p 9999 1.2.3.4 "cd /var/qux; RAILS_ENV=staging bash"}
+      stderr.should be_empty
+      exit_status.should be_success
     end
   end
 
@@ -200,8 +210,9 @@ feature "Config DSL" do
     CONFIG
 
     run "taketo --dry-run"
-    exit_status.should be_success
     stdout.should =~ %r{ssh -t 1.2.3.4 "cd /var/apps/slots; (RAILS_ENV=staging FOO=the\\ value|FOO=the\\ value RAILS_ENV=staging) bash"}
+    stderr.should be_empty
+    exit_status.should be_success
   end
 
   scenario "Unique server alias" do
@@ -221,8 +232,9 @@ feature "Config DSL" do
     CONFIG
 
     run "taketo ss2 --dry-run"
-    exit_status.should be_success
     stdout.should == %q{ssh -t 2.3.4.5 "RAILS_ENV=staging bash"}
+    stderr.should be_empty
+    exit_status.should be_success
   end
 
   scenario "Default destination" do
@@ -241,8 +253,9 @@ feature "Config DSL" do
     CONFIG
 
     run "taketo --dry-run"
-    exit_status.should be_success
     stdout.should == %Q{ssh -t 2.3.4.5 "RAILS_ENV=staging bash"}
+    stderr.should be_empty
+    exit_status.should be_success
   end
 
   scenario "ssh identity file" do
@@ -258,8 +271,9 @@ feature "Config DSL" do
     CONFIG
 
     run "taketo --dry-run"
-    exit_status.should be_success
     stdout.should == %q{ssh -t -i /home/gor/.ssh/foo\ bar 2.3.4.5 "RAILS_ENV=staging bash"}
+    stderr.should be_empty
+    exit_status.should be_success
   end
 
   scenario "server outside project" do
@@ -270,8 +284,55 @@ feature "Config DSL" do
     CONFIG
 
     run "taketo my_server --dry-run"
-    exit_status.should be_success
     stdout.should == %q{ssh -t 1.2.3.4 "bash"}
+    stderr.should be_empty
+    exit_status.should be_success
   end
 
+  scenario "group at project level" do
+    create_config <<-CONFIG
+      project :slots do
+        group :frontends do
+          server :s1 do
+            host '1.2.3.4'
+          end
+
+          server :s2 do
+            host '2.3.4.5'
+          end
+        end
+
+        server :s3 do
+          host '3.4.5.6'
+        end
+      end
+    CONFIG
+
+    run "taketo --list slots:frontends"
+    stdout.should == "slots:frontends:s1\nslots:frontends:s2"
+    stderr.should be_empty
+    exit_status.should be_success
+  end
+
+  scenario "groups at config level" do
+    create_config <<-CONFIG
+      group :beer do
+        server do
+          host '1.2.3.4'
+        end
+      end
+
+      project :bars do
+        server do
+          host '3.4.5.6'
+        end
+      end
+    CONFIG
+
+    run "taketo --list beer"
+    stdout.should == "beer:default"
+    stderr.should be_empty
+    exit_status.should be_success
+  end
 end
+

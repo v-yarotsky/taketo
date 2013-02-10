@@ -5,6 +5,6 @@ rvm:
   - 1.9.3
 branches:
   only:
-    - wip
+    - groups
     - master
 env: COVERAGE=true

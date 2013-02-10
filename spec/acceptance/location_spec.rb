@@ -14,8 +14,9 @@ feature "Location on remote host" do
     CONFIG
 
     run "taketo slots:staging --dry-run --directory /var/www"
-    exit_status.should be_success
     stdout.should == %q{ssh -t 1.2.3.4 "cd /var/www; RAILS_ENV=staging bash"}
+    stderr.should be_empty
+    exit_status.should be_success
   end
 end
 

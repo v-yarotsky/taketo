@@ -25,7 +25,6 @@ feature "Generate SSH config" do
 
   scenario "Generate ssh config" do
     run "taketo --generate-ssh-config"
-    exit_status.should be_success
     stdout.should == <<-SSH_CONFIG.chomp
 Host bar.foo.com
 Hostname bar.foo.com
@@ -39,6 +38,7 @@ Hostname 2.3.4.5
 Host 2.3.4.5
 Hostname 2.3.4.5
     SSH_CONFIG
+    exit_status.should be_success
   end
 end
 

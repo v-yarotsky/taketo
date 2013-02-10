@@ -18,7 +18,7 @@ end
 describe "ConfigValidator::ConfigValidatorVisitor" do
   subject(:visitor) { ConfigValidator::ConfigValidatorVisitor.new }
 
-  { :Config => nil, :Project => "my_project" }.each do |node_type, path|
+  { :Config => nil, :Project => "my_project", :Group => "my_group" }.each do |node_type, path|
     it "requires #{node_type} to have servers" do
       node = stub(node_type, :has_servers? => false, :path => path)
       error_message = /#{path ? path + ": " : ""}no servers/

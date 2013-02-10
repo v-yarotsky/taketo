@@ -12,5 +12,7 @@ describe "Project" do
   end
 
   it_behaves_like "a construct with nodes", :environments, :environment
+  it_behaves_like "a construct with nodes", :groups, :group
+  it_behaves_like "a node with servers"
 end
 

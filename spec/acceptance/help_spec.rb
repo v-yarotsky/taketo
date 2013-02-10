@@ -2,6 +2,8 @@ require 'acceptance_spec_helper'
 
 feature "Global server alias" do
   background { config_exists <<-CONFIG }
+    default_destination 'foo:bar'
+
     project :foo do
       environment :bar do
         server do
@@ -32,7 +34,6 @@ feature "Global server alias" do
 
   scenario "Unique server alias" do
     run "taketo --view"
-    exit_status.should be_success
     stdout.should == <<-CONFIG_OUTLINE.chomp
 
 Project: foo
@@ -55,11 +56,11 @@ Project: baz
         console
         killall - Kill ALL humans
     CONFIG_OUTLINE
+    exit_status.should be_success
   end
 
   scenario "View particular server config" do
     run "taketo foo:bar:default --view"
-    exit_status.should be_success
     stdout.should == <<-CONFIG_OUTLINE.chomp
 Server: default
   Host: 1.2.3.4
@@ -69,6 +70,7 @@ Server: default
   Default command: bash
   Environment: RAILS_ENV=bar
     CONFIG_OUTLINE
+    exit_status.should be_success
   end
 end
 

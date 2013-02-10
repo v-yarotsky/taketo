@@ -97,5 +97,39 @@ describe "AssociatedNodes" do
       expect { construct.has_nodes?(:quack) }.to raise_error NodesNotDefinedError
     end
   end
+
+  describe "#has_deeply_nested_nodes?" do
+    class TestNestedNodes
+      include AssociatedNodes
+
+      def name; :foo; end
+
+      has_nodes :foos, :foo
+      has_nodes :bars, :bar
+    end
+
+    subject(:construct) { TestNestedNodes.new }
+    let(:foo) { TestNestedNodes.new }
+
+    context "directly nested nodes" do
+      it "returns true when present" do
+        construct.nodes(:foos) << foo
+        expect(construct).to have_deeply_nested_nodes(:foos)
+      end
+    end
+
+    context "indirectly nested nodes" do
+      before(:each) { construct.nodes(:foos) << foo }
+
+      it "returns true when present" do
+        foo.nodes(:bars) << stub(:Bar, :name => :bar)
+        expect(construct).to have_deeply_nested_nodes(:bars)
+      end
+
+      it "returns false when not present" do
+        expect(construct).not_to have_deeply_nested_nodes(:bars)
+      end
+    end
+  end
 end
 

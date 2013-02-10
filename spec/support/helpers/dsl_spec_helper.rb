@@ -1,6 +1,6 @@
 module DSLSpec
   class TestConstructsFactory
-    attr_reader :config, :project, :environment, :server, :command
+    attr_reader :config, :project, :environment, :server, :group, :command
 
     def create(type, *args)
       send("create_#{type}", *args)
@@ -22,6 +22,10 @@ module DSLSpec
       @server ||= RSpec::Mocks::Mock.new(:Server, :name => name, :default_server_config => proc {}).as_null_object
     end
 
+    def create_group(name = :foo)
+      @group ||= RSpec::Mocks::Mock.new(:Group, :name => name, :default_server_config => proc {}).as_null_object
+    end
+
     def create_command(name = :the_cmd)
       @command ||= RSpec::Mocks::Mock.new(:Command, :name => name, :default_server_config => proc {}).as_null_object
     end
@@ -37,7 +41,7 @@ module DSLSpec
     end
   end
 
-  def dsl(scope = [:config], scope_object = nil)
+  def dsl(scope = scopes[:config], scope_object = nil, &block)
     context = DSL.new(factory)
 
     def context.set_scope(s, obj)
@@ -46,17 +50,35 @@ module DSLSpec
     end
 
     context.set_scope(scope, scope_object || factory.create_config)
-
-    yield context
+    block.call(context)
   end
 
   def scopes
     scopes_hash = {
-      :config      => [:config],
-      :project     => [:config, :project],
-      :environment => [:config, :project, :environment],
-      :server      => [:config, :project, :environment, :server],
-      :command     => [:config, :project, :environment, :server, :command]
+      :config      => [[:config]],
+      :project     => [[:config, :project]],
+      :environment => [[:config, :project, :environment]],
+      :group       => [
+        [:config, :group],
+        [:config, :project, :group],
+        [:config, :project, :environment, :group]
+      ],
+      :server      => [
+        # [:config, :server],
+        # [:config, :group, :server],
+        # [:config, :project, :server],
+        # [:config, :project, :group, :server],
+        # [:config, :project, :environment, :server],
+        [:config, :project, :environment, :group, :server]
+      ],
+      :command     => [
+        [:config, :server, :command],
+        [:config, :group, :server, :command],
+        [:config, :project, :server, :command],
+        [:config, :project, :group, :server, :command],
+        [:config, :project, :environment, :server, :command],
+        [:config, :project, :environment, :group, :server, :command]
+      ]
     }
 
     def scopes_hash.except(*keys)
