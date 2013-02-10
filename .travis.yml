@@ -5,6 +5,5 @@ rvm:
   - 1.9.3
 branches:
   only:
-    - groups
     - master
 env: COVERAGE=true
