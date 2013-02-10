@@ -6,19 +6,19 @@ module Taketo
     class ConfigError < StandardError; end
 
     class << self
-      def define_scope(scope, *parent_scopes_and_options, &block)
+      def define_scope(scope, *parent_scopes_and_options, &scope_setup_block)
         options = parent_scopes_and_options.last.is_a?(Hash) ? parent_scopes_and_options.pop : {}
         parent_scopes = parent_scopes_and_options
 
-        define_method scope do |*args, &blk|
+        define_method scope do |*args, &scope_block|
           ensure_nesting_allowed!(scope, parent_scopes)
           name = args.shift || options[:default_name] or raise(ArgumentError, "Name not specified")
 
           scope_object = current_scope_object.find(scope, name) { @factory.create(scope, name) }
 
           in_scope(scope, scope_object) do
-            instance_exec(current_scope_object, &block) if block
-            blk.call
+            instance_exec(current_scope_object, &scope_setup_block) if scope_setup_block
+            scope_block.call
           end
         end
 
@@ -28,9 +28,9 @@ module Taketo
       end
 
       def define_method_in_scope(name, *parent_scopes, &block)
-        define_method name do |*args, &blk|
+        define_method name do |*args, &argument_block|
           ensure_nesting_allowed!(name, parent_scopes)
-          args.push blk if blk
+          args.push argument_block if argument_block
           instance_exec(*args, &block)
         end
       end
@@ -80,12 +80,12 @@ module Taketo
     define_method_in_scope(:execute, :command)            { |command|       current_scope_object.command = command                 }
     define_method_in_scope(:desc, :command)               { |description|   current_scope_object.description = description         }
 
-    define_method_in_scope(:default_server_config, :config, :project, :environment, :group) do |blk|
-      current_scope_object.default_server_config = blk
+    define_method_in_scope(:default_server_config, :config, :project, :environment, :group) do |block|
+      current_scope_object.default_server_config = block
     end
 
-    define_method_in_scope(:shared_server_config, :config) do |name, blk|
-      @shared_server_configs.store(name.to_sym, blk)
+    define_method_in_scope(:shared_server_config, :config) do |name, block|
+      @shared_server_configs.store(name.to_sym, block)
     end
 
     define_method_in_scope(:include_shared_server_config, :server) do |*args|
