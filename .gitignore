@@ -1,4 +1,6 @@
 tmp/
+doc/
+.yardoc/
 .DS_Store
 .tags*
 .rvmrc
@@ -8,3 +10,4 @@ pkg/
 coverage/
 *.sublime-project
 *.sublime-workspace
+Gemfile.lock

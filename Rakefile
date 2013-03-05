@@ -26,5 +26,8 @@ RSpec::Core::RakeTask.new(:acceptance_spec) do |t|
   t.pattern = 'spec/acceptance/**/*_spec.rb'
 end
 
+require 'yard'
+YARD::Rake::YardocTask.new
+
 task :default => [:spec, :acceptance_spec]
 
