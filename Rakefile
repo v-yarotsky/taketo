@@ -12,8 +12,11 @@ rescue Bundler::BundlerError => e
 end
 
 require 'rake'
-require 'rspec/core/rake_task'
 
+require 'rake/clean'
+CLOBBER.include('doc/**', 'pkg/**', 'coverage/**')
+
+require 'rspec/core/rake_task'
 RSpec::Core::RakeTask.new do |t|
   t.pattern = 'spec/lib/**/*_spec.rb'
 end

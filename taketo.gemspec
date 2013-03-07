@@ -26,17 +26,16 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.6"
   s.specification_version = 3
 
-  s.executables = ["taketo"]
-  s.files = Dir.glob("{bin,lib,spec,script}/**/*") + %w[Gemfile Gemfile.lock Rakefile LICENSE.txt README.md VERSION]
-  s.require_paths = ["lib"]
+  s.files            = `git ls-files`.split($/)
+  s.executables      = s.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  s.test_files       = s.files.grep(%r{^(spec)/})
+  s.require_paths    = ["lib"]
+  s.extra_rdoc_files = %w[LICENSE.txt README.md]
 
   s.add_development_dependency("rspec", "~> 2.11")
   s.add_development_dependency("rake",  "~> 0.9")
   s.add_development_dependency("simplecov", "~> 0.6")
   s.add_development_dependency("open4", "~> 1.3")
-
-  s.add_development_dependency("redcarpet", "~> 2.2")
-  s.add_development_dependency("yard", "~> 0.8.5")
 end
 
 
