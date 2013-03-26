@@ -10,6 +10,9 @@ if ENV['COVERAGE']
       f.lines.count < 5
     end
   end
+elsif ENV["TRAVIS"]
+  require 'coveralls'
+  Coveralls.wear!
 end
 
 require 'rspec'

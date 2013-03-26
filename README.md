@@ -2,6 +2,7 @@ Take Me To
 ==========
 
 [![Build Status](https://secure.travis-ci.org/v-yarotsky/taketo.png)](http://travis-ci.org/v-yarotsky/taketo)
+[![Coverage Status](https://coveralls.io/repos/v-yarotsky/taketo/badge.png?branch=master)](https://coveralls.io/r/v-yarotsky/taketo)
 [![Code Climate](https://codeclimate.com/github/v-yarotsky/taketo.png)](https://codeclimate.com/github/v-yarotsky/taketo)
 [![Gem Version](https://badge.fury.io/rb/taketo.png)](http://badge.fury.io/rb/taketo)
 
