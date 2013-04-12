@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    taketo (0.2.0.alpha)
+    taketo (0.2.0)
 
 GEM
   remote: https://rubygems.org/
