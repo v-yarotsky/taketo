@@ -37,8 +37,9 @@ def parse_options
     opts.separator "Special options:"
 
     opts.on("--dry-run", "Print out what would be run") { |v| options[:dry_run] = v }
-    opts.on("--debug")                                  { |v| options[:debug] = v }
     opts.on("--matches")                                { |v| options[:action] = :matches }
+    opts.on("--edit-config")                            { |v| options[:action] = :edit_config }
+    opts.on("--debug")                                  { |v| options[:debug] = v }
   end.parse!
 
   options.merge!(:destination_path => ARGV.shift.to_s)

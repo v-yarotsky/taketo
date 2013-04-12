@@ -3,6 +3,7 @@ require 'taketo/actions/view'
 require 'taketo/actions/list'
 require 'taketo/actions/matches'
 require 'taketo/actions/generate_ssh_config'
+require 'taketo/actions/edit_config'
 
 module Taketo
 
@@ -13,7 +14,8 @@ module Taketo
         :view                => View,
         :list                => List,
         :matches             => Matches,
-        :generate_ssh_config => GenerateSshConfig
+        :generate_ssh_config => GenerateSshConfig,
+        :edit_config         => EditConfig
       }
       actions_map.fetch(name) { Login }
     end
