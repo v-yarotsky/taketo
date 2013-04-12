@@ -1,15 +1,13 @@
 require 'taketo/group_list_visitor'
 require 'taketo/actions/base_action'
-require 'taketo/actions/group_action'
+require 'taketo/group_resolver'
 
 module Taketo
   module Actions
 
     class List < BaseAction
-      include GroupAction
-
       def run
-        node = resolver.resolve
+        node = GroupResolver.new(config, destination_path).resolve
         traverser = ConfigTraverser.new(node)
         lister = GroupListVisitor.new
         traverser.visit_depth_first(lister)

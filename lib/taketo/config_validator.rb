@@ -2,6 +2,7 @@ require 'taketo/config_traverser'
 require 'taketo/config_visitor'
 
 module Taketo
+
   class ConfigError < StandardError; end
 
   class ConfigValidatorVisitor < ConfigVisitor

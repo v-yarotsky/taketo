@@ -2,6 +2,7 @@ require 'taketo/config_visitor'
 require 'taketo/printer'
 
 module Taketo
+
   class ConfigPrinterVisitor < ConfigVisitor
     include Printer
 
@@ -49,5 +50,6 @@ module Taketo
       indent(4) { put command.name.to_s + (" - " + command.description if command.description).to_s }
     end
   end
+
 end
 

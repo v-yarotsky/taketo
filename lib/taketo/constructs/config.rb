@@ -3,6 +3,7 @@ require 'taketo/support'
 
 module Taketo
   module Constructs
+
     class Config < BaseConstruct
       has_nodes :groups, :group
       has_nodes :projects, :project
@@ -18,6 +19,7 @@ module Taketo
         has_deeply_nested_nodes?(:servers)
       end
     end
+
   end
 end
 

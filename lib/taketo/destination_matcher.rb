@@ -1,4 +1,5 @@
 module Taketo
+
   class DestinationMatcher
     def initialize(nodes)
       @nodes = nodes
@@ -18,5 +19,6 @@ module Taketo
       @nodes.select { |n| n.respond_to?(:global_alias) }.map(&:global_alias).map(&:to_s).reject(&:empty?)
     end
   end
+
 end
 

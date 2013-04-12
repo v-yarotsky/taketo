@@ -2,6 +2,7 @@ require 'taketo/config_visitor'
 require 'taketo/config_traverser'
 
 module Taketo
+
   class AmbiguousDestinationError < StandardError; end
   class NonExistentDestinationError < StandardError; end
 
@@ -45,6 +46,7 @@ module Taketo
       end
     end
   end
+
 end
 
 

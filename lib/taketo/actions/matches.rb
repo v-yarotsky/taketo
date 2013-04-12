@@ -1,8 +1,8 @@
 require 'taketo/destination_matcher'
 require 'taketo/actions/base_action'
-require 'taketo/actions/server_action'
-require 'taketo/actions/group_action'
-require 'taketo/actions/node_action'
+require 'taketo/group_resolver'
+require 'taketo/node_resolver'
+require 'taketo/server_resolver'
 
 module Taketo
   module Actions
@@ -10,17 +10,17 @@ module Taketo
     class Matches < BaseAction
       def initialize(options)
         super
-        if options[:list]
-          self.extend(GroupAction)
+        @resolver = if options[:list]
+          GroupResolver
         elsif options[:view]
-          self.extend(NodeAction)
+          NodeResolver
         else
-          self.extend(ServerAction)
-        end
+          ServerResolver
+        end.new(config, destination_path)
       end
 
       def run
-        puts DestinationMatcher.new(resolver.nodes).matches.join(" ")
+        puts DestinationMatcher.new(@resolver.nodes).matches.join(" ")
       end
     end
 

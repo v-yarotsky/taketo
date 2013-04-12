@@ -2,6 +2,7 @@ require 'taketo/config_visitor'
 require 'taketo/printer'
 
 module Taketo
+
   class SSHConfigGeneratorVisitor < ConfigVisitor
     include Printer
 
@@ -19,4 +20,5 @@ module Taketo
       put
     end
   end
+
 end

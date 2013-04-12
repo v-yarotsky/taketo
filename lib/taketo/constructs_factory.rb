@@ -1,8 +1,8 @@
 require 'taketo/constructs'
 
 module Taketo
-  class ConstructsFactory
 
+  class ConstructsFactory
     def create(type, *args)
       send("create_#{type}", *args)
     end
@@ -31,5 +31,6 @@ module Taketo
       Constructs::Command.new(*args)
     end
   end
+
 end
 

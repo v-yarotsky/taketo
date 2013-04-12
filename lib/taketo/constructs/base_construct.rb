@@ -3,6 +3,7 @@ require 'taketo/associated_nodes'
 
 module Taketo
   module Constructs
+
     class BaseConstruct
       include AssociatedNodes
 

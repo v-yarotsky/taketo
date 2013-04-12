@@ -4,6 +4,7 @@ require 'taketo/support'
 
 module Taketo
   module Constructs
+
     class Server < BaseConstruct
       attr_reader :environment_variables
       attr_accessor :host, :port, :username, :default_location, :default_command, :global_alias, :identity_file
@@ -36,6 +37,7 @@ module Taketo
         end
       end
     end
+
   end
 end
 

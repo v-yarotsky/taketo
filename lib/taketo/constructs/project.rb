@@ -3,6 +3,7 @@ require 'taketo/support'
 
 module Taketo
   module Constructs
+
     class Project < BaseConstruct
       has_nodes :environments, :environment
       has_nodes :servers, :server
@@ -12,6 +13,7 @@ module Taketo
         has_deeply_nested_nodes?(:servers)
       end
     end
+
   end
 end
 

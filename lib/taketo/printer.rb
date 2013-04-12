@@ -1,4 +1,5 @@
 module Taketo
+
   module Printer
     def initialize
       @indent_level = 0
@@ -25,5 +26,6 @@ module Taketo
       put "#{str} #{value}" if value
     end
   end
+
 end
 

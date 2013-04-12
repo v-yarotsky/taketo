@@ -1,6 +1,7 @@
 require 'taketo/constructs_factory'
 
 module Taketo
+
   class DSL
     class ScopeError  < StandardError; end
     class ConfigError < StandardError; end
@@ -130,5 +131,6 @@ module Taketo
     end
 
   end
+
 end
 

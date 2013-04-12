@@ -1,15 +1,13 @@
 require 'taketo/commands/ssh_command'
 require 'taketo/actions/base_action'
-require 'taketo/actions/server_action'
+require 'taketo/server_resolver'
 
 module Taketo
   module Actions
 
     class Login < BaseAction
-      include ServerAction
-
       def run
-        server = resolver.resolve
+        server = ServerResolver.new(config, destination_path).resolve
         server_command = remote_command(server)
         command_to_execute = Commands::SSHCommand.new(server).render(server_command.render(server, options))
         execute(command_to_execute)

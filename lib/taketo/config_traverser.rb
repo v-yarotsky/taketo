@@ -2,6 +2,7 @@ require 'delegate'
 require 'forwardable'
 
 module Taketo
+
   class ConfigTraverser
     def initialize(root)
       @root = root
@@ -22,5 +23,6 @@ module Taketo
       end
     end
   end
+
 end
 

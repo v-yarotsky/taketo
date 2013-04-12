@@ -3,6 +3,7 @@ require 'shellwords'
 
 module Taketo
   module Commands
+
     class SSHCommand
       extend Forwardable
       include Shellwords
@@ -31,6 +32,7 @@ module Taketo
         %Q[-i #{shellescape @server.identity_file}] if @server.identity_file
       end
     end
+
   end
 end
 

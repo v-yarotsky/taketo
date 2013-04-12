@@ -3,6 +3,7 @@ require 'shellwords'
 
 module Taketo
   module Constructs
+
     class Command < BaseConstruct
       include Shellwords
 
@@ -35,6 +36,7 @@ module Taketo
         server.environment_variables.map { |k, v| %Q[#{k}=#{shellescape v}] }.join(" ")
       end
     end
+
   end
 end
 

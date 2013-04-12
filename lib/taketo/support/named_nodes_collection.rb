@@ -3,6 +3,7 @@ require 'taketo/support'
 
 module Taketo
   module Support
+
     class NamedNodesCollection
       include Enumerable
       extend Forwardable
@@ -37,9 +38,10 @@ module Taketo
       end
 
       protected
-      
+
       attr_reader :nodes
     end
+
   end
 end
 
