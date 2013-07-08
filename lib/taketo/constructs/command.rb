@@ -1,4 +1,3 @@
-require 'taketo/constructs/base_construct'
 require 'shellwords'
 
 module Taketo

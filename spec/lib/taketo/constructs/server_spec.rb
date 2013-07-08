@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'support/helpers/construct_spec_helper'
-require 'taketo/constructs/server'
+require 'taketo/constructs'
 
 include Taketo
 
@@ -58,6 +58,17 @@ describe "Server" do
 
     it "does not fail if parent doesn't provide #rails_env" do
       expect { server.parent = 1 }.not_to raise_error
+    end
+  end
+
+  describe "#ssh_command" do
+    it "stores symbol" do
+      server.ssh_command = "ohai"
+      expect(server.ssh_command).to eq(:ohai)
+    end
+
+    it "has #ssh_command = :ssh by default" do
+      expect(server.ssh_command).to eq(:ssh)
     end
   end
 

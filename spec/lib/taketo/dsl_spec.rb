@@ -197,6 +197,10 @@ describe "DSL" do
       end
     end
 
+    describe "#ssh_command" do
+      it_behaves_like "a scoped method", :ssh_command, :server, :ssh_command=, "mosh"
+    end
+
     describe "#host" do
       it_behaves_like "a scoped method", :host, :server, :host=, "127.0.0.2"
     end
@@ -224,6 +228,7 @@ describe "DSL" do
     describe "#identity_file" do
       it_behaves_like "a scoped method", :identity_file, :server, :identity_file=, "/home/gor/.ssh/qqq"
     end
+
 
     describe "#default_command" do
       it_behaves_like "a scoped method", :default_command, :server, :default_command=, :tmux

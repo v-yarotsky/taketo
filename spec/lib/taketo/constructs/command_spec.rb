@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'taketo/constructs/command'
+require 'taketo/constructs'
 
 include Taketo
 

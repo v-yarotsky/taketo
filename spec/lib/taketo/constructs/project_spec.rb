@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'support/helpers/construct_spec_helper'
-require 'taketo/constructs/project'
+require 'taketo/constructs'
 
 include Taketo
 

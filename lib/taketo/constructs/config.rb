@@ -1,4 +1,3 @@
-require 'taketo/constructs/base_construct'
 require 'taketo/support'
 
 module Taketo

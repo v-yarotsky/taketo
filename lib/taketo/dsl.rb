@@ -70,6 +70,7 @@ module Taketo
     define_scope :command, :server
 
     define_method_in_scope(:default_destination, :config) { |destination|   current_scope_object.default_destination = destination }
+    define_method_in_scope(:ssh_command, :server)         { |ssh_command|   current_scope_object.ssh_command = ssh_command         }
     define_method_in_scope(:host, :server)                { |hostname|      current_scope_object.host = hostname                   }
     define_method_in_scope(:port, :server)                { |port_number|   current_scope_object.port = port_number                }
     define_method_in_scope(:user, :server)                { |username|      current_scope_object.username = username               }

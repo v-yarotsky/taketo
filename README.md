@@ -178,6 +178,16 @@ List of servers included in given group can be obtained this way ```taketo --lis
 
 An SSH config file can be generated from taketo config. To do so, run ```taketo --generate-ssh-config```.
 
+Taketo provides support for SSH and [Mobile Shell](http://mosh.mit.edu/). Example:
+
+```ruby
+  project :my_project do
+    server do
+      ssh_command :mosh
+    end
+  end
+```
+
 Tips:
 -----
 

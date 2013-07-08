@@ -4,7 +4,7 @@ require 'taketo/actions'
 include Taketo
 
 describe "Actions" do
-  describe ".action_by_name" do
+  describe ".[]" do
     it "returns class by name" do
       Actions[:matches].should == Actions::Matches
     end

@@ -11,3 +11,5 @@ coverage/
 *.sublime-project
 *.sublime-workspace
 Gemfile.lock
+.ruby-version
+.ruby-gemset

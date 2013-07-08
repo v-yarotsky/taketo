@@ -59,5 +59,24 @@ feature "connect to server" do
     stderr.should be_empty
     exit_status.should be_success
   end
+
+  scenario "mosh instead of good ol' ssh" do
+    create_config <<-CONFIG
+      project :slots do
+        environment :staging do
+          server do
+            ssh_command :mosh
+            identity_file "/home/gor/.ssh/foo bar"
+            host "2.3.4.5"
+          end
+        end
+      end
+    CONFIG
+
+    run "taketo --dry-run"
+    stdout.should == %q{mosh --ssh="ssh -i /home/gor/.ssh/foo\ bar" -- 2.3.4.5 /bin/sh -c "RAILS_ENV=staging bash"}
+    stderr.should be_empty
+    exit_status.should be_success
+  end
 end
 

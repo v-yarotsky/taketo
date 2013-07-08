@@ -1,5 +1,3 @@
-require 'taketo/constructs/base_construct'
-require 'taketo/constructs/command'
 require 'taketo/support'
 
 module Taketo
@@ -7,13 +5,14 @@ module Taketo
 
     class Server < BaseConstruct
       attr_reader :environment_variables
-      attr_accessor :host, :port, :username, :default_location, :default_command, :global_alias, :identity_file
+      attr_accessor :ssh_command, :host, :port, :username, :default_location, :default_command, :global_alias, :identity_file
 
       has_nodes :commands, :command
 
       def initialize(name)
         super
         @environment_variables = {}
+        @ssh_command = :ssh
       end
 
       def env(env_variables)
@@ -23,6 +22,10 @@ module Taketo
       def parent=(parent)
         super
         env(:RAILS_ENV => parent.rails_env) if parent.respond_to?(:rails_env)
+      end
+
+      def ssh_command=(ssh_command)
+        @ssh_command = ssh_command.to_sym
       end
 
       def global_alias=(alias_name)

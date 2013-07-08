@@ -3,7 +3,7 @@ require 'taketo/commands'
 
 include Taketo::Commands
 
-describe "SSH Command" do
+describe "Mosh Command" do
   let(:server) do
     stub(:Server, :host => "1.2.3.4",
                   :port => 22,
@@ -11,15 +11,15 @@ describe "SSH Command" do
                   :identity_file => "/home/gor/.ssh/qqq")
   end
 
-  subject(:ssh_command) { SSHCommand.new(server) }
+  subject(:mosh_command) { MoshCommand.new(server) }
 
   it "composes command based on provided server object" do
-    ssh_command.render("foobar").should == %q[ssh -t -p 22 -i /home/gor/.ssh/qqq deployer@1.2.3.4 "foobar"]
+    mosh_command.render("foobar").should == %q[mosh --ssh="ssh -p 22 -i /home/gor/.ssh/qqq" -- deployer@1.2.3.4 /bin/sh -c "foobar"]
   end
 
   it "ignores absent parts if they are not required" do
     server.stub(:port => nil, :username => nil, :identity_file => nil)
-    ssh_command.render("foobar").should == %q[ssh -t 1.2.3.4 "foobar"]
+    mosh_command.render("foobar").should == %q[mosh -- 1.2.3.4 /bin/sh -c "foobar"]
   end
 end
 

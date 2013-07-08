@@ -1,4 +1,4 @@
-require 'taketo/commands/ssh_command'
+require 'taketo/commands'
 require 'taketo/actions/base_action'
 require 'taketo/server_resolver'
 
@@ -9,7 +9,7 @@ module Taketo
       def run
         server = ServerResolver.new(config, destination_path).resolve
         server_command = remote_command(server)
-        command_to_execute = Commands::SSHCommand.new(server).render(server_command.render(server, options))
+        command_to_execute = Commands[server.ssh_command].new(server).render(server_command.render(server, options))
         execute(command_to_execute)
       end
 
