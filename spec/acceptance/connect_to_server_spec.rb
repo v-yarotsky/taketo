@@ -74,7 +74,7 @@ feature "connect to server" do
     CONFIG
 
     run "taketo --dry-run"
-    stdout.should == %q{mosh --ssh="ssh -i /home/gor/.ssh/foo\ bar" -- 2.3.4.5 /bin/sh -c "RAILS_ENV=staging bash"}
+    stdout.should == %q{MOSH_TITLE_NOPREFIX=1 mosh --no-init --ssh="ssh -i /home/gor/.ssh/foo\ bar" -- 2.3.4.5 /bin/sh -c "RAILS_ENV=staging bash"}
     stderr.should be_empty
     exit_status.should be_success
   end

@@ -13,7 +13,7 @@ module Taketo
       end
 
       def program
-        "mosh"
+        "MOSH_TITLE_NOPREFIX=1 mosh --no-init"
       end
 
       def ssh_program
