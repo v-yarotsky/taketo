@@ -22,7 +22,7 @@ module Taketo::Support
         expect(construct.foos).to eq([foo])
       end
 
-      specify "#append_foo adds a foo to nested foos collection" do
+      specify "#add_foo adds a foo to nested foos collection" do
         construct.nodes(:foos) << foo
         expect(construct.nodes(:foos)).to include(foo)
       end

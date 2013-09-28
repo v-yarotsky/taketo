@@ -43,7 +43,7 @@ module Taketo
       def default_server_config
         parent_default_server_config = parent.default_server_config
         own_default_server_config = @default_server_config
-        proc { instance_eval(&parent_default_server_config); instance_eval(&own_default_server_config)}
+        proc { instance_eval(&parent_default_server_config); instance_eval(&own_default_server_config) }
       end
 
       def qualified_name

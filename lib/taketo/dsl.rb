@@ -106,8 +106,7 @@ module Taketo
     def in_scope(scope, new_scope_object)
       parent_scope_object, @current_scope_object = @current_scope_object, new_scope_object
       @scope.push(scope)
-      parent_scope_object.send("append_#{scope}", current_scope_object)
-      current_scope_object.parent = parent_scope_object
+      parent_scope_object.send("add_#{scope}", current_scope_object)
       yield
       @scope.pop
       @current_scope_object = parent_scope_object

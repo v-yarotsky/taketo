@@ -19,13 +19,14 @@ module Taketo
         #
         # bar = Bar.new
         # bar.foos                                  # => foos collection
-        # bar.append_foo(foo)                       # adds node the collection
+        # bar.add_foo(foo)                          # adds node the collection
         # bar.find_foo(:foo_name)                   # find foo in foos collection by name
         #
         def has_nodes(name_plural, name_singular)
           self.node_types << name_plural
           includable = Module.new do
-            define_method "append_#{name_singular}" do |object|
+            define_method "add_#{name_singular}" do |object|
+              object.parent = self
               nodes(name_plural) << object
             end
 

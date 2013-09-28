@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'taketo/dsl'
 
 describe "Taketo DSL" do
   it "parses config and instantiate objects" do

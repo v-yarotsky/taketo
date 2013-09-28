@@ -1,8 +1,8 @@
 shared_examples "a construct with nodes" do |name_plural, name_singular|
-  specify "#append_#{name_singular} adds a #{name_singular} to " +         # specify "#append_server adds a server to " +
+  specify "#add_#{name_singular} adds a #{name_singular} to " +            # specify "#add_server adds a server to " +
     "the #{name_plural} collection" do                                     #   "the servers collection" do
     node = mock(:name => :foo).as_null_object                              #   server = mock(:name => :foo).as_null_object
-    subject.send("append_#{name_singular}", node)                          #   environment.append_server(server)
+    subject.send("add_#{name_singular}", node)                             #   environment.add_server(server)
     expect(subject.send(name_plural)).to include(node)                     #   expect(environment.servers).to include(server)
   end                                                                      # end
 

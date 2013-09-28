@@ -54,16 +54,8 @@ module Taketo
           it "adds a #{scope_name} to the #{parent_scope_name}'s #{scope_name}s collection" do
             within_parent_dsl(parent_scope_name) do |c|
               stub_find_or_create_scope_object(c, scope_name, :bar)
-              c.current_scope_object.should_receive("append_#{scope_name}").
+              c.current_scope_object.should_receive("add_#{scope_name}").
                 with(factory.send(scope_name))
-              c.send(scope_name, :bar) {}
-            end
-          end
-
-          it "sets #{scope_name}'s parent to the #{parent_scope_name} scope object" do
-            within_parent_dsl(parent_scope_name) do |c|
-              stub_find_or_create_scope_object(c, scope_name, :bar)
-              factory.send(scope_name).should_receive(:parent=).with(c.current_scope_object)
               c.send(scope_name, :bar) {}
             end
           end
