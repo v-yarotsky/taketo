@@ -1,11 +1,10 @@
 require 'taketo/support'
-require 'taketo/associated_nodes'
 
 module Taketo
   module Constructs
 
     class BaseConstruct
-      include AssociatedNodes
+      include Taketo::Support::AssociatedNodes
 
       attr_accessor :parent
       attr_reader :name

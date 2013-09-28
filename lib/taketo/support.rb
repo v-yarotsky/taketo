@@ -5,6 +5,7 @@ module Taketo
     autoload :NamedNodesCollection, 'taketo/support/named_nodes_collection'
     autoload :KeyError,             'taketo/support/key_error'
     autoload :Printer,              'taketo/support/printer'
+    autoload :AssociatedNodes,      'taketo/support/associated_nodes'
   end
 
 end
