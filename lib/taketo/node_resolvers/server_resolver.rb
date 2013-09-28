@@ -1,5 +1,3 @@
-require 'taketo/constructs/server'
-
 module Taketo
   module NodeResolvers
 

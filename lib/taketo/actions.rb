@@ -13,6 +13,7 @@ module Taketo
       actions_map.fetch(name) { Login }
     end
 
+    autoload :BaseAction,        'taketo/actions/base_action'
     autoload :Login,             'taketo/actions/login'
     autoload :View,              'taketo/actions/view'
     autoload :List,              'taketo/actions/list'

@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'taketo/support/inflections'
 
 include Taketo::Support
 

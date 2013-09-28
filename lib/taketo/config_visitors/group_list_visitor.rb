@@ -1,5 +1,3 @@
-require 'taketo/config_visitors'
-
 module Taketo
   module ConfigVisitors
 

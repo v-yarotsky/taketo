@@ -1,7 +1,3 @@
-require 'taketo/destination_matcher'
-require 'taketo/actions/base_action'
-require 'taketo/node_resolvers'
-
 module Taketo
   module Actions
 
@@ -18,7 +14,7 @@ module Taketo
       end
 
       def run
-        puts DestinationMatcher.new(@resolver.nodes).matches.join(" ")
+        puts Support::DestinationMatcher.new(@resolver.nodes).matches.join(" ")
       end
     end
 

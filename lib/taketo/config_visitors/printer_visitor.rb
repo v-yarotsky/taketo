@@ -1,5 +1,3 @@
-require 'taketo/support'
-
 module Taketo
   module ConfigVisitors
 

@@ -1,5 +1,3 @@
-require 'taketo/constructs'
-
 module Taketo
   module ConfigVisitors
 

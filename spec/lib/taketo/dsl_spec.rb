@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'support/helpers/dsl_spec_helper'
-require 'taketo/dsl'
 
 include Taketo
 

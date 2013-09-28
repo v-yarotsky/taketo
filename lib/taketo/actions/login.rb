@@ -1,7 +1,3 @@
-require 'taketo/commands'
-require 'taketo/actions/base_action'
-require 'taketo/node_resolvers'
-
 module Taketo
   module Actions
 

@@ -1,7 +1,3 @@
-require 'taketo/config_visitors'
-require 'taketo/config_traverser'
-require 'taketo/exceptions'
-
 module Taketo
   module NodeResolvers
 
@@ -12,7 +8,7 @@ module Taketo
           path = config.default_destination
         end
         @path = path
-        @traverser = ConfigTraverser.new(@config)
+        @traverser = Support::ConfigTraverser.new(@config)
       end
 
       def resolve

@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'taketo/support/named_nodes_collection'
 
 include Taketo::Support
 

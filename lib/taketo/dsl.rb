@@ -1,5 +1,3 @@
-require 'taketo/constructs_factory'
-
 module Taketo
 
   class DSL

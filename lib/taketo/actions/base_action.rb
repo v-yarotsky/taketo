@@ -1,6 +1,3 @@
-require 'taketo/config_traverser'
-require 'taketo/config_validator'
-
 module Taketo
   module Actions
 
@@ -17,8 +14,8 @@ module Taketo
           config_file = options[:config]
 
           DSL.new.configure(config_file).tap do |config|
-            traverser = ConfigTraverser.new(config)
-            ConfigValidator.new(traverser).validate!
+            traverser = Support::ConfigTraverser.new(config)
+            Support::ConfigValidator.new(traverser).validate!
           end
         end
       end

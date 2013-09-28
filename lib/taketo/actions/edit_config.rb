@@ -1,5 +1,3 @@
-require 'taketo/actions/base_action'
-
 module Taketo
   module Actions
 

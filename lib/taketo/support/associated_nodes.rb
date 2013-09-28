@@ -1,5 +1,3 @@
-require 'taketo/exceptions'
-
 module Taketo
   module Support
 

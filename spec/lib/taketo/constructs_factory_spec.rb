@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'taketo/constructs_factory'
 
 include Taketo
 

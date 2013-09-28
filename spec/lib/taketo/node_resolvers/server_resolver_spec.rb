@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'support/helpers/construct_spec_helper'
-require 'taketo/node_resolvers'
 
 module Taketo::NodeResolvers
 

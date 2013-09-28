@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'taketo/commands'
 
 include Taketo::Commands
 

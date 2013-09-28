@@ -1,7 +1,6 @@
 require 'spec_helper'
-require 'taketo/config_validator'
 
-module Taketo
+module Taketo::Support
 
   describe ConfigValidator do
     let(:traverser) { stub(:ConfigTraverser) }
