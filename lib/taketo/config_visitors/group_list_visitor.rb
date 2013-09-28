@@ -1,5 +1,4 @@
 require 'taketo/config_visitors'
-require 'taketo/printer'
 
 module Taketo
   module ConfigVisitors

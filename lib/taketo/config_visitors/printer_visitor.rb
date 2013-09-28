@@ -1,10 +1,10 @@
-require 'taketo/printer'
+require 'taketo/support'
 
 module Taketo
   module ConfigVisitors
 
     class PrinterVisitor < BaseVisitor
-      include Taketo::Printer
+      include Taketo::Support::Printer
 
       visit Config do |config|
         indent(0) do
