@@ -1,11 +1,8 @@
 require 'taketo/config_visitors'
 require 'taketo/config_traverser'
+require 'taketo/exceptions'
 
 module Taketo
-
-  class AmbiguousDestinationError < StandardError; end
-  class NonExistentDestinationError < StandardError; end
-
   module NodeResolvers
 
     class BaseResolver
@@ -51,5 +48,4 @@ module Taketo
 
   end
 end
-
 

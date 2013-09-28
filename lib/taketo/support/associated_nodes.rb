@@ -1,6 +1,6 @@
-module Taketo
-  class NodesNotDefinedError < StandardError; end
+require 'taketo/exceptions'
 
+module Taketo
   module Support
 
     module AssociatedNodes

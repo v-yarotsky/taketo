@@ -1,10 +1,3 @@
-require 'taketo/actions/login'
-require 'taketo/actions/view'
-require 'taketo/actions/list'
-require 'taketo/actions/matches'
-require 'taketo/actions/generate_ssh_config'
-require 'taketo/actions/edit_config'
-
 module Taketo
 
   module Actions
@@ -19,6 +12,13 @@ module Taketo
       }
       actions_map.fetch(name) { Login }
     end
+
+    autoload :Login,             'taketo/actions/login'
+    autoload :View,              'taketo/actions/view'
+    autoload :List,              'taketo/actions/list'
+    autoload :Matches,           'taketo/actions/matches'
+    autoload :GenerateSshConfig, 'taketo/actions/generate_ssh_config'
+    autoload :EditConfig,        'taketo/actions/edit_config'
   end
 
 end

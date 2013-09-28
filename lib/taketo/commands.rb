@@ -1,10 +1,6 @@
 module Taketo
 
   module Commands
-    autoload :SSHOptions,  'taketo/commands/ssh_options'
-    autoload :SSHCommand,  'taketo/commands/ssh_command'
-    autoload :MoshCommand, 'taketo/commands/mosh_command'
-
     class CommandNotFoundError < StandardError; end
 
     def self.[](name)
@@ -17,6 +13,10 @@ module Taketo
           "Command #{name.inspect} not found. Available commands are: #{commands_map.keys.join(", ")}"
       end
     end
+
+    autoload :SSHOptions,  'taketo/commands/ssh_options'
+    autoload :SSHCommand,  'taketo/commands/ssh_command'
+    autoload :MoshCommand, 'taketo/commands/mosh_command'
   end
 
 end

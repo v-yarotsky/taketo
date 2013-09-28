@@ -74,8 +74,8 @@ module Taketo::Support
         expect(construct.nodes(:foos)).to eq([foo])
       end
 
-      it "raises NodesNotDefinedError if non-specified node requested" do
-        expect { construct.nodes(:bars) }.to raise_error(NodesNotDefinedError, /bars/)
+      it "raises Taketo::NodesNotDefinedError if non-specified node requested" do
+        expect { construct.nodes(:bars) }.to raise_error(Taketo::NodesNotDefinedError, /bars/)
       end
     end
 
@@ -94,7 +94,7 @@ module Taketo::Support
       end
 
       it "raises if node can not have children of specified type" do
-        expect { construct.has_nodes?(:quack) }.to raise_error NodesNotDefinedError
+        expect { construct.has_nodes?(:quack) }.to raise_error Taketo::NodesNotDefinedError
       end
     end
 

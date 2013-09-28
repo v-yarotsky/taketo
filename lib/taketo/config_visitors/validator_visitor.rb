@@ -1,7 +1,7 @@
+require 'taketo/exceptions'
+
 module Taketo
   module ConfigVisitors
-
-    class ConfigError < StandardError; end
 
     class ValidatorVisitor < BaseVisitor
       def initialize
