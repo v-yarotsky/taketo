@@ -1,4 +1,4 @@
-require 'taketo/config_visitor'
+require 'taketo/config_visitors'
 require 'taketo/config_traverser'
 
 module Taketo
@@ -27,7 +27,7 @@ module Taketo
 
     def nodes
       @nodes ||= begin
-        collector = SimpleCollector(Taketo::Constructs::BaseConstruct).new
+        collector = ConfigVisitors::SimpleCollector(Taketo::Constructs::BaseConstruct).new
         @traverser.visit_depth_first(collector)
         collector.result.reject { |n| Taketo::Constructs::Command === n }
       end
