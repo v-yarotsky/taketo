@@ -1,9 +1,6 @@
 module Taketo
 
   class DSL
-    class ScopeError  < StandardError; end
-    class ConfigError < StandardError; end
-
     class << self
       def define_scope(scope, *parent_scopes_and_options, &scope_setup_block)
         options = parent_scopes_and_options.last.is_a?(Hash) ? parent_scopes_and_options.pop : {}
@@ -41,7 +38,7 @@ module Taketo
       @factory = factory
       @scope = [:config]
       @config = @current_scope_object = factory.create_config
-      @shared_server_configs = Hash.new { |h, k| raise ConfigError, "Shared server config '#{k}' is not defined!"}
+      @shared_server_configs = Hash.new { |h, k| raise DSLConfigError, "Shared server config '#{k}' is not defined!"}
     end
 
     def configure(filename = nil, &block)
@@ -118,7 +115,7 @@ module Taketo
 
     def ensure_nesting_allowed!(scope, parent_scopes)
       if Array(parent_scopes).none? { |s| current_scope?(s) }
-        raise ScopeError, "#{scope} can't be defined in #{current_scope} scope"
+        raise DSLScopeError, "#{scope} can't be defined in #{current_scope} scope"
       end
     end
 

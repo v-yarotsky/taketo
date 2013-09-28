@@ -1,5 +1,3 @@
-require 'taketo/constructs'
-
 shared_examples "a construct with nodes" do |name_plural, name_singular|
   specify "#append_#{name_singular} adds a #{name_singular} to " +         # specify "#append_server adds a server to " +
     "the #{name_plural} collection" do                                     #   "the servers collection" do
@@ -36,7 +34,7 @@ module ConstructsFixtures
   end
 
   def create_config(nodes_by_types = {})
-    c = Taketo::Constructs::Config.new
+    c = Config.new
     add_nodes(c, nodes_by_types)
     c
   end

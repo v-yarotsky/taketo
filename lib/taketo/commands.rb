@@ -1,8 +1,6 @@
 module Taketo
 
   module Commands
-    class CommandNotFoundError < StandardError; end
-
     def self.[](name)
       commands_map = {
         :ssh  => SSHCommand,

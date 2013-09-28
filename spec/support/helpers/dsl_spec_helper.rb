@@ -42,7 +42,7 @@ module DSLSpec
   end
 
   def dsl(scope = scopes[:config], scope_object = nil, &block)
-    context = DSL.new(factory)
+    context = Taketo::DSL.new(factory)
 
     def context.set_scope(s, obj)
       @scope = s

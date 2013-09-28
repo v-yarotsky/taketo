@@ -1,5 +1,3 @@
-require 'taketo/dsl'
-
 RSpec::Matchers.define :be_appropriate_construct do |construct, *args|
   chain(:under) do |enclosing_scope|
     @enclosing_scope = enclosing_scope
@@ -22,7 +20,7 @@ RSpec::Matchers.define :be_appropriate_construct do |construct, *args|
         else
           c.send(construct, *args)
         end
-      rescue Taketo::DSL::ScopeError => e
+      rescue Taketo::DSLScopeError => e
         @result = false
       rescue
         #nothing
