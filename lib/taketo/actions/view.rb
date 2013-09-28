@@ -1,7 +1,7 @@
 require 'taketo/config_traverser'
 require 'taketo/config_visitors'
 require 'taketo/actions/base_action'
-require 'taketo/node_resolver'
+require 'taketo/node_resolvers'
 
 module Taketo
   module Actions
@@ -9,7 +9,7 @@ module Taketo
     class View < BaseAction
       def run
         config.default_destination = nil
-        node = NodeResolver.new(config, destination_path).resolve
+        node = NodeResolvers::BaseResolver.new(config, destination_path).resolve
         traverser = ConfigTraverser.new(node)
         config_printer = ConfigVisitors::PrinterVisitor.new
         traverser.visit_depth_first(config_printer)

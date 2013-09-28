@@ -1,8 +1,6 @@
 require 'taketo/destination_matcher'
 require 'taketo/actions/base_action'
-require 'taketo/group_resolver'
-require 'taketo/node_resolver'
-require 'taketo/server_resolver'
+require 'taketo/node_resolvers'
 
 module Taketo
   module Actions
@@ -11,11 +9,11 @@ module Taketo
       def initialize(options)
         super
         @resolver = if options[:list]
-          GroupResolver
+          NodeResolvers::GroupResolver
         elsif options[:view]
-          NodeResolver
+          NodeResolvers::BaseResolver
         else
-          ServerResolver
+          NodeResolvers::ServerResolver
         end.new(config, destination_path)
       end
 
