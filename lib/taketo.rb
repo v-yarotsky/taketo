@@ -7,6 +7,7 @@ module Taketo
 
   # Lazy requires
   autoload :Actions,           'taketo/actions'
+  autoload :CLI,               'taketo/cli'
   autoload :Commands,          'taketo/commands'
   autoload :ConfigVisitors,    'taketo/config_visitors'
   autoload :Constructs,        'taketo/constructs'
