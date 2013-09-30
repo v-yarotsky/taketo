@@ -6,7 +6,7 @@ module Taketo
 
       visit Config do |config|
         indent(0) do
-          if config.has_projects?
+          if config.has_nodes?(:project)
             put_optional "Default destination:", config.default_destination
           else
             put "There are no projects yet..."
@@ -18,14 +18,14 @@ module Taketo
         put
         indent(0) do
           put "Project: #{project.name}"
-          indent { put "(No environments)" unless project.has_environments? }
+          indent { put "(No environments)" unless project.has_nodes?(:environment) }
         end
       end
 
       visit Environment do |environment|
         indent(1) do
           put "Environment: #{environment.name}"
-          indent { put "(No servers)" unless environment.has_servers? }
+          indent { put "(No servers)" unless environment.has_nodes?(:server) }
         end
       end
 
@@ -39,7 +39,7 @@ module Taketo
             put_optional "Default location:", server.default_location
             put "Default command: #{server.default_command}"
             put "Environment: " + server.environment_variables.map { |n, v| "#{n}=#{v}" }.join(" ")
-            put "Commands:" if server.has_commands?
+            put "Commands:" if server.has_nodes?(:command)
           end
         end
       end

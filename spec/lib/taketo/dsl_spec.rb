@@ -54,8 +54,7 @@ module Taketo
           it "adds a #{scope_name} to the #{parent_scope_name}'s #{scope_name}s collection" do
             within_parent_dsl(parent_scope_name) do |c|
               stub_find_or_create_scope_object(c, scope_name, :bar)
-              c.current_scope_object.should_receive("add_#{scope_name}").
-                with(factory.send(scope_name))
+              c.current_scope_object.should_receive(:add_node).with(factory.send(scope_name))
               c.send(scope_name, :bar) {}
             end
           end
@@ -283,7 +282,7 @@ module Taketo
     end
 
     def stub_find_or_create_scope_object(dsl_object, scope, name)
-      dsl_object.current_scope_object.stub(:find).with(scope, name).and_yield.and_return(factory.create(scope, name))
+      dsl_object.current_scope_object.stub(:find_node_by_type_and_name).with(scope, name).and_yield.and_return(factory.create(scope, name))
     end
 
     def within_parent_dsl(parent_scope, &block)

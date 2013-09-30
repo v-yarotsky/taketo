@@ -28,24 +28,19 @@ module ConstructsFixtures
   [Project, Environment, Server].each do |node_type|
     define_method node_type.name.downcase.gsub(/\w*::/, '') do |name, *args|
       n = node_type.new(name)
-      add_nodes(n, args.first || {})
+      add_nodes(n, args.first || [])
       n
     end
   end
 
-  def create_config(nodes_by_types = {})
+  def create_config(children_nodes = [])
     c = Config.new
-    add_nodes(c, nodes_by_types)
+    add_nodes(c, children_nodes)
     c
   end
 
-  def add_nodes(node, nodes_by_types)
-    nodes_by_types.each do |child_type, children_of_type|
-      Array(children_of_type).each do |c|
-        node.nodes(child_type) << c
-        c.parent = node
-      end
-    end
+  def add_nodes(node, children_nodes)
+    children_nodes.each { |c| node.add_node(c) }
   end
 end
 

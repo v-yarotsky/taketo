@@ -3,7 +3,7 @@ module Taketo
 
     class GroupResolver < BaseResolver
       def nodes
-        super.select { |n| [Taketo::Constructs::Config, Taketo::Constructs::Project, Taketo::Constructs::Environment, Taketo::Constructs::Group].include?(n.class) }
+        super.select { |n| [:config, :project, :environment, :group].include?(n.node_type) }
       end
     end
 

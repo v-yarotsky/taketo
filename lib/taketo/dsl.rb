@@ -10,7 +10,7 @@ module Taketo
           ensure_nesting_allowed!(scope, parent_scopes)
           name = args.shift || options[:default_name] or raise(ArgumentError, "Name not specified")
 
-          scope_object = current_scope_object.find(scope, name) { @factory.create(scope, name) }
+          scope_object = current_scope_object.find_node_by_type_and_name(scope, name) { @factory.create(scope, name) }
 
           in_scope(scope, scope_object) do
             instance_exec(current_scope_object, &scope_setup_block) if scope_setup_block
@@ -106,7 +106,7 @@ module Taketo
     def in_scope(scope, new_scope_object)
       parent_scope_object, @current_scope_object = @current_scope_object, new_scope_object
       @scope.push(scope)
-      parent_scope_object.send("add_#{scope}", current_scope_object)
+      parent_scope_object.add_node(current_scope_object)
       yield
       @scope.pop
       @current_scope_object = parent_scope_object

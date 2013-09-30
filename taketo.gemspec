@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   s.require_paths    = ["lib"]
   s.extra_rdoc_files = %w[LICENSE.txt README.md]
 
-  s.add_development_dependency("rspec", "~> 2.11")
+  s.add_development_dependency("rspec", "~> 2.14")
   s.add_development_dependency("rake",  "~> 0.9")
   s.add_development_dependency("simplecov", "~> 0.6")
   s.add_development_dependency("open4", "~> 1.3")

@@ -10,7 +10,7 @@ module Taketo::Constructs
 
     describe "#render" do
       let(:server) do
-        mock(:Server,
+        double(:Server,
             :environment_variables => { :FOO => "bar baz" },
             :default_location => "/var/apps/the app")
       end

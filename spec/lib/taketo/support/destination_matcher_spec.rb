@@ -7,12 +7,12 @@ module Taketo::Support
     include ConstructsFixtures
 
     let!(:server1) { s = server(:s1); s.global_alias = :foo_server_alias; s }
-    let!(:environment1) { environment(:bar, :servers => server1) }
-    let!(:project1) { project(:foo, :environments => environment1) }
+    let!(:environment1) { environment(:bar, [server1]) }
+    let!(:project1) { project(:foo, [environment1]) }
 
     let!(:server2) { server(:s2) }
 
-    let!(:config) { create_config(:projects => project1, :servers => server2) }
+    let!(:config) { create_config([project1, server2]) }
 
     subject(:matcher) { DestinationMatcher.new([server1, server2]) }
 

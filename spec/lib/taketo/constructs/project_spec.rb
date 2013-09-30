@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'support/helpers/construct_spec_helper'
 
 module Taketo::Constructs
 
@@ -10,9 +9,9 @@ module Taketo::Constructs
       expect(project.name).to eq(:foo)
     end
 
-    it_behaves_like "a construct with nodes", :environments, :environment
-    it_behaves_like "a construct with nodes", :groups, :group
-    it_behaves_like "a node with servers"
+    it "allows only groups, environments and servers as children" do
+      project.allowed_node_types.should =~ [:group, :environment, :server]
+    end
   end
 
 end

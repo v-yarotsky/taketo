@@ -17,7 +17,7 @@ module Taketo::Constructs
 
     describe "#parent=" do
       it "stores parent" do
-        parent = stub
+        parent = double
         construct.parent = parent
         construct.parent.should == parent
       end
@@ -55,7 +55,7 @@ module Taketo::Constructs
 
     describe "#default_server_config=" do
       let(:default_server_config) { proc { call_from_self } }
-      let(:context) { stub(:Context) }
+      let(:context) { double(:Context) }
 
       it "sets default server config" do
         construct.default_server_config = default_server_config
@@ -64,7 +64,7 @@ module Taketo::Constructs
       end
 
       it "merges given config to parent's default server config" do
-        construct.parent = stub(:default_server_config => proc { call_from_parent })
+        construct.parent = double(:default_server_config => proc { call_from_parent })
         construct.default_server_config = default_server_config
 
         context.should_receive(:call_from_parent).ordered
@@ -77,6 +77,9 @@ module Taketo::Constructs
       expect(construct.default_server_config.call).to eq(nil)
     end
 
+    it "should be able to have children nodes" do
+      expect(construct).to be_kind_of(::Taketo::Support::ChildrenNodes)
+    end
   end
 
 end

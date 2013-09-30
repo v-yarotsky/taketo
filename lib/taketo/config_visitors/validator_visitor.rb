@@ -7,19 +7,19 @@ module Taketo
       end
 
       visit Config do |c|
-        raise ConfigError, "There are no servers. Add some to your config (~/.taketo.rc.rb by default)" unless c.has_servers?
+        raise ConfigError, "There are no servers. Add some to your config (~/.taketo.rc.rb by default)" unless node_has_servers?(c)
       end
 
       visit Project do |p|
-        raise ConfigError, "Project #{p.path}: no servers" unless p.has_servers?
+        raise ConfigError, "Project #{p.path}: no servers" unless node_has_servers?(p)
       end
 
       visit Environment do |e|
-        raise ConfigError, "Environment #{e.path}: no servers" unless e.has_servers?
+        raise ConfigError, "Environment #{e.path}: no servers" unless node_has_servers?(e)
       end
 
       visit Group do |g|
-        raise ConfigError, "Group #{g.path}: no servers" unless g.has_servers?
+        raise ConfigError, "Group #{g.path}: no servers" unless node_has_servers?(g)
       end
 
       visit Server do |s|
@@ -36,6 +36,13 @@ module Taketo
 
       visit Command do |c|
         raise ConfigError, "Don't know what to execute on command #{c.name}" if String(c.command).empty?
+      end
+
+      def node_has_servers?(node)
+        servers_collector = ConfigVisitors::SimpleCollector(Taketo::Constructs::Server).new
+        traverser = Taketo::Support::ConfigTraverser.new(node)
+        traverser.visit_depth_first(servers_collector)
+        servers_collector.result.any?
       end
     end
 

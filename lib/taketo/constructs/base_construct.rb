@@ -2,14 +2,13 @@ module Taketo
   module Constructs
 
     class BaseConstruct
-      include Taketo::Support::AssociatedNodes
+      include Taketo::Support::ChildrenNodes
 
       attr_accessor :parent
       attr_reader :name
       attr_writer :default_server_config
 
       def initialize(name)
-        super
         @name = name
         @default_server_config = proc {}
         @parent = NullConstruct

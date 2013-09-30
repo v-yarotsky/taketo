@@ -3,7 +3,7 @@ require 'spec_helper'
 module Taketo::Support
 
   describe ConfigValidator do
-    let(:traverser) { stub(:ConfigTraverser) }
+    let(:traverser) { double(:ConfigTraverser) }
 
     describe "#validate!" do
       it "visits all nodes with an instance of ConfigValidator::ConfigValidatorVisitor" do

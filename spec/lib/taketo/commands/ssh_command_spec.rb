@@ -4,10 +4,10 @@ module Taketo::Commands
 
   describe SSHCommand do
     let(:server) do
-      stub(:Server, :host => "1.2.3.4",
-                    :port => 22,
-                    :username => "deployer",
-                    :identity_file => "/home/gor/.ssh/qqq")
+      double(:Server, :host => "1.2.3.4",
+                      :port => 22,
+                      :username => "deployer",
+                      :identity_file => "/home/gor/.ssh/qqq")
     end
 
     subject(:ssh_command) { SSHCommand.new(server) }

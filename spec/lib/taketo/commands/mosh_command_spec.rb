@@ -4,10 +4,10 @@ module Taketo::Commands
 
   describe MoshCommand do
     let(:server) do
-      stub(:Server, :host => "1.2.3.4",
-                    :port => 22,
-                    :username => "deployer",
-                    :identity_file => "/home/gor/.ssh/qqq")
+      double(:Server, :host => "1.2.3.4",
+                      :port => 22,
+                      :username => "deployer",
+                      :identity_file => "/home/gor/.ssh/qqq")
     end
 
     subject(:mosh_command) { MoshCommand.new(server) }

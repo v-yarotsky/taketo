@@ -7,25 +7,25 @@ module Taketo::NodeResolvers
     include ConstructsFixtures
 
     let(:server1) { s = server(:s1); s.global_alias = :the_alias; s }
-    let(:environment1) { environment(:bar, :servers => server1) }
-    let(:project1) { project(:foo, :environments => environment1) }
+    let(:environment1) { environment(:bar, [ server1 ]) }
+    let(:project1) { project(:foo, [environment1]) }
 
     let(:server2) { server(:s2) }
-    let(:environment2) { environment(:qux, :servers => server2) }
-    let(:project2) { project(:baz, :environments => environment2) }
+    let(:environment2) { environment(:qux, [server2]) }
+    let(:project2) { project(:baz, [environment2]) }
 
     let(:server3) { server(:s3) }
     let(:server4) { server(:s4) }
-    let(:environment3) { environment(:corge, :servers => [server3, server4]) }
-    let(:project3) { project(:quux, :environments => environment3) }
+    let(:environment3) { environment(:corge, [server3, server4]) }
+    let(:project3) { project(:quux, [environment3]) }
 
     let(:server5) { server(:s5) }
     let(:server6) { server(:s6) }
-    let(:environment4) { environment(:garply, :servers => [server5, server6]) }
-    let(:environment5) { environment(:waldo, :servers => server(:s7)) }
-    let(:project4) { project(:grault, :environments => [environment4, environment5]) }
+    let(:environment4) { environment(:garply, [server5, server6]) }
+    let(:environment5) { environment(:waldo, [server(:s7)]) }
+    let(:project4) { project(:grault, [environment4, environment5]) }
 
-    let(:config) { create_config(:projects => [project1, project2, project3, project4]) }
+    let(:config) { create_config([project1, project2, project3, project4]) }
 
     context "when project, environment and server specified" do
       it "returns server if it exists" do
@@ -92,14 +92,14 @@ module Taketo::NodeResolvers
           context "when there's one environment" do
             context "when there's one server" do
               it "executes command without asking project/environment/server" do
-                config = create_config(:projects => project1)
+                config = create_config([project1])
                 expect(resolver(config, "").resolve).to eq(server1)
               end
             end
 
             context "when there are multiple servers" do
               it "asks for server" do
-                config = create_config(:projects => project3)
+                config = create_config([project3])
                 expect { resolver(config, "").resolve }.to raise_error Taketo::AmbiguousDestinationError, /s3.*s4/i
               end
             end
@@ -107,7 +107,7 @@ module Taketo::NodeResolvers
 
           context "when there are multiple environments" do
             it "asks for environment" do
-              config = create_config(:projects => project4)
+              config = create_config([project4])
               expect { resolver(config, "").resolve }.to raise_error Taketo::AmbiguousDestinationError, /garply:s5.*garply:s6.*waldo:s7/i
             end
           end
@@ -115,7 +115,7 @@ module Taketo::NodeResolvers
 
         context "when there are multiple projects" do
           it "asks for project" do
-            config = create_config(:projects => [project3, project4])
+            config = create_config([project3, project4])
             expect { resolver(config, "").resolve }.to raise_error Taketo::AmbiguousDestinationError, /corge:s3.*corge:s4.*garply:s5.*garply:s6.*waldo:s7/i
           end
         end
@@ -132,7 +132,7 @@ module Taketo::NodeResolvers
         it "resolves to exact match" do
           s1 = server(:server1)
           s10 = server(:server10)
-          config = create_config(:servers => [s1, s10])
+          config = create_config([s1, s10])
           expect(resolver(config, "server1").resolve).to eq(s1)
         end
       end

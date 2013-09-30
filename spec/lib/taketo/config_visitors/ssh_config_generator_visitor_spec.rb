@@ -6,7 +6,7 @@ module Taketo::ConfigVisitors
     subject(:generator) { SSHConfigGeneratorVisitor.new }
 
     describe "#visit_server" do
-      let(:server) { stub(:Server, :name => :sponge, :host => "bar.foo.com", :port => nil, :username => nil, :identity_file => nil, :global_alias => nil) }
+      let(:server) { double(:Server, :name => :sponge, :host => "bar.foo.com", :port => nil, :username => nil, :identity_file => nil, :global_alias => nil) }
 
       it "renders available server info" do
         server.stub(:port => 8000, :username => "bob", :identity_file => "path_to_identity_file")

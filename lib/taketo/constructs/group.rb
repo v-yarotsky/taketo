@@ -2,14 +2,10 @@ module Taketo
   module Constructs
 
     class Group < BaseConstruct
-      has_nodes :servers, :server
+      accepts_node_types :server
 
       def rails_env
         parent.rails_env if parent.respond_to?(:rails_env)
-      end
-
-      def has_servers?
-        has_deeply_nested_nodes?(:servers)
       end
     end
 

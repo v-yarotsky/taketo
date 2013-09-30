@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'support/helpers/construct_spec_helper'
 
 module Taketo::Constructs
 
@@ -12,7 +11,7 @@ module Taketo::Constructs
 
     describe "#rails_env" do
       it "returns parent's #rails_env" do
-        group.parent = stub(:Environment, :rails_env => "bar")
+        group.parent = double(:Environment, :rails_env => "bar")
         expect(group.rails_env).to eq("bar")
       end
 
@@ -22,7 +21,9 @@ module Taketo::Constructs
       end
     end
 
-    it_behaves_like "a node with servers"
+    it "allows only servers as children" do
+      group.allowed_node_types.should =~ [:server]
+    end
   end
 
 end

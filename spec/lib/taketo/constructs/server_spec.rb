@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'support/helpers/construct_spec_helper'
 
 module Taketo::Constructs
 
@@ -32,14 +31,14 @@ module Taketo::Constructs
       end
 
       it "returns existing defined command if default command name is set" do
-        command = stub(:Command, :name => :foo)
-        server.commands << command
+        command = double(:Command, :name => :foo, :node_type => :command).as_null_object
+        server.add_node(command)
         server.default_command = :foo
         expect(server.default_command).to eq(command)
       end
 
       it "returns explicit command if default command not found by name" do
-        command = stub(:Command)
+        command = double(:Command)
         Command.should_receive(:explicit_command).with("tmux attach || tmux new-session").and_return(command)
         server.default_command = "tmux attach || tmux new-session"
         expect(server.default_command).to eq(command)
@@ -47,7 +46,7 @@ module Taketo::Constructs
     end
 
     describe "#parent=" do
-      let(:environment) { stub(:Environment, :rails_env => 'the_env') }
+      let(:environment) { double(:Environment, :rails_env => 'the_env') }
 
       it "sets RAILS_ENV environment variable" do
         server.environment_variables.should == {}
@@ -82,7 +81,9 @@ module Taketo::Constructs
       expect(server.environment_variables).to include(:FOO => "bar", :BAR => "baz")
     end
 
-    it_behaves_like "a construct with nodes", :commands, :command
+    it "allows only commands as children" do
+      server.allowed_node_types.should =~ [:command]
+    end
   end
 
 end

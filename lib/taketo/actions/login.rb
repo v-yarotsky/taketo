@@ -16,7 +16,7 @@ module Taketo
         if String(command).empty?
           server.default_command
         else
-          server.find_command(command.to_sym) || Constructs::Command.explicit_command(command)
+          server.find_node_by_type_and_name(:command, command.to_sym) || Constructs::Command.explicit_command(command)
         end
       end
 

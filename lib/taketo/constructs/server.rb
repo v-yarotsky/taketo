@@ -5,7 +5,7 @@ module Taketo
       attr_reader :environment_variables
       attr_accessor :ssh_command, :host, :port, :username, :default_location, :default_command, :global_alias, :identity_file
 
-      has_nodes :commands, :command
+      accepts_node_types :command
 
       def initialize(name)
         super
@@ -32,7 +32,7 @@ module Taketo
 
       def default_command
         if defined? @default_command
-          find_command(@default_command) || Command.explicit_command(@default_command)
+          find_node_by_type_and_name(:command, @default_command) || Command.explicit_command(@default_command)
         else
           Command.default
         end

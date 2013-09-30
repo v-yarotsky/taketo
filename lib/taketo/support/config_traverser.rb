@@ -16,10 +16,8 @@ module Taketo
           node = path_stack.pop
           visitor.visit(node)
 
-          node.class.node_types.each do |node_type|
-            node.nodes(node_type).reverse_each do |n|
-              path_stack.push(n)
-            end
+          node.nodes.reverse_each do |n|
+            path_stack.push(n)
           end
         end
       end
