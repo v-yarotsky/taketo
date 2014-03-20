@@ -1,41 +1,37 @@
+require 'forwardable'
+
 module Taketo
   module Constructs
 
     class Server < BaseConstruct
-      attr_reader :environment_variables
-      attr_accessor :ssh_command, :host, :port, :username, :default_location, :default_command, :global_alias, :identity_file
+      extend Forwardable
 
-      accepts_node_types :command
+      attr_accessor :config, :global_alias
+      # TODO rename to included_shared_server_configs
+      attr_reader :shared_server_configs
+
+      def_delegators :@config, :environment_variables,
+                               :ssh_command,
+                               :host,
+                               :port,
+                               :username,
+                               :default_location,
+                               :default_command,
+                               :identity_file,
+                               :commands
 
       def initialize(name)
-        super
-        @environment_variables = {}
-        @ssh_command = :ssh
+        super(name)
+        @config = ::Taketo::Support::ServerConfig.new
+        @shared_server_configs = []
       end
 
-      def env(env_variables)
-        @environment_variables.merge!(env_variables)
+      def global_alias=(value)
+        @global_alias = value.to_s
       end
 
-      def parent=(parent)
-        super
-        env(:RAILS_ENV => parent.rails_env) if parent.respond_to?(:rails_env)
-      end
-
-      def ssh_command=(ssh_command)
-        @ssh_command = ssh_command.to_sym
-      end
-
-      def global_alias=(alias_name)
-        @global_alias = alias_name.to_s
-      end
-
-      def default_command
-        if defined? @default_command
-          find_node_by_type_and_name(:command, @default_command) || Command.explicit_command(@default_command)
-        else
-          Command.default
-        end
+      def include_shared_server_config(server_config)
+        @shared_server_configs << server_config
       end
     end
 

@@ -29,22 +29,33 @@ module Taketo::Support
     let(:traverser) { described_class.new(config) }
 
     class PrintingVisitor
-      attr_reader :result
+      attr_reader :result, :after_visit_result
 
       def initialize
         @result = []
+        @after_visit_result = []
       end
 
       def visit(node)
         @result << node.name
       end
+
+      def after_visit(node)
+        @after_visit_result << node.name
+      end
     end
 
     describe "#visit_depth_first" do
+      let(:visitor) { PrintingVisitor.new }
+
       it "traverses in depth with visitor" do
-        visitor = PrintingVisitor.new
         traverser.visit_depth_first(visitor)
-        visitor.result.should == [config, project_1, environment_1, environment_2, server_1, server_2, project_2, server_3].map(&:name)
+        expect(visitor.result).to eq([config, project_1, environment_1, environment_2, server_1, server_2, project_2, server_3].map(&:name))
+      end
+
+      it "triggers after_visit as needed" do
+        traverser.visit_depth_first(visitor)
+        expect(visitor.after_visit_result).to eq([environment_1, server_1, server_2, environment_2, project_1, project_2, server_3, config].map(&:name))
       end
     end
   end

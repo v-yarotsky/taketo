@@ -33,6 +33,11 @@ module Taketo
           end
         end
 
+        def <<(node)
+          add_node(node)
+          self
+        end
+
         def find_node_by_type_and_name(node_type, node_name)
           nodes.detect { |n| n.node_type == node_type && n.name == node_name } or (yield if block_given?)
         end

@@ -19,6 +19,7 @@ module Taketo
     module_function :SimpleCollector
 
     autoload :BaseVisitor,               'taketo/config_visitors/base_visitor'
+    autoload :CompilerVisitor,           'taketo/config_visitors/compiler_visitor'
     autoload :PrinterVisitor,            'taketo/config_visitors/printer_visitor'
     autoload :SSHConfigGeneratorVisitor, 'taketo/config_visitors/ssh_config_generator_visitor'
     autoload :GroupListVisitor,          'taketo/config_visitors/group_list_visitor'

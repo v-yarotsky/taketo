@@ -70,6 +70,24 @@ module Taketo::Support
       expect(construct.has_nodes?(:project)).to be_true
       expect(construct.has_nodes?(:environment)).to be_false
     end
+
+    describe "#<<" do
+      it "adds nodes" do
+        construct << project
+        expect(construct.nodes).to eq([project])
+      end
+
+      it "is chainable" do
+        construct << project << server
+        expect(construct.nodes).to eq([project, server])
+      end
+
+      it "sets child node parent" do
+        expect(project).to receive(:parent=).with(construct)
+        expect(server).to receive(:parent=).with(construct)
+        construct << project << server
+      end
+    end
   end
 
 end

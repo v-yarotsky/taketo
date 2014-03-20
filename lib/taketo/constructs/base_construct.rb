@@ -4,14 +4,14 @@ module Taketo
     class BaseConstruct
       include Taketo::Support::ChildrenNodes
 
-      attr_accessor :parent
+      attr_accessor :parent, :default_server_config, :path
       attr_reader :name
-      attr_writer :default_server_config
 
       def initialize(name)
         @name = name
-        @default_server_config = proc {}
+        @default_server_config = ::Taketo::Support::ServerConfig.new
         @parent = NullConstruct
+        yield self if block_given?
       end
 
       def node_type
@@ -25,6 +25,8 @@ module Taketo
         @parent = parent
       end
 
+      ##
+      # TODO get rid of this crap
       def parents
         result = []
         p = parent
@@ -35,27 +37,17 @@ module Taketo
         result
       end
 
-      def path
-        parents.reverse_each.map(&:name).concat([self.name]).reject(&:nil?).join(":")
-      end
-
-      def default_server_config
-        parent_default_server_config = parent.default_server_config
-        own_default_server_config = @default_server_config
-        proc { instance_eval(&parent_default_server_config); instance_eval(&own_default_server_config) }
-      end
-
       def qualified_name
-        "#{node_type} #{self.name}"
+        "#{node_type} #{name}"
       end
     end
 
     class NullConstructClass
-      def default_server_config; proc {}; end
+      def default_server_config; ::Taketo::Support::ServerConfig.new; end
+      def qualified_name; ""; end
     end
 
     NullConstruct = NullConstructClass.new
-
   end
 end
 

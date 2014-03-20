@@ -58,24 +58,24 @@ module Taketo
     define_scope :environment, :project
     define_scope :group, :environment, :project, :config
 
-    define_scope :server, :environment, :project, :config, :group, :default_name => :default do |s|
-      instance_eval(&s.default_server_config)
-    end
+    define_scope :server, :environment, :project, :config, :group, :default_name => :default# do |s|
+    #  instance_eval(&s.default_server_config)
+    #end
 
     define_scope :command, :server
 
-    define_method_in_scope(:default_destination, :config) { |destination|   current_scope_object.default_destination = destination }
-    define_method_in_scope(:ssh_command, :server)         { |ssh_command|   current_scope_object.ssh_command = ssh_command         }
-    define_method_in_scope(:host, :server)                { |hostname|      current_scope_object.host = hostname                   }
-    define_method_in_scope(:port, :server)                { |port_number|   current_scope_object.port = port_number                }
-    define_method_in_scope(:user, :server)                { |username|      current_scope_object.username = username               }
-    define_method_in_scope(:location, :server)            { |path|          current_scope_object.default_location = path           }
-    define_method_in_scope(:global_alias,:server)         { |alias_name|    current_scope_object.global_alias = alias_name         }
-    define_method_in_scope(:env, :server)                 { |env|           current_scope_object.env(env)                          }
-    define_method_in_scope(:identity_file, :server)       { |identity_file| current_scope_object.identity_file = identity_file     }
-    define_method_in_scope(:default_command, :server)     { |command|       current_scope_object.default_command = command         }
-    define_method_in_scope(:execute, :command)            { |command|       current_scope_object.command = command                 }
-    define_method_in_scope(:desc, :command)               { |description|   current_scope_object.description = description         }
+    define_method_in_scope(:default_destination, :config) { |destination|   current_scope_object.default_destination = destination        }
+    define_method_in_scope(:ssh_command, :server)         { |ssh_command|   current_scope_object.config.ssh_command = ssh_command         }
+    define_method_in_scope(:host, :server)                { |hostname|      current_scope_object.config.host = hostname                   }
+    define_method_in_scope(:port, :server)                { |port_number|   current_scope_object.config.port = port_number                }
+    define_method_in_scope(:user, :server)                { |username|      current_scope_object.config.username = username               }
+    define_method_in_scope(:location, :server)            { |path|          current_scope_object.config.default_location = path           }
+    define_method_in_scope(:global_alias,:server)         { |alias_name|    current_scope_object.config.global_alias = alias_name         }
+    define_method_in_scope(:env, :server)                 { |env|           current_scope_object.config.add_environment_variables(env)    }
+    define_method_in_scope(:identity_file, :server)       { |identity_file| current_scope_object.config.identity_file = identity_file     }
+    define_method_in_scope(:default_command, :server)     { |command|       current_scope_object.config.default_command = command         }
+    define_method_in_scope(:execute, :command)            { |command|       current_scope_object.command = command                        }
+    define_method_in_scope(:desc, :command)               { |description|   current_scope_object.description = description                }
 
     define_method_in_scope(:default_server_config, :config, :project, :environment, :group) do |block|
       current_scope_object.default_server_config = block

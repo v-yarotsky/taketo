@@ -6,19 +6,17 @@ module Taketo
 
       def initialize(name)
         super(name)
+        @default_server_config = add_rails_env(@default_server_config)
       end
 
-      def project_name
-        if parent.is_a?(Project)
-          parent.name
-        else
-          ""
-        end
+      def default_server_config=(server_config)
+        super(add_rails_env(server_config))
       end
 
-      def rails_env
-        name.to_s
+      def add_rails_env(server_config)
+        ::Taketo::Support::ServerConfig.new(:environment_variables => { :RAILS_ENV => name.to_s }).merge(server_config)
       end
+      private :add_rails_env
     end
 
   end

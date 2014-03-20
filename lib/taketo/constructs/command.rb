@@ -38,5 +38,3 @@ module Taketo
 
   end
 end
-
-

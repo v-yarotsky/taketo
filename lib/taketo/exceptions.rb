@@ -6,6 +6,8 @@ module Taketo
   class CommandNotFoundError < StandardError; end
   class DSLScopeError  < StandardError; end
   class DSLConfigError < StandardError; end
+  class DuplicateSharedServerConfigError < StandardError; end
+  class SharedServerConfigNotFoundError < StandardError; end
 
   unless defined? KeyError
     class KeyError < StandardError; end

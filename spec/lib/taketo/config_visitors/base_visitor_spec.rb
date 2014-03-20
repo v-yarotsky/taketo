@@ -19,6 +19,10 @@ module Taketo::ConfigVisitors
       visit Numeric do |n|
         n.to_s
       end
+
+      after_visit Numeric do |n|
+        n * 2
+      end
     end
 
     subject(:visitor) { DummyVisitor.new }
@@ -41,6 +45,10 @@ module Taketo::ConfigVisitors
         def to_s; "captured as Numeric"; end
       end
       expect(visitor.visit(c.new)).to eq("captured as Numeric")
+    end
+
+    it "defines #after_visit* methods" do
+      expect(visitor.after_visit_numeric(42)).to eq(84)
     end
   end
 

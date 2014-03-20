@@ -9,6 +9,8 @@ module Taketo
         end
         @path = path
         @traverser = Support::ConfigTraverser.new(@config)
+        compiler = ::Taketo::ConfigVisitors::CompilerVisitor.new
+        @traverser.visit_depth_first(compiler)
       end
 
       def resolve

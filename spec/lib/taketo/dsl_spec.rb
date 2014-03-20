@@ -168,16 +168,6 @@ module Taketo
     describe "#server" do
       it_behaves_like "a scope", :server, [:environment, :config, :project, :group]
 
-      it "evaluates default_server_config" do
-        within_parent_dsl(:environment) do |c|
-          stub_find_or_create_scope_object(c, :server, :bar)
-          default_server_config = proc { some_setup }
-          factory.server.stub(:default_server_config => default_server_config)
-          c.should_receive(:some_setup)
-          c.server(:bar) {}
-        end
-      end
-
       it "has name optional" do
         within_parent_dsl(:environment) do |c|
           stub_find_or_create_scope_object(c, :server, :default)
@@ -208,7 +198,7 @@ module Taketo
       end
 
       describe "#env" do
-        it_behaves_like "a scoped method", :env, :server, :env, { :FOO => "bar" }
+        it_behaves_like "a scoped method", :env, :server, :add_environment_variables, { :FOO => "bar" }
       end
 
       describe "#global_alias" do

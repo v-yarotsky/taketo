@@ -45,40 +45,14 @@ module Taketo::Constructs
       expect(construct.parents).to eq([])
     end
 
-    describe "#path" do
-      include_context "parents"
-
-      it "returns names of parents separated by :" do
-        expect(construct.path).to eq("grand_parent:parent:my_node")
-      end
-    end
-
-    describe "#default_server_config=" do
-      let(:default_server_config) { proc { call_from_self } }
-      let(:context) { double(:Context) }
-
-      it "sets default server config" do
-        construct.default_server_config = default_server_config
-        context.should_receive(:call_from_self)
-        context.instance_eval(&construct.default_server_config)
-      end
-
-      it "merges given config to parent's default server config" do
-        construct.parent = double(:default_server_config => proc { call_from_parent })
-        construct.default_server_config = default_server_config
-
-        context.should_receive(:call_from_parent).ordered
-        context.should_receive(:call_from_self).ordered
-        context.instance_eval(&construct.default_server_config)
-      end
-    end
-
-    it "has an empty proc as an initial default server config" do
-      expect(construct.default_server_config.call).to eq(nil)
-    end
-
     it "should be able to have children nodes" do
       expect(construct).to be_kind_of(::Taketo::Support::ChildrenNodes)
+    end
+
+    describe ".new" do
+      it "yields self" do
+        expect { |b| TestBaseConstruct.new(:my_node, &b) }.to yield_control
+      end
     end
   end
 
