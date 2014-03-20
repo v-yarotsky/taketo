@@ -25,18 +25,6 @@ module Taketo
         @parent = parent
       end
 
-      ##
-      # TODO get rid of this crap
-      def parents
-        result = []
-        p = parent
-        while p != NullConstruct
-          result << p
-          p = p.parent
-        end
-        result
-      end
-
       def qualified_name
         "#{node_type} #{name}"
       end

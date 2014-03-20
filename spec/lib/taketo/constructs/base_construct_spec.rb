@@ -23,28 +23,6 @@ module Taketo::Constructs
       end
     end
 
-    shared_context "parents" do
-      let(:grand_parent) { TestBaseConstruct.new(:grand_parent) }
-      let(:parent) { TestBaseConstruct.new(:parent) }
-
-      before(:each) do
-        parent.parent = grand_parent
-        construct.parent = parent
-      end
-    end
-
-    describe "#parents" do
-      include_context "parents"
-
-      it "returns parent nodes up until NullConstruct" do
-        expect(construct.parents).to eq([parent, grand_parent])
-      end
-    end
-
-    specify "#parents returns an empty array if there are no parents" do
-      expect(construct.parents).to eq([])
-    end
-
     it "should be able to have children nodes" do
       expect(construct).to be_kind_of(::Taketo::Support::ChildrenNodes)
     end
