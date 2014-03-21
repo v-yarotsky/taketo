@@ -41,13 +41,7 @@ module Taketo::ConfigVisitors
         expect(prj_server.environment_variables).to include(:UNTOUCHED => 1, :OVERRIDDEN => :not_overridden)
       end
 
-      it "includes shared server configs on top" do
-        prj_env_server.include_shared_server_config(::Taketo::Support::ServerConfig.new(:environment_variables => { :OVERRIDDEN => :overridden_by_shared_config }))
-        ::Taketo::Support::ConfigTraverser.new(config).visit_depth_first(compiler)
-        expect(prj_env_server.environment_variables).to include(:UNTOUCHED => 1, :OVERRIDDEN => :overridden_by_shared_config)
-      end
-
-      it "includes own server config on top of shared configs" do
+      it "includes own server config on top" do
         prj_env_server.config = ::Taketo::Support::ServerConfig.new(:environment_variables => { :OVERRIDDEN => :overridden_by_own_config })
         ::Taketo::Support::ConfigTraverser.new(config).visit_depth_first(compiler)
         expect(prj_env_server.environment_variables).to include(:UNTOUCHED => 1, :OVERRIDDEN => :overridden_by_own_config)

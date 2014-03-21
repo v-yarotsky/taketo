@@ -6,7 +6,7 @@ module Taketo::NodeResolvers
   describe ServerResolver do
     include ConstructsFixtures
 
-    let(:server1) { s = server(:s1); s.global_alias = :the_alias; s }
+    let(:server1) { s = server(:s1); s.config.global_alias = :the_alias; s }
     let(:environment1) { environment(:bar, [ server1 ]) }
     let(:project1) { project(:foo, [environment1]) }
 

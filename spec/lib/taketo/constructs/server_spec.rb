@@ -19,9 +19,20 @@ module Taketo::Constructs
       expect(server.allowed_node_types).to be_empty
     end
 
-    specify "#global_alias= converts to string" do
-      server.global_alias = :foo
-      expect(server.global_alias).to eq("foo")
+    describe "#fetch_command" do
+      let(:command) { ::Taketo::Support::Command.explicit_command("echo") }
+
+      before(:each) do
+        server.config = ::Taketo::Support::ServerConfig.new(:commands => [command])
+      end
+
+      it "returns command by name if found" do
+        expect(server.fetch_command("echo")).to eq(command)
+      end
+
+      it "returns explicit command if not found by name" do
+        expect(server.fetch_command("shutdown -h now")).to eq(::Taketo::Support::Command.explicit_command("shutdown -h now"))
+      end
     end
 
     # check delegating to config

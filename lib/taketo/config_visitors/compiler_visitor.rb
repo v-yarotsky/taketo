@@ -21,7 +21,7 @@ module Taketo
       end
 
       visit Server do |s|
-        s.config = (@server_configs_stack + s.shared_server_configs).inject(::Taketo::Support::ServerConfig.new, &:merge).merge(s.config)
+        s.config = @server_configs_stack.inject(::Taketo::Support::ServerConfig.new, &:merge).merge(s.config)
         s.path = make_node_path(s)
       end
 

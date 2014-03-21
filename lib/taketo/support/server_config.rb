@@ -3,8 +3,9 @@ require 'set'
 module Taketo
   module Support
 
+    # TODO make it immutable maybe?
     class ServerConfig
-      FIELDS = [:ssh_command, :host, :port, :username, :default_location, :default_command, :identity_file].freeze
+      FIELDS = [:ssh_command, :host, :port, :username, :default_location, :default_command, :identity_file, :global_alias].freeze
       attr_accessor *FIELDS
       attr_reader :environment_variables, :commands
 
@@ -17,6 +18,10 @@ module Taketo
 
       def ssh_command=(value)
         @ssh_command = value.to_sym
+      end
+
+      def global_alias=(value)
+        @global_alias = value.to_s
       end
 
       def merge(server_config)
@@ -47,6 +52,10 @@ module Taketo
 
       def add_environment_variables(env_variables)
         @environment_variables.merge!(Hash[Array(env_variables)])
+      end
+
+      def include_shared_server_config(server_config)
+        merge!(server_config)
       end
 
       # overriding command?

@@ -105,29 +105,29 @@ feature "Config DSL" do
 
   context "Per-Scope default server config" do
     background { config_exists <<-CONFIG }
+      default_server_config do
+        env :FOO => 'bar'
+      end
+
+      project :slots do
         default_server_config do
-          env :FOO => 'bar'
+          location '/mnt/apps'
         end
 
-        project :slots do
-          default_server_config do
-            location '/mnt/apps'
-          end
-
-          environment :staging do
-            server :s1 do
-              host "1.2.3.4"
-            end
+        environment :staging do
+          server :s1 do
+            host "1.2.3.4"
           end
         end
+      end
 
-        project :shoes do
-          environment :production do
-            server do
-              host "2.3.4.5"
-            end
+      project :shoes do
+        environment :production do
+          server do
+            host "2.3.4.5"
           end
         end
+      end
     CONFIG
 
     scenario "Global default server config" do

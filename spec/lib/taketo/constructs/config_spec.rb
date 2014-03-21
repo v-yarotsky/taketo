@@ -11,6 +11,7 @@ module Taketo::Constructs
 
     it { should have_accessor(:default_destination) }
 
+    # TODO figure out how to be with dsl2 and this
     context "shared server configs" do
       let(:shared_server_config) do
         ::Taketo::Support::ServerConfig.new do |c|
@@ -38,6 +39,15 @@ module Taketo::Constructs
       end
     end
 
+    describe "#default_server_config" do
+      it "has :ssh as ssh_command" do
+        expect(config.default_server_config.ssh_command).to eq(:ssh)
+      end
+
+      it "has bash as default_command" do
+        expect(config.default_server_config.default_command).to eq("bash")
+      end
+    end
   end
 
 end

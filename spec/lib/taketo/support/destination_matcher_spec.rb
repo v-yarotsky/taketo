@@ -6,7 +6,7 @@ module Taketo::Support
   describe DestinationMatcher do
     include ConstructsFixtures
 
-    let!(:server1) { s = server(:s1); s.global_alias = :foo_server_alias; s.path = "foo:bar:s1"; s }
+    let!(:server1) { s = server(:s1); s.config.global_alias = :foo_server_alias; s.path = "foo:bar:s1"; s }
     let!(:server2) { s = server(:s2); s.path = "s2"; s }
 
     subject(:matcher) { DestinationMatcher.new([server1, server2]) }

@@ -6,16 +6,22 @@ module Taketo
 
       attr_accessor :default_destination
 
+      attr_reader :shared_server_configs # just for dsl reopening
+
       def initialize(*args)
         super(nil)
         @shared_server_configs = {}
+        @default_server_config = @default_server_config.merge(
+          :ssh_command => :ssh,
+          :default_command => "bash"
+        )
       end
 
-      def add_shared_server_config(name, server_config)
+      def add_shared_server_config(name, server_config_proc)
         if @shared_server_configs.key?(name)
           raise ::Taketo::DuplicateSharedServerConfigError, name
         end
-        @shared_server_configs.store(name, server_config)
+        @shared_server_configs.store(name, server_config_proc)
       end
 
       def shared_server_config(name)

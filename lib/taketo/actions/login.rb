@@ -1,23 +1,22 @@
 module Taketo
   module Actions
 
+    # TODO rename to RunCommand or something
     class Login < BaseAction
       def run
         server = NodeResolvers::ServerResolver.new(config, destination_path).resolve
         server_command = remote_command(server)
-        command_to_execute = Commands[server.ssh_command].new(server).render(server_command.render(server, options))
+        command_to_execute = Commands[server.ssh_command].new(server).render(server_command)
         execute(command_to_execute)
       end
 
       private
 
       def remote_command(server)
-        command = options[:command]
-        if String(command).empty?
-          server.default_command
-        else
-          server.find_node_by_type_and_name(:command, command.to_sym) || Constructs::Command.explicit_command(command)
-        end
+        command_name = String(options[:command]).empty? ? server.default_command : options[:command]
+        command = server.fetch_command(command_name)
+        command_renderer = ::Taketo::Support::CommandRenderer.new(server, options)
+        command_renderer.render(command)
       end
 
       def execute(shell_command)

@@ -8,6 +8,11 @@ module Taketo
 
       attr_accessor :command, :description
 
+      def initialize(*)
+        warn "Taketo::Constructs::Command is deprecated. Use combo of Taketo::Support::Command and Taketo::Support::CommandRenderer"
+        super
+      end
+
       def self.default
         new(:default).tap { |cmd| cmd.command = "bash" }
       end
