@@ -13,7 +13,6 @@ module Taketo
         @config ||= begin
           config_file = options[:config]
 
-          require 'taketo/dsl2'
           DSL2.new.configure(config_file).tap do |config|
             traverser = Support::ConfigTraverser.new(config)
             compiler = ConfigVisitors::CompilerVisitor.new

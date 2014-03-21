@@ -13,6 +13,7 @@ module Taketo
   autoload :Constructs,        'taketo/constructs'
   autoload :ConstructsFactory, 'taketo/constructs_factory'
   autoload :DSL,               'taketo/dsl'
+  autoload :DSL2,              'taketo/dsl2'
   autoload :NodeResolvers,     'taketo/node_resolvers'
   autoload :Support,           'taketo/support'
 end
