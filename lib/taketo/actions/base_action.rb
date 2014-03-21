@@ -16,6 +16,8 @@ module Taketo
           require 'taketo/dsl2'
           DSL2.new.configure(config_file).tap do |config|
             traverser = Support::ConfigTraverser.new(config)
+            compiler = ConfigVisitors::CompilerVisitor.new
+            traverser.visit_depth_first(compiler)
             Support::ConfigValidator.new(traverser).validate!
           end
         end

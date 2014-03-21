@@ -25,7 +25,7 @@ module Taketo::NodeResolvers
     let(:environment5) { environment(:waldo, [server(:s7)]) }
     let(:project4) { project(:grault, [environment4, environment5]) }
 
-    let(:config) { create_config([project1, project2, project3, project4]) }
+    let(:config) { config = create_compiled_config([project1, project2, project3, project4]) }
 
     context "when project, environment and server specified" do
       it "returns server if it exists" do
@@ -92,14 +92,14 @@ module Taketo::NodeResolvers
           context "when there's one environment" do
             context "when there's one server" do
               it "executes command without asking project/environment/server" do
-                config = create_config([project1])
+                config = create_compiled_config([project1])
                 expect(resolver(config, "").resolve).to eq(server1)
               end
             end
 
             context "when there are multiple servers" do
               it "asks for server" do
-                config = create_config([project3])
+                config = create_compiled_config([project3])
                 expect { resolver(config, "").resolve }.to raise_error Taketo::AmbiguousDestinationError, /s3.*s4/i
               end
             end
@@ -107,7 +107,7 @@ module Taketo::NodeResolvers
 
           context "when there are multiple environments" do
             it "asks for environment" do
-              config = create_config([project4])
+              config = create_compiled_config([project4])
               expect { resolver(config, "").resolve }.to raise_error Taketo::AmbiguousDestinationError, /garply:s5.*garply:s6.*waldo:s7/i
             end
           end
@@ -115,7 +115,7 @@ module Taketo::NodeResolvers
 
         context "when there are multiple projects" do
           it "asks for project" do
-            config = create_config([project3, project4])
+            config = create_compiled_config([project3, project4])
             expect { resolver(config, "").resolve }.to raise_error Taketo::AmbiguousDestinationError, /corge:s3.*corge:s4.*garply:s5.*garply:s6.*waldo:s7/i
           end
         end
@@ -132,7 +132,7 @@ module Taketo::NodeResolvers
         it "resolves to exact match" do
           s1 = server(:server1)
           s10 = server(:server10)
-          config = create_config([s1, s10])
+          config = create_compiled_config([s1, s10])
           expect(resolver(config, "server1").resolve).to eq(s1)
         end
       end

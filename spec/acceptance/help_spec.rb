@@ -50,7 +50,7 @@ Project: baz
   Environment: qux
     Server: bart
       Host: 2.3.4.5
-      Default command: rails c
+      Default command: console
       Environment: RAILS_ENV=qux
       Commands:
         console

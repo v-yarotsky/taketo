@@ -25,7 +25,7 @@ module Taketo::NodeResolvers
     let(:environment5) { environment(:waldo, [server(:s7)]) }
     let(:project4) { project(:grault, [environment4, environment5]) }
 
-    let(:config) { create_config([project1, project2, project3, project4]) }
+    let(:config) { create_compiled_config([project1, project2, project3, project4]) }
 
     describe "#resolve" do
       it "does not resolve to server" do

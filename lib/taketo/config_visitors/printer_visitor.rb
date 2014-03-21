@@ -39,13 +39,14 @@ module Taketo
             put_optional "Default location:", server.default_location
             put "Default command: #{server.default_command}"
             put "Environment: " + server.environment_variables.map { |n, v| "#{n}=#{v}" }.join(" ")
-            put "Commands:" if server.has_nodes?(:command)
+            put "Commands:" if server.commands.any?
+            indent do
+              server.commands.each do |command|
+                put command.name.to_s + (" - " + command.description if command.description).to_s
+              end
+            end
           end
         end
-      end
-
-      visit Command do |command|
-        indent(4) { put command.name.to_s + (" - " + command.description if command.description).to_s }
       end
     end
 

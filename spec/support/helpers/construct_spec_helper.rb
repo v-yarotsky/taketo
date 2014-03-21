@@ -39,6 +39,14 @@ module ConstructsFixtures
     c
   end
 
+  def create_compiled_config(*args)
+    config = create_config(*args)
+    traverser = ::Taketo::Support::ConfigTraverser.new(config)
+    compiler = ::Taketo::ConfigVisitors::CompilerVisitor.new
+    traverser.visit_depth_first(compiler)
+    config
+  end
+
   def add_nodes(node, children_nodes)
     children_nodes.each { |c| node.add_node(c) }
   end

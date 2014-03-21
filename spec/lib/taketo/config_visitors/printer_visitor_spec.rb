@@ -5,22 +5,8 @@ module Taketo::ConfigVisitors
   describe PrinterVisitor do
     subject(:printer) { PrinterVisitor.new }
 
-    describe "#visit_command" do
-      let(:command) { double(:Command, :name => :foo, :description => nil) }
-
-      it "renders command name" do
-        printer.visit_command(command)
-        expect(printer.result).to eq("foo")
-      end
-
-      it "renders description if available" do
-        command.stub(:description => "The description")
-        printer.visit_command(command)
-        expect(printer.result).to eq("foo - The description")
-      end
-    end
-
     describe "#visit_server" do
+      let(:command) { double(:Command, :description => "foo", :name => "f") }
       let(:server) do
         double(:Server,
                :name => :sponge,
@@ -29,11 +15,11 @@ module Taketo::ConfigVisitors
                :username => "bob",
                :default_location => "/var/app",
                :default_command => "tmux",
-               :environment_variables => { :FOO => "bar", :BOO => "baz" })
+               :environment_variables => { :FOO => "bar", :BOO => "baz" },
+               :commands => [command])
       end
 
       it "renders available server info" do
-        expect(server).to receive(:has_nodes?).with(:command).and_return(false)
         printer.visit_server(server)
         expect(printer.result).to match(
 %r[Server: sponge
@@ -42,17 +28,19 @@ module Taketo::ConfigVisitors
   User: bob
   Default location: /var/app
   Default command: tmux
-  Environment: (FOO=bar BOO=baz|BOO=baz FOO=bar)])
+  Environment: (FOO=bar BOO=baz|BOO=baz FOO=bar)
+  Commands:
+    f - foo])
       end
 
       it "does not renders commands section header if there are no commands defined" do
-        expect(server).to receive(:has_nodes?).with(:command).and_return(false)
+        expect(server).to receive(:commands).and_return([])
         printer.visit_server(server)
         expect(printer.result).not_to match(/commands/i)
       end
 
       it "renders commands if defined" do
-        expect(server).to receive(:has_nodes?).with(:command).and_return(true)
+        expect(server).to receive(:commands).and_return([command])
         printer.visit_server(server)
         expect(printer.result).to include("Commands:")
       end

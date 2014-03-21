@@ -82,6 +82,7 @@ feature "Config validation" do
   end
 
   scenario "Command without definition" do
+    pending
     create_config <<-CONFIG
       project :foo do
         environment :bar do
