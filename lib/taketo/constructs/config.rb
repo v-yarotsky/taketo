@@ -11,7 +11,7 @@ module Taketo
       def initialize(*args)
         super(nil)
         @shared_server_configs = {}
-        @default_server_config = @default_server_config.merge(
+        @default_server_config.merge!(
           :ssh_command => :ssh,
           :default_command => "bash"
         )

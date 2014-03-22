@@ -17,37 +17,31 @@ module Taketo
       described_class.new
     end
 
-    describe "#merge" do
+    describe "#merge!" do
       context "with other ServerConfig" do
         it "merges fields" do
-          merged = server_config.merge(described_class.new(:host => "3.4.5.6"))
+          merged = server_config.merge!(described_class.new(:host => "3.4.5.6"))
           expect(merged.host).to eq("3.4.5.6")
           expect(merged.port).to eq(1234) # didn't change
         end
 
         it "deeply merges environment_variables" do
-          merged = server_config.merge(described_class.new(:environment_variables => { :BAR => "bar" }))
+          merged = server_config.merge!(described_class.new(:environment_variables => { :BAR => "bar" }))
           expect(merged.environment_variables).to eq(:SOME_API_SECRET => "sshhh. secret!", :BAR => "bar")
         end
       end
 
       context "with Hash" do
         it "merges fields" do
-          merged = server_config.merge(:host => "3.4.5.6")
+          merged = server_config.merge!(:host => "3.4.5.6")
           expect(merged.host).to eq("3.4.5.6")
           expect(merged.port).to eq(1234) # didn't change
         end
 
         it "deeply merges environment_variables" do
-          merged = server_config.merge(:environment_variables => { :BAR => "bar" })
+          merged = server_config.merge!(:environment_variables => { :BAR => "bar" })
           expect(merged.environment_variables).to eq(:SOME_API_SECRET => "sshhh. secret!", :BAR => "bar")
         end
-      end
-
-      it "does not alter source server config" do
-        merged = server_config.merge(:host => "2.3.4.5")
-        expect(merged.host).to eq("2.3.4.5")
-        expect(server_config.host).to eq("1.2.3.4")
       end
     end
 
@@ -58,18 +52,12 @@ module Taketo
 
     describe "#ssh_command" do
       it "returns symbol" do
-        merged = server_config.merge(:ssh_command => "mosh")
+        merged = server_config.merge!(:ssh_command => "mosh")
         expect(merged.ssh_command).to eq(:mosh)
       end
 
       it "has #ssh_command = :ssh by default" do
         expect(server_config.ssh_command).to eq(:ssh)
-      end
-    end
-
-    describe "#dup" do
-      it "duplicates fields" do
-        expect(server_config.dup.environment_variables).not_to equal(server_config.environment_variables)
       end
     end
 

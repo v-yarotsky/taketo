@@ -52,7 +52,7 @@ module ConstructsFixtures
     options = options.dup
     s = Server.new(name)
     s.path = options.delete(:path) || s.path
-    s.config = s.config.merge(options)
+    s.config.merge!(options)
     yield s if block_given?
     s
   end

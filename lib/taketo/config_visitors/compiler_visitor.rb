@@ -21,7 +21,7 @@ module Taketo
       end
 
       visit Server do |s|
-        s.config = @server_configs_stack.inject(ServerConfig.new, &:merge).merge(s.config)
+        s.config = @server_configs_stack.inject(ServerConfig.new, &:merge!).merge!(s.config)
         s.path = make_node_path(s)
       end
 

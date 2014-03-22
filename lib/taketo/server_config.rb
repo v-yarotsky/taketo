@@ -2,7 +2,6 @@ require 'set'
 
 module Taketo
 
-  # TODO make it immutable maybe?
   class ServerConfig
     FIELDS = [:ssh_command, :host, :port, :username, :default_location, :default_command, :identity_file, :global_alias].freeze
     attr_accessor *FIELDS
@@ -23,21 +22,12 @@ module Taketo
       @global_alias = value.to_s
     end
 
-    def merge(server_config)
-      dup.merge!(server_config)
-    end
-
     def merge!(server_config)
       config_hash = Hash[server_config.to_a]
       FIELDS.each { |f| send("#{f}=", config_hash[f]) if config_hash.key?(f) }
       add_environment_variables(config_hash[:environment_variables])
       Array(config_hash[:commands]).each { |c| add_command(c) }
       self
-    end
-    protected :merge!
-
-    def dup
-      Marshal.load(Marshal.dump(self))
     end
 
     def to_a
@@ -56,9 +46,6 @@ module Taketo
     def include_shared_server_config(server_config)
       merge!(server_config)
     end
-
-    # overriding command?
-
   end
 
 end
