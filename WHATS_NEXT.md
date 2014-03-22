@@ -24,12 +24,12 @@ What's next
 
 [X] Commands as part of server config
 
-[ ] Simplify creation of commands, sort module nesting out
+[X] Simplify creation of commands, sort module nesting out
 
 [ ] Make better api for creating and changing servers
 
-[ ] Make server config mutable - it's in the nature of this app, so it's ok
+[X] Make server config mutable - it's in the nature of this app, so it's ok
 
-[ ] Refactor DSL2
+[ ] Refactor DSL2 (add specs first!)
 
 [ ] Deal with shared server configs with arguments!
