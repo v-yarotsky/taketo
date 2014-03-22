@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Taketo::Support
 
-  describe CommandRenderer do
+  describe ServerCommandRenderer do
     describe "#render" do
       let(:command) { "rails c" }
       let(:server) do

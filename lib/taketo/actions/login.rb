@@ -15,8 +15,8 @@ module Taketo
       def remote_command(server)
         command_name = String(options[:command]).empty? ? server.default_command : options[:command]
         command = server.fetch_command(command_name)
-        command_renderer = ::Taketo::Support::CommandRenderer.new(server, options)
-        command_renderer.render(command)
+        server_command_renderer = Support::ServerCommandRenderer.new(server, options)
+        server_command_renderer.render(command)
       end
 
       def execute(shell_command)

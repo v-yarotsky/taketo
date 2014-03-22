@@ -3,7 +3,7 @@ require 'shellwords'
 module Taketo
   module Support
 
-    class CommandRenderer
+    class ServerCommandRenderer
       include Shellwords
 
       def initialize(server, options = {})
