@@ -12,7 +12,6 @@ module Taketo
     autoload :Environment,   'taketo/constructs/environment'
     autoload :Server,        'taketo/constructs/server'
     autoload :Group,         'taketo/constructs/group'
-    autoload :Command,       'taketo/constructs/command'
   end
 
 end

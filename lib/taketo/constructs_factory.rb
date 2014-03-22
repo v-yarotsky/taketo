@@ -24,10 +24,6 @@ module Taketo
     def create_group(*args)
       Constructs::Group.new(*args)
     end
-
-    def create_command(*args)
-      Constructs::Command.new(*args)
-    end
   end
 
 end

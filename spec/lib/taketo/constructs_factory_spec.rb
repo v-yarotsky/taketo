@@ -36,11 +36,6 @@ module Taketo
       group = factory.create_group(:foo)
       expect(group).to be_an_instance_of(Taketo::Constructs::Group)
     end
-
-    specify "#create_command creates a command object" do
-      command = factory.create_command(:foo)
-      expect(command).to be_an_instance_of(Taketo::Constructs::Command)
-    end
   end
 
 end

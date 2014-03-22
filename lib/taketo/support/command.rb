@@ -26,7 +26,7 @@ module Taketo
       end
 
       def to_s
-        command.dup
+        command.to_s.dup
       end
     end
 

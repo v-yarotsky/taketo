@@ -25,7 +25,7 @@ end
 module ConstructsFixtures
   include Taketo::Constructs
 
-  [Project, Environment, Server].each do |node_type|
+  [Project, Environment, Group].each do |node_type|
     define_method node_type.name.downcase.gsub(/\w*::/, '') do |name, *args|
       n = node_type.new(name)
       add_nodes(n, args.first || [])
@@ -45,6 +45,27 @@ module ConstructsFixtures
     compiler = ::Taketo::ConfigVisitors::CompilerVisitor.new
     traverser.visit_depth_first(compiler)
     config
+  end
+
+  def server(name, options = {})
+    options = options.dup
+    s = Server.new(name)
+    s.path = options.delete(:path) || s.path
+    s.config = s.config.merge(options)
+    yield s if block_given?
+    s
+  end
+
+  def command(name, options = {})
+    options = options.dup
+    c = ::Taketo::Support::Command.new(name)
+    c.command = options.delete(:command)
+    c.description = options.delete(:description)
+    c
+  end
+
+  def explicit_command(name_and_command)
+    ::Taketo::Support::Command.explicit_command(name_and_command)
   end
 
   def add_nodes(node, children_nodes)

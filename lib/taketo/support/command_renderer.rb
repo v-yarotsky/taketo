@@ -1,3 +1,5 @@
+require 'shellwords'
+
 module Taketo
   module Support
 

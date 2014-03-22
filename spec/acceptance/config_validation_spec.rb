@@ -80,25 +80,5 @@ feature "Config validation" do
     stderr.should include("Server foo:bar:s2: global alias 'a1' has already been taken by server foo:bar:s1")
     exit_status.should_not be_success
   end
-
-  scenario "Command without definition" do
-    pending
-    create_config <<-CONFIG
-      project :foo do
-        environment :bar do
-          server do
-            host "1.2.3.4"
-
-            command :qux do
-            end
-          end
-        end
-      end
-    CONFIG
-
-    run "taketo"
-    stderr.should include("Don't know what to execute on command qux")
-    exit_status.should_not be_success
-  end
 end
 

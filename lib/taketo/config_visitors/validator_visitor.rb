@@ -32,10 +32,10 @@ module Taketo
         end
 
         raise ConfigError, "Server #{s.path}: host is not defined" if String(s.host).empty?
-      end
 
-      visit Command do |c|
-        raise ConfigError, "Don't know what to execute on command #{c.name}" if String(c.command).empty?
+        s.commands.each do |c|
+          raise ConfigError, "Don't know what to execute on command #{c.name}" if String(c.command).empty?
+        end
       end
 
       def node_has_servers?(node)

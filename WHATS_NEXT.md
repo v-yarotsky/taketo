@@ -1,7 +1,7 @@
 What's next
 ===========
 
-[X] yield self from constructor 
+[X] yield self from constructor
 
 [X] "expand" config - merge every server config into servers, assign full path to each node
 
@@ -19,7 +19,17 @@ What's next
     [X] Make the Expander
     [X] Make the Config hold shared server configs
 
-[ ] Extract command renderer from constructs/command (so command does not depend on server config). Maybe I don't need Command class altogether,
+[X] Extract command renderer from constructs/command (so command does not depend on server config). Maybe I don't need Command class altogether,
     not sure about what to do with description, though.
 
-[ ] Commands as part of server config
+[X] Commands as part of server config
+
+[ ] Simplify creation of commands, sort module nesting out
+
+[ ] Make better api for creating and changing servers
+
+[ ] Make server config mutable - it's in the nature of this app, so it's ok
+
+[ ] Refactor DSL2
+
+[ ] Deal with shared server configs with arguments!
