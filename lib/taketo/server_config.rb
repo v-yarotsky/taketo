@@ -28,7 +28,7 @@ module Taketo
     end
 
     def merge!(server_config)
-      config_hash = server_config.to_h
+      config_hash = Hash[server_config.to_a]
       FIELDS.each { |f| send("#{f}=", config_hash[f]) if config_hash.key?(f) }
       add_environment_variables(config_hash[:environment_variables])
       Array(config_hash[:commands]).each { |c| add_command(c) }
@@ -40,7 +40,7 @@ module Taketo
       Marshal.load(Marshal.dump(self))
     end
 
-    def to_h
+    def to_a
       values = FIELDS.map { |f| send(f) }
       Hash[FIELDS.zip(values).reject { |k, v| v.nil? }].merge(:environment_variables => environment_variables, :commands => commands)
     end
