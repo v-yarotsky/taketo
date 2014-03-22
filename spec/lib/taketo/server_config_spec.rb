@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Taketo::Support
+module Taketo
 
   describe ServerConfig do
     subject(:server_config) do
@@ -75,12 +75,12 @@ module Taketo::Support
 
     describe "#add_command" do
       it "does not add duplicate commands" do
-        command1 = ::Taketo::Support::Command.explicit_command("say_hi_1")
-        command2 = ::Taketo::Support::Command.explicit_command("say_hi_2")
-        server_config.add_command(command1)
-        server_config.add_command(command2)
-        server_config.add_command(command1)
-        expect(server_config.commands.to_a).to match_array([command1, command2])
+        server_command1 = ServerCommand.explicit_command("say_hi_1")
+        server_command2 = ServerCommand.explicit_command("say_hi_2")
+        server_config.add_command(server_command1)
+        server_config.add_command(server_command2)
+        server_config.add_command(server_command1)
+        expect(server_config.commands.to_a).to match_array([server_command1, server_command2])
       end
     end
 

@@ -39,8 +39,8 @@ module Taketo
       end
 
       def node_has_servers?(node)
-        servers_collector = ConfigVisitors::SimpleCollector(Taketo::Constructs::Server).new
-        traverser = Taketo::Support::ConfigTraverser.new(node)
+        servers_collector = ConfigVisitors::SimpleCollector(Constructs::Server).new
+        traverser = Support::ConfigTraverser.new(node)
         traverser.visit_depth_first(servers_collector)
         servers_collector.result.any?
       end

@@ -1,53 +1,54 @@
 require 'spec_helper'
+require 'support/helpers/construct_spec_helper'
 
-module Taketo::ConfigVisitors
+module Taketo
+  module ConfigVisitors
 
-  describe CompilerVisitor do
-    subject(:compiler) { CompilerVisitor.new }
+    describe CompilerVisitor do
+      include ConstructsFixtures
 
-    describe "#visit_server" do
-      let(:project) { ::Taketo::Constructs::Project.new(:prj) }
-      let(:environment) { ::Taketo::Constructs::Environment.new(:env) }
-      let(:prj_env_server) { ::Taketo::Constructs::Server.new(:server) }
-      let(:prj_server) { ::Taketo::Constructs::Server.new(:server) }
+      subject(:compiler) { CompilerVisitor.new }
 
-      let!(:config) do
-        config = ::Taketo::Constructs::Config.new
+      describe "#visit_server" do
+        let(:prj) { project(:prj, [env, prj_server]) }
+        let(:env) { environment(:env, [prj_env_server]) }
+        let(:prj_env_server) { server(:server) }
+        let(:prj_server) { server(:server) }
 
-        config.default_server_config = ::Taketo::Support::ServerConfig.new(:environment_variables => { :UNTOUCHED => 1, :OVERRIDDEN => :not_overridden })
-        environment.default_server_config = ::Taketo::Support::ServerConfig.new(:environment_variables => { :OVERRIDDEN => :overridden_by_environment })
+        let!(:config) do
+          config = create_config([prj])
 
-        config.add_node(project)
-        project.add_node(environment)
-        environment.add_node(prj_env_server)
-        project.add_node(prj_server)
-        config
-      end
+          config.default_server_config = ServerConfig.new(:environment_variables => { :UNTOUCHED => 1, :OVERRIDDEN => :not_overridden })
+          env.default_server_config = ServerConfig.new(:environment_variables => { :OVERRIDDEN => :overridden_by_environment })
 
-      it "assigns full paths to config, projects, environments, groups" do
-        ::Taketo::Support::ConfigTraverser.new(config).visit_depth_first(compiler)
-        expect(environment.path).to eq("prj:env")
-      end
+          config
+        end
 
-      it "assigns full path to servers" do
-        ::Taketo::Support::ConfigTraverser.new(config).visit_depth_first(compiler)
-        expect(prj_env_server.path).to eq("prj:env:server")
-        expect(prj_server.path).to eq("prj:server")
-      end
+        it "assigns full paths to config, projects, environments, groups" do
+          Support::ConfigTraverser.new(config).visit_depth_first(compiler)
+          expect(env.path).to eq("prj:env")
+        end
 
-      it "merges configs stack" do
-        ::Taketo::Support::ConfigTraverser.new(config).visit_depth_first(compiler)
-        expect(prj_env_server.environment_variables).to include(:UNTOUCHED => 1, :OVERRIDDEN => :overridden_by_environment)
-        expect(prj_server.environment_variables).to include(:UNTOUCHED => 1, :OVERRIDDEN => :not_overridden)
-      end
+        it "assigns full path to servers" do
+          Support::ConfigTraverser.new(config).visit_depth_first(compiler)
+          expect(prj_env_server.path).to eq("prj:env:server")
+          expect(prj_server.path).to eq("prj:server")
+        end
 
-      it "includes own server config on top" do
-        prj_env_server.config = ::Taketo::Support::ServerConfig.new(:environment_variables => { :OVERRIDDEN => :overridden_by_own_config })
-        ::Taketo::Support::ConfigTraverser.new(config).visit_depth_first(compiler)
-        expect(prj_env_server.environment_variables).to include(:UNTOUCHED => 1, :OVERRIDDEN => :overridden_by_own_config)
+        it "merges configs stack" do
+          Support::ConfigTraverser.new(config).visit_depth_first(compiler)
+          expect(prj_env_server.environment_variables).to include(:UNTOUCHED => 1, :OVERRIDDEN => :overridden_by_environment)
+          expect(prj_server.environment_variables).to include(:UNTOUCHED => 1, :OVERRIDDEN => :not_overridden)
+        end
+
+        it "includes own server config on top" do
+          prj_env_server.config = ServerConfig.new(:environment_variables => { :OVERRIDDEN => :overridden_by_own_config })
+          Support::ConfigTraverser.new(config).visit_depth_first(compiler)
+          expect(prj_env_server.environment_variables).to include(:UNTOUCHED => 1, :OVERRIDDEN => :overridden_by_own_config)
+        end
       end
     end
-  end
 
+  end
 end
 

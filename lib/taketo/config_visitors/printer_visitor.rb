@@ -2,7 +2,7 @@ module Taketo
   module ConfigVisitors
 
     class PrinterVisitor < BaseVisitor
-      include Taketo::Support::Printer
+      include Support::Printer
 
       visit Config do |config|
         indent(0) do

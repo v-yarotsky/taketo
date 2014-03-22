@@ -15,6 +15,8 @@ module Taketo
   autoload :DSL,               'taketo/dsl'
   autoload :DSL2,              'taketo/dsl2'
   autoload :NodeResolvers,     'taketo/node_resolvers'
+  autoload :ServerCommand,     'taketo/server_command'
+  autoload :ServerConfig,      'taketo/server_config'
   autoload :Support,           'taketo/support'
 end
 

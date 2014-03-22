@@ -56,7 +56,7 @@ module Taketo
     end
 
     def command(name)
-      scope_object = ::Taketo::Support::Command.new(name.to_s)
+      scope_object = ServerCommand.new(name.to_s)
       in_scope(scope_object) do |current, parent|
         parent.add_command(current)
         yield
@@ -71,7 +71,7 @@ module Taketo
     end
 
     def shared_server_config(name, &block)
-      scope_object = ::Taketo::Support::ServerConfig.new
+      scope_object = ServerConfig.new
       #in_scope(scope_object) do |current, parent|
       #  yield
         @config.add_shared_server_config(name, block)
@@ -130,7 +130,7 @@ module Taketo
 
     def include_shared_server_config(*shared_config_names)
       extract_config_names_and_arguments(shared_config_names).each do |config_name, arguments|
-        generated_config = ::Taketo::Support::ServerConfig.new
+        generated_config = ServerConfig.new
         in_scope(generated_config) do
           instance_exec(*arguments, &@config.shared_server_config(config_name))
         end

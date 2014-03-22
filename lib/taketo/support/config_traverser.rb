@@ -1,5 +1,3 @@
-require 'delegate'
-require 'forwardable'
 require 'set'
 
 module Taketo

@@ -2,14 +2,14 @@ module Taketo
   module Constructs
 
     class BaseConstruct
-      include Taketo::Support::ChildrenNodes
+      include Support::ChildrenNodes
 
       attr_accessor :parent, :default_server_config, :path
       attr_reader :name
 
       def initialize(name)
         @name = name
-        @default_server_config = ::Taketo::Support::ServerConfig.new
+        @default_server_config = ServerConfig.new
         @parent = NullConstruct
         yield self if block_given?
       end
@@ -31,7 +31,7 @@ module Taketo
     end
 
     class NullConstructClass
-      def default_server_config; ::Taketo::Support::ServerConfig.new; end
+      def default_server_config; ServerConfig.new; end
       def qualified_name; ""; end
     end
 

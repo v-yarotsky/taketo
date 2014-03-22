@@ -22,7 +22,7 @@ module Taketo
 
       def nodes
         @nodes ||= begin
-          collector = ConfigVisitors::SimpleCollector(Taketo::Constructs::BaseConstruct).new
+          collector = ConfigVisitors::SimpleCollector(Constructs::BaseConstruct).new
           @traverser.visit_depth_first(collector)
           # TODO do it somewhat better
           collector.result

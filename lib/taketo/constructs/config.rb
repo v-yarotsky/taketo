@@ -19,7 +19,7 @@ module Taketo
 
       def add_shared_server_config(name, server_config_proc)
         if @shared_server_configs.key?(name)
-          raise ::Taketo::DuplicateSharedServerConfigError, name
+          raise DuplicateSharedServerConfigError, name
         end
         @shared_server_configs.store(name, server_config_proc)
       end
@@ -27,7 +27,7 @@ module Taketo
       def shared_server_config(name)
         @shared_server_configs.fetch(name)
       rescue KeyError
-        raise ::Taketo::SharedServerConfigNotFoundError, name
+        raise SharedServerConfigNotFoundError, name
       end
     end
 

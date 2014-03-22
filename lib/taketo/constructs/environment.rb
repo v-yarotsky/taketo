@@ -14,7 +14,7 @@ module Taketo
       end
 
       def add_rails_env(server_config)
-        ::Taketo::Support::ServerConfig.new(:environment_variables => { :RAILS_ENV => name.to_s }).merge(server_config)
+        ServerConfig.new(:environment_variables => { :RAILS_ENV => name.to_s }).merge(server_config)
       end
       private :add_rails_env
     end

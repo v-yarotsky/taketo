@@ -21,12 +21,12 @@ module Taketo
 
       def initialize(name)
         super(name)
-        @config = ::Taketo::Support::ServerConfig.new
+        @config = ServerConfig.new
       end
 
       def fetch_command(name_or_explicit_command)
         commands.detect { |cmd| cmd.name == name_or_explicit_command } ||
-          ::Taketo::Support::Command.explicit_command(name_or_explicit_command)
+          ServerCommand.explicit_command(name_or_explicit_command)
       end
     end
 

@@ -3,7 +3,7 @@ module Taketo
 
     class ServerResolver < BaseResolver
       def nodes
-        super.select { |n| Taketo::Constructs::Server === n }
+        super.select { |n| Constructs::Server === n }
       end
       alias :servers :nodes
 

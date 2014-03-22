@@ -23,6 +23,7 @@ shared_examples "a node with servers" do
 end
 
 module ConstructsFixtures
+  include Taketo
   include Taketo::Constructs
 
   [Project, Environment, Group].each do |node_type|
@@ -41,8 +42,8 @@ module ConstructsFixtures
 
   def create_compiled_config(*args)
     config = create_config(*args)
-    traverser = ::Taketo::Support::ConfigTraverser.new(config)
-    compiler = ::Taketo::ConfigVisitors::CompilerVisitor.new
+    traverser = Support::ConfigTraverser.new(config)
+    compiler = ConfigVisitors::CompilerVisitor.new
     traverser.visit_depth_first(compiler)
     config
   end
@@ -56,16 +57,16 @@ module ConstructsFixtures
     s
   end
 
-  def command(name, options = {})
+  def server_command(name, options = {})
     options = options.dup
-    c = ::Taketo::Support::Command.new(name)
+    c = ServerCommand.new(name)
     c.command = options.delete(:command)
     c.description = options.delete(:description)
     c
   end
 
-  def explicit_command(name_and_command)
-    ::Taketo::Support::Command.explicit_command(name_and_command)
+  def explicit_server_command(name_and_command)
+    ServerCommand.explicit_command(name_and_command)
   end
 
   def add_nodes(node, children_nodes)

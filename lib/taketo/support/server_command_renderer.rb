@@ -11,12 +11,8 @@ module Taketo
         @environment_variables = server.environment_variables
       end
 
-      def render(command)
-        %Q[#{directory} #{environment_variables} #{command}].strip.squeeze(" ")
-      end
-
-      def to_s
-        command.to_s
+      def render(server_command)
+        %Q[#{directory} #{environment_variables} #{server_command}].strip.squeeze(" ")
       end
 
       private

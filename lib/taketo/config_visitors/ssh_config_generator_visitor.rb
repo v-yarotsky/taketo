@@ -2,7 +2,7 @@ module Taketo
   module ConfigVisitors
 
     class SSHConfigGeneratorVisitor < BaseVisitor
-      include Taketo::Support::Printer
+      include Support::Printer
 
       visit Server do |server|
         put_server(server, server.global_alias) unless server.global_alias.to_s.empty?

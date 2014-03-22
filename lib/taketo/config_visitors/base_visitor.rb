@@ -3,7 +3,7 @@ module Taketo
 
     class BaseVisitor
       include Taketo::Constructs
-      extend  Taketo::Constructs
+      extend  Taketo::Constructs # for downcased_construct_class_name
 
       def self.visit(*klasses, &block)
         klasses.each do |klass|
