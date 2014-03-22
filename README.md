@@ -10,7 +10,6 @@ A tiny helper utility to make access to servers easier for different projects an
 
 Taketo is known to work on:
 
-* ree 1.8.7
 * MRI 1.9.2
 * MRI 1.9.3
 * MRI 2.0.0
