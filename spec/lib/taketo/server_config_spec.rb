@@ -50,6 +50,11 @@ module Taketo
       expect(server_config.global_alias).to eq("foo")
     end
 
+    specify "#default_command= converts to string" do
+      server_config.default_command = :foo
+      expect(server_config.default_command).to eq("foo")
+    end
+
     describe "#ssh_command" do
       it "returns symbol" do
         merged = server_config.merge!(:ssh_command => "mosh")

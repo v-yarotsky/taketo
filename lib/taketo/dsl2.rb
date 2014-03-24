@@ -112,7 +112,7 @@ module Taketo
     end
 
     def default_command(command_name)
-      current_scope_object.default_command = command_name.to_s
+      current_scope_object.default_command = command_name
     end
 
     def execute(command)

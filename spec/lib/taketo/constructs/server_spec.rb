@@ -37,7 +37,7 @@ module Taketo
       it { should have_accessor(:identity_file) }
       it { should have_accessor(:ssh_command) }
       it { should have_accessor(:default_location) }
-      it { should have_accessor(:default_command) }
+      it { should have_accessor(:default_command, "str") }
 
       it { should respond_to(:environment_variables) }
       it { should respond_to(:commands) }

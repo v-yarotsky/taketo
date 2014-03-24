@@ -22,6 +22,10 @@ module Taketo
       @global_alias = value.to_s
     end
 
+    def default_command=(value)
+      @default_command = value.to_s
+    end
+
     def merge!(server_config)
       config_hash = Hash[server_config.to_a]
       FIELDS.each { |f| send("#{f}=", config_hash[f]) if config_hash.key?(f) }
