@@ -32,5 +32,13 @@ end
 require 'yard'
 YARD::Rake::YardocTask.new
 
+task :console do
+  require 'irb'
+  require 'irb/completion'
+  require_relative 'lib/taketo'
+  ARGV.clear
+  IRB.start
+end
+
 task :default => [:spec, :acceptance_spec]
 

@@ -49,9 +49,7 @@ module Taketo
       scope_object = current_scope_object.find_node_by_type_and_name(:server, name) { @factory.create(:server, name) }
       in_scope(scope_object) do |current, parent|
         parent.add_node(current)
-        in_scope(current.config) do
-          yield
-        end
+        yield
       end
     end
 
@@ -72,10 +70,7 @@ module Taketo
 
     def shared_server_config(name, &block)
       scope_object = ServerConfig.new
-      #in_scope(scope_object) do |current, parent|
-      #  yield
-        @config.add_shared_server_config(name, block)
-      #end
+      @config.add_shared_server_config(name, block)
     end
 
     # NON-SCOPES

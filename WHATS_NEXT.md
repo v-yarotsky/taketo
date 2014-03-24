@@ -26,7 +26,7 @@ What's next
 
 [X] Simplify creation of commands, sort module nesting out
 
-[ ] Make better api for creating and changing servers
+[X] Make better api for creating and changing servers
 
 [X] Make server config mutable - it's in the nature of this app, so it's ok
 
