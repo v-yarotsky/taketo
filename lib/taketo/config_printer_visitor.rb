@@ -39,6 +39,7 @@ module Taketo
           put_optional "Port:", server.port
           put_optional "User:", server.username
           put_optional "Default location:", server.default_location
+          put_optional "Global alias:", server.global_alias
           put "Default command: #{server.default_command}"
           put "Environment: " + server.environment_variables.map { |n, v| "#{n}=#{v}" }.join(" ")
           put "Commands:" if server.has_commands?
