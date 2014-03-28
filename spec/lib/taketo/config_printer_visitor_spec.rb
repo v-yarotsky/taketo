@@ -30,6 +30,7 @@ describe "ConfigPrinterVisitor" do
            :username => "bob",
            :default_location => "/var/app",
            :default_command => "tmux",
+           :global_alias => "sponge1",
            :environment_variables => { :FOO => "bar", :BOO => "baz" })
     end
 
@@ -42,6 +43,7 @@ describe "ConfigPrinterVisitor" do
   Port: 8000
   User: bob
   Default location: /var/app
+  Global alias: sponge1
   Default command: tmux
   Environment: (FOO=bar BOO=baz|BOO=baz FOO=bar)])
     end
